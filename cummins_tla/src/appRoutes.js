@@ -13,7 +13,7 @@ export default function appRoutes(){
         <Routes>
             <Route exact path="/" element={<Login/>}/>
             <Route exact path="/app" element={<App/>}/>
-            <Route extact path="/app/home" element={<Dasboard/>}/>
+            <Route extact path="/app/home" element={<Dashboard/>}/>
             <Route exact path="/app/firstFit" element={<FirstFit/>}/>
             <Route exact path="/app/Reman" element={<Reman/>}/>
             <Route exact path="/app/teardownTray" element={<TeardownTray/>}/>
