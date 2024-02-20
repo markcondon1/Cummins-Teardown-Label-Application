@@ -6,29 +6,28 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './logo.png';
 import './App.css';
 
+import Login from "./pages/Login";
+import FirstFit from "./pages/FirstFit";
+import Reman from "./pages/Reman";
+import TeardownTray from "./pages/TeardownTray";
+import Dashboard from "./pages/Dashboard";
+import {BrowserRouter as Router, Route, Routes,} from "react-router-dom";
 function App() {
 
-//connect express
-//data will be the string we send from our server
-  const apiCall = () => {
-    axios.get('http://localhost:8080').then((data) => {
-      //this console.log will be in our frontend console
-      console.log(data)
-    })
 
-  }
   return (
-    <div className="App">
-      <div class="row">
-        <div class="col-12 col-lg-6">
-        <h1><img src={logo} width={75} height ={75}/>Cummins Unified Teardown Label Application <Button>Logout</Button>{' '}</h1>
-        
-        </div>
+      <div className="App">
+          <Router>
+              <Routes>
+                  <Route exact path="/" element={<Login/>} />
+                  <Route exact path="/app" element={<App/>} />
+                  <Route exact path="/app/home" element={<Dashboard/>} />
+                  <Route exact path="/app/firstFit" element={<FirstFit/>} />
+                  <Route exact path="/app/Reman" element={<Reman/>} />
+                  <Route exact path="/app/teardownTray" element={<TeardownTray/>} />
+              </Routes>
+          </Router>
       </div>
-      <header className="App-header">
-        <button onClick={apiCall}> Making API call</button>
-      </header>
-    </div>
   );
 }
 
