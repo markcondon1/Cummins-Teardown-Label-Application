@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+
+import NavBar from "./components/NavBar";
 import '../App.css';
 export default function Dashboard(){
     const navigate = useNavigate();
@@ -22,23 +24,10 @@ export default function Dashboard(){
 
     return(
         
-        <div class="container" className="Dashboard">
-            <div className="Dashboard">
-            <Navbar className="bg-body-tertiary">
-        <Container>
-          <Navbar.Brand href="#home">
-            <img
-              alt=""
-              src="/logo.svg"
-              width="30"
-              height="30"
-              className="d-inline-block align-top"
-            />{' '}
-            Cummins Unified Teardown Label Application
-          </Navbar.Brand>
-        </Container>
-      </Navbar>
-      <div class="row">
+    <div class="container" className="Dashboard">
+        <div className="Dashboard">
+            <NavBar></NavBar>     
+       <div class="row">
             <div class="col">
         <h1>Click which label you would like to print.</h1>
         <div class="col">
