@@ -2,8 +2,9 @@ import {useNavigate} from "react-router-dom";
 
 import Button from "react-bootstrap/Button";
 import Image from 'react-bootstrap/Image';
+import './page_styles.css';
 
-//import logo from './logo.png';
+import logo from './components/logo.png';
 
 
 export default function Login(){
@@ -13,12 +14,22 @@ export default function Login(){
         console.log("test")
     }
     return(
-        <div className="App">
-            <div className="col-12 col-lg-6">
-                <h1>Cummins Unified Teardown Label Application <Button>Logout</Button>{' '}</h1>
-                <Button onClick={login}> login</Button>
-
+        <div className="login-container">
+            <div className="login-header">
+                <img src ={logo} alt="Logo" className="logo"/>
+                <h1>Cummins Unified Teardown Label Application</h1>
+    
             </div>
+            <div className="login-form">
+                <label htmlFor="userID">User ID</label>
+                <input type="text" id="userID" placeholder="Enter user ID" />
+
+                <label htmlFor="password">Password</label>
+                <input type="password" id="password" placeholder="Password" />
+
+                <Button onClick={login}> login</Button>
+            </div>
+            
         </div>
     )
 }
