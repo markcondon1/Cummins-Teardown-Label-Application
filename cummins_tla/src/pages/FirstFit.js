@@ -18,6 +18,7 @@ export default function FirstFit(){
 
     return(
         <div>
+            <h1>wawdawd</h1>
             <Button onClick={reman}> Reman </Button>
             <Button onClick={teardown}> Teardown Tray  </Button>
             <Button onClick={firstFit}> First Fit </Button>
