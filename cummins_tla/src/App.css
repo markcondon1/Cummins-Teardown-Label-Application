@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  background-size:auto;
+  
 }
 
 .App-logo {
@@ -12,6 +14,25 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+
+.logout-btn {
+  background-color: red;
+  color: red;
+}
+
+
+.Dashboard {
+  text-align: center;
+  font-size: 60px;
+  margin: auto;
+}
+
+#Dashboard-btn {
+  padding: 15px 32px;
+  text-align: center;
+  font-size: 24px;
+}
+
 
 .App-header {
   background-color: #282c34;

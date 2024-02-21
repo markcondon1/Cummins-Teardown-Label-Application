@@ -1,5 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import Button from "react-bootstrap/Button";
+import NavBar from "./components/NavBar";
 
 export default function TeardownTray(){
     const navigate = useNavigate();
@@ -17,10 +18,22 @@ export default function TeardownTray(){
 
 
     return(
-        <div>
-            <Button onClick={reman}> Reman </Button>
-            <Button onClick={teardown}> Teardown Tray  </Button>
-            <Button onClick={firstFit}> First Fit </Button>
+        <div class="container">
+            <div>
+                <NavBar></NavBar>
+            </div>
+            <div class="row">
+            <div class="col">
+        <h1>Teardown Tray</h1>
+        <div class="col">
+            <Button id = "Dashboard-btn"onClick={firstFit}>  First Fit  </Button>
+            </div>
+        <div class="col">
+            <Button id = "Dashboard-btn"onClick={teardown}> Teardown Tray  </Button>
+            </div>
+            <Button id = "Dashboard-btn" onClick={reman}> Reman </Button>
+        </div>
+            </div>
         </div>
     )
 }

@@ -3,10 +3,10 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from './logo.png';
+//import logo from './logo.png';
 import './App.css';
 
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import FirstFit from "./pages/FirstFit";
 import Reman from "./pages/Reman";
 import TeardownTray from "./pages/TeardownTray";
