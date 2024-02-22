@@ -57,3 +57,7 @@
     transform: rotate(360deg);
   }
 }
+
+#navbar{
+  width: 100%;
+}

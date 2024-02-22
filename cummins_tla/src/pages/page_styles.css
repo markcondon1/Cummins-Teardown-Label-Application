@@ -49,3 +49,34 @@
     color: white;
     cursor: pointer;
 }
+
+.dashboard-container{
+    padding-top: 50px;
+    padding-bottom: 50px;
+    margin: auto;
+    justify-content: center;
+    max-width: 1000px;
+}
+
+.dashboard{
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 1000px; /* Adjust width as needed */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.dashboard button{
+    height: 100%;
+    width: 95%;
+    padding: 25px;
+    margin: 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 35px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}

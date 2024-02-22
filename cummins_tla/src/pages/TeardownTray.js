@@ -18,22 +18,11 @@ export default function TeardownTray(){
 
 
     return(
-        <div class="container">
+        <div class="container-fluid">
             <div>
                 <NavBar></NavBar>
             </div>
-            <div class="row">
-            <div class="col">
-        <h1>Teardown Tray</h1>
-        <div class="col">
-            <Button id = "Dashboard-btn"onClick={firstFit}>  First Fit  </Button>
-            </div>
-        <div class="col">
-            <Button id = "Dashboard-btn"onClick={teardown}> Teardown Tray  </Button>
-            </div>
-            <Button id = "Dashboard-btn" onClick={reman}> Reman </Button>
-        </div>
-            </div>
+            <h1>Teardown Tray Components Label Station</h1>
         </div>
     )
 }

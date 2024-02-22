@@ -24,23 +24,20 @@ export default function Dashboard(){
 
     return(
         
-    <div class="container" className="Dashboard">
-        <div className="Dashboard">
+    <div class="container-fluid">
             <NavBar></NavBar>     
-       <div class="row">
-            <div class="col">
-        <h1>Click which label you would like to print.</h1>
-        <div class="col">
-            <Button id = "Dashboard-btn"onClick={firstFit}>  First Fit  </Button>
+            <div className="dashboard-container">
+                <div className="dashboard">
+                    <h1>Click which label you would like to print.</h1>
+                        <Button onClick={firstFit}>  First Fit  </Button>
+                        <Button onClick={teardown}> Teardown Tray  </Button>
+                        <Button onClick={reman}> Reman </Button>
+                    </div>
+                </div>
             </div>
-        <div class="col">
-            <Button id = "Dashboard-btn"onClick={teardown}> Teardown Tray  </Button>
-            </div>
-            <Button id = "Dashboard-btn" onClick={reman}> Reman </Button>
-        </div>
-            </div>
-        </div>
-        </div>
+
+
+
         
     )
 }
