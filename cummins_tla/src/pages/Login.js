@@ -27,7 +27,7 @@ export default function Login(){
                 <label htmlFor="password">Password</label>
                 <input type="password" id="password" placeholder="Password" />
 
-                <Button onClick={login}> login</Button>
+                <Button onClick={login}>Login</Button>
             </div>
             
         </div>
