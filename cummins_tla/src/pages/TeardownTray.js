@@ -18,7 +18,7 @@ export default function TeardownTray(){
 
 
     return(
-        <div class="container-fluid">
+        <div class="container-flex">
             <div>
                 <NavBar></NavBar>
             </div>

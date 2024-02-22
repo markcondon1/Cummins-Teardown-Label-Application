@@ -18,7 +18,7 @@ export default function FirstFit(){
 
 
     return(
-        <div class="container">
+        <div class="container-flex">
             <div>
                 <NavBar></NavBar>
                 <div class="row">

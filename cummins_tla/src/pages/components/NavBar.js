@@ -7,7 +7,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { slide as Menu } from 'react-burger-menu'
 import logo from './logo.png';
-import '../../App.css';
+import './NavBar.css';
 
 function NavBar(){
     const navigate = useNavigate();
@@ -16,9 +16,14 @@ function NavBar(){
         navigate("/");
     }
     return (
+      
         <Navbar id="navbar" bg="primary" data-bs-theme="dark">
+        <Menu>
+          <a id="first-fit" className="menu-item" href="/app/firstFit">First Fit</a>
+          <a id="teardown-tray" className="menu-item" href="/app/teardownTray">Teardown Tray</a>
+          <a id="reman" className="menu-item" href="/app/Reman">Reman</a>
+        </Menu>
         <Container>
-          
           <Navbar.Brand href="">
             <img src={logo} height={60} width={60}/>{''}
             Cummins Unified Teardown Label Application

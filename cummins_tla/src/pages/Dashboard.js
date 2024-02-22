@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-
 import NavBar from "./components/NavBar";
 import '../App.css';
 export default function Dashboard(){
@@ -23,8 +22,8 @@ export default function Dashboard(){
 
 
     return(
-        
-    <div class="container-fluid">
+    
+    <div class="container-flex">
             <NavBar></NavBar>     
             <div className="dashboard-container">
                 <div className="dashboard">
