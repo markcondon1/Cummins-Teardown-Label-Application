@@ -22,7 +22,13 @@ export default function TeardownTray(){
             <div>
                 <NavBar></NavBar>
             </div>
+            <div className="teardown">
             <h1>Teardown Tray Components Label Station</h1>
+                <div className="teardown-container">
+                    <label>Enter Value:</label>
+                    <input type="text" placeholder="Value"></input>
+                </div>
+            </div>
         </div>
     )
 }

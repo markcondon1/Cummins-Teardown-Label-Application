@@ -79,5 +79,19 @@
   .bm-item:hover {
     color: #ffffff;
   }
+
+  .user-id{
+    padding-left:450px;
+    color:#ffffff;
+    font-size: 25px;
+  }
+
+  .logout-button{
+    background: #fff;
+  color: red;
+  border: 2px solid red;
+  border-radius: 3px;
+  padding: 5px 10px;
+  }
   
   
