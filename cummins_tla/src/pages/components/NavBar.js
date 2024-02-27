@@ -28,7 +28,10 @@ function NavBar(){
             <img src={logo} height={60} width={60}/>{''}
             Cummins Unified Teardown Label Application
           </Navbar.Brand>
-          <Button class="btn btn-secondary" onClick={logout} >Logout</Button>
+          <div className="user-id">
+            <text>Holder, Place [ph123]</text>
+          </div>
+          <Button onClick={logout} >Logout</Button>
         </Container>
       </Navbar>
     )

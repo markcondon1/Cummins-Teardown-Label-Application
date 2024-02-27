@@ -35,7 +35,7 @@ app.post('/api/login', async (req, res) => {
 
     try {
         // Query  database to find the user with the trying to login
-        const query = 'SELECT * FROM users WHERE userid = $1 AND password = $2';
+        const query = 'SELECT userid, password FROM users WHERE userid = $1 AND password = $2';
         const { rows } = await pool.query(query, [username, password]);
 
         if (rows.length === 1) {
