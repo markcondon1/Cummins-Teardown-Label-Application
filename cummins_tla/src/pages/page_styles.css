@@ -89,3 +89,149 @@
     color: white;
     cursor: pointer;
 }
+
+
+
+.container-fluid {
+    background-color: #ffffff;
+    padding: 15px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+}
+
+.row h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.card {
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 10px 15px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333333;
+}
+
+.card-body {
+    padding: 20px;
+    color: #212529;
+}
+
+.col-md-6 {
+    padding: 0 15px;
+    width: 50%;
+}
+
+
+.scanned-variables,
+.ticket-details,
+.components-list {
+    background-color: #e9ecef;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.print-controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.print-qty {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.radio-buttons label,
+.print-controls
+.print-qty label {
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+.radio-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+.print-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: auto;
+    margin-top: 10px;
+}
+
+.radio-buttons input[type="radio"] {
+    margin-right: 0px;
+    margin-left: 20px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    text-align: center;
+    margin-left: 10px;
+}
+
+.auto-print {
+    display: flex;
+    align-items: center;
+}
+
+select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+    }
+
+    .col-md-6 {
+        width: 100%;
+    }
+}
