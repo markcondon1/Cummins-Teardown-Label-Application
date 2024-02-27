@@ -29,7 +29,7 @@ function NavBar(){
             Cummins Unified Teardown Label Application
           </Navbar.Brand>
           <div className="user-id">
-            <text>Holder, Place [ph123]</text>
+            <text>Holder, Place [tst123]</text>
           </div>
           <Button onClick={logout} >Logout</Button>
         </Container>
