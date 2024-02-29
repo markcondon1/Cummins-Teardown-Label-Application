@@ -40,7 +40,15 @@ app.post('/api/login', async (req, res) => {
 
         if (rows.length === 1) {
             // User found, authentication successful
-            res.json({ success: true, message: 'Login successful', user: rows[0] });
+            const user = rows[0];
+            res.json(
+                { success: true,
+                    message: 'Login successful',
+                    user: {
+                        userid: user.userid,
+                        firstname: user.firstname,
+                        lastname: user.lastname,
+                    } });
         } else {
             // No user found with the provided credentials
             res.status(401).json({ success: false, message: 'Invalid username or password' });
@@ -50,6 +58,7 @@ app.post('/api/login', async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
+
 
 
 app.listen(8080, () => {

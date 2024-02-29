@@ -46,6 +46,7 @@ export default function Login(){
             const data = await response.json();
             setUsers(data); // Set the users state with the fetched data
 
+
         } catch (error) {
             console.error("Error fetching user data:", error);
         }
