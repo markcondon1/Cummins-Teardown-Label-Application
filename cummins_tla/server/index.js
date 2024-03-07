@@ -35,20 +35,14 @@ app.post('/api/login', async (req, res) => {
 
     try {
         // Query  database to find the user with the trying to login
-        const query = 'SELECT userid, password FROM users WHERE userid = $1 AND password = $2';
+        const query = 'SELECT userid, firstname, lastname, password FROM users WHERE userid = $1 AND password = $2';
         const { rows } = await pool.query(query, [username, password]);
 
         if (rows.length === 1) {
             // User found, authentication successful
             const user = rows[0];
-            res.json(
-                { success: true,
-                    message: 'Login successful',
-                    user: {
-                        userid: user.userid,
-                        firstname: user.firstname,
-                        lastname: user.lastname,
-                    } });
+            const { userid, firstname, lastname } = user;
+            res.json({ success: true, message: 'Login successful', user: { userid, firstname, lastname } });
         } else {
             // No user found with the provided credentials
             res.status(401).json({ success: false, message: 'Invalid username or password' });
@@ -58,7 +52,20 @@ app.post('/api/login', async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
+app.post('/api/login', async (req, res) => {
+    const { firstname, lastname } = req.body;
 
+    try {
+        // Query  database to find the user with the trying to login
+        const query = 'SELECT firstname, lastname FROM users WHERE userid = $1 AND password = $2';
+        const { rows } = await pool.query(query, [firstname, lastname]);
+
+
+    } catch (error) {
+        console.error('Error executing query', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
 
 
 app.listen(8080, () => {

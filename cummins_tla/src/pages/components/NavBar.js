@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
@@ -10,27 +10,39 @@ import logo from './logo.png';
 import './NavBar.css';
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {useSelector} from "react-redux";
+
 
 function NavBar(){
     const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState(null);
+    const location = useLocation();
+    const user = useSelector(state => state.user);
+    const [firstname, setFirstname] = useState(null);
+    const [lastname, setLastname] = useState(null);
+    const [username, setUsername] = useState('');
+
 
     useEffect(() => {
-        // Make an API call to fetch user information after successful login
-        const fetchUserData = async () => {
-            try {
-                // Replace 'api/userdata' with the appropriate API endpoint to fetch user data
-                const response = await axios.get('http://localhost:8080/api/login', {
-                    username: 'example_username',
-                    password: 'example_password'
-                });
-                setUserInfo(response.data.user); // Assuming response.data contains user information
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
+        // const fetchUserData = async () => {
+        //
+        //     try {
+        //         const response = await fetch('http://localhost:8080/api/login', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //             },
+        //             body: JSON.stringify({ username, firstname,lastname }),
+        //         });
+        //         const data = await response.json();
+        //         console.log(data);
+        //     } catch (error) {
+        //         console.error('Error fetching user data:', error);
+        //     }
+        // };
 
-        fetchUserData();
+        //fetchUserData();
+        console.log("user: ", user);
     }, []);
 
     const logout=()=>{
@@ -39,14 +51,9 @@ function NavBar(){
     return (
       
         <Navbar id="navbar" bg="primary" data-bs-theme="dark">
-            {userInfo && (
-                <div>
-                    <p>First Name: {userInfo.firstname}</p>
-                    <p>Last Name: {userInfo.lastname}</p>
-                    <p>User ID: {userInfo.userid}</p>
-                </div>
-            )}
+
         <Menu>
+
           <a id="first-fit" className="menu-item" href="/app/firstFit">First Fit</a>
           <a id="teardown-tray" className="menu-item" href="/app/teardownTray">Teardown Tray</a>
           <a id="reman" className="menu-item" href="/app/Reman">Reman</a>
@@ -57,14 +64,9 @@ function NavBar(){
             Cummins Unified Teardown Label Application
           </Navbar.Brand>
           <div className="user-id">
-              {userInfo && (
-                  <div className="user-info">
-                      <p>First Name: {userInfo.firstname}</p>
-                      <p>Last Name: {userInfo.lastname}</p>
-                      <p>User ID: {userInfo.userid}</p>
-                  </div>
-              )}
+              <h6> {user.lastname}, {user.firstname}</h6>
           </div>
+
           <Button onClick={logout} >Logout</Button>
         </Container>
       </Navbar>

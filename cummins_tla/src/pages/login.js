@@ -7,16 +7,23 @@ import logo from './components/logo.png';
 import {useEffect, useState} from "react";
 import axios, {AxiosHeaders } from "axios";
 import { supabase } from '../supabase';
+import {SET_USER} from "../store/actionTypes/user";
+import {setUser} from "../store/actions/user";
+import {useDispatch, useSelector} from "react-redux";
 
 export default function Login(){
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [users, setUsers] = useState([]);
     const [notification, setNotification] = useState(null);
+    const [firstname, setFirstname] = useState(null);
+    const [lastname, setLastname] = useState(null);
+    const user = useSelector(state => state.user);
 
-    const handleLogin = async (event) => {
-        event.preventDefault();
+    const handleLogin = async () => {
+
         // Make an HTTP request to the login endpoint
         try {
             const response = await fetch('http://localhost:8080/api/login', {
@@ -29,6 +36,14 @@ export default function Login(){
             const data = await response.json();
             console.log(data); // Handle the response from the server
             if (data.success){
+//dispatch to set user
+                dispatch(setUser({
+                    firstname: data.user.firstname,
+                    lastname: data.user.lastname,
+                    userid: data.user.userid,
+                }));
+                console.log("first", data.user.firstname);
+                console.log('User data dispatched:', user);
                 navigate('/app/home');
             } else {
                 setNotification('Incorrect username or password');
@@ -45,6 +60,8 @@ export default function Login(){
             const response = await fetch("http://localhost:8080/api/data");
             const data = await response.json();
             setUsers(data); // Set the users state with the fetched data
+            console.log("users= ", data);
+
 
 
         } catch (error) {
@@ -72,6 +89,7 @@ export default function Login(){
             <div className="login-header">
                 <img src ={logo} alt="Logo" className="logo"/>
                 <h1>Cummins Unified Teardown Label Application</h1>
+
 
             </div>
             <div className="login-form">
