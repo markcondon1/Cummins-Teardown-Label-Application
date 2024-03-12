@@ -2,7 +2,7 @@ import App from "./App";
 import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import FirstFit from "./pages/FirstFit";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import Reman from "./pages/Reman";
 import TeardownTray from "./pages/TeardownTray";
 import Dashboard from "./pages/Dashboard";
