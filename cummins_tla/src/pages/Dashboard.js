@@ -6,9 +6,14 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavBar from "./components/NavBar";
 import '../App.css';
+import {useEffect, useState} from "react";
+import axios from "axios";
+import {useSelector} from "react-redux";
 export default function Dashboard(){
     const navigate = useNavigate();
+    const user = useSelector(state => state.user);
 
+    console.log("user: ", user);
     const reman=()=>{
         navigate("/app/Reman");
     }
@@ -34,8 +39,6 @@ export default function Dashboard(){
                     </div>
                 </div>
             </div>
-
-
 
         
     )
