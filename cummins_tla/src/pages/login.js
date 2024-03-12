@@ -21,7 +21,7 @@ export default function Login(){
     const [firstname, setFirstname] = useState(null);
     const [lastname, setLastname] = useState(null);
     const user = useSelector(state => state.user);
-
+//ignore this
     const handleLogin = async () => {
 
         // Make an HTTP request to the login endpoint
