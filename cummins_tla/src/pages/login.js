@@ -11,6 +11,7 @@ import {SET_USER} from "../store/actionTypes/user";
 import {setUser, userAuth} from "../store/actions/user";
 import {useDispatch, useSelector} from "react-redux";
 
+
 export default function Login(){
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -21,7 +22,7 @@ export default function Login(){
     const [firstname, setFirstname] = useState(null);
     const [lastname, setLastname] = useState(null);
     const user = useSelector(state => state.user);
-//ignore this
+
     const handleLogin = async () => {
 
         // Make an HTTP request to the login endpoint
@@ -55,7 +56,7 @@ export default function Login(){
                 setNotification('Incorrect username or password');
                 setTimeout(() => setNotification(''), 5000);
             }
-                } catch (error) {
+        } catch (error) {
             console.error('Error:', error);
             setNotification('An error occurred while logging in');
             setTimeout(() => setNotification(''), 5000);
@@ -109,8 +110,8 @@ export default function Login(){
                 {notification && <div className="error-message">{notification}</div>}
             </div>
             <div className="user-list">
-        </div>
-            
+            </div>
+
         </div>
     )
 }
