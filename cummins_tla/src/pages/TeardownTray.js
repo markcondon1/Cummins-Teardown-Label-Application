@@ -1,3 +1,4 @@
+import React, { useRef, useEffect } from "react";
 import {useNavigate} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
@@ -16,6 +17,12 @@ export default function TeardownTray(){
         navigate("/app/firstFit");
     }
 
+    const inputElement = useRef(null);
+    useEffect(() => {
+      if (inputElement.current) {
+        inputElement.current.focus();
+      }
+    }, []);
 
     return(
         <div class="container-flex">
@@ -23,11 +30,14 @@ export default function TeardownTray(){
                 <NavBar></NavBar>
             </div>
             <div className="teardown">
-            <h1>Teardown Tray Components Label Station</h1>
+                <div className="row">
+                    <h1>Teardown Tray Components Label Station</h1>
+                    </div>
                 <div className="teardown-container">
                     <label>Enter Value:</label>
-                    <input type="text" placeholder="Value"></input>
-                </div>
+                    <input ref={inputElement} type="text" placeholder="Value"></input>
+                    </div>
+                
             </div>
         </div>
     )

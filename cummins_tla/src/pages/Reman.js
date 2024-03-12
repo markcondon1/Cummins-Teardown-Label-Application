@@ -1,3 +1,4 @@
+import React, { useRef, useEffect } from "react";
 import {useNavigate} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
@@ -17,6 +18,12 @@ export default function Reman(){
         navigate("/app/firstFit");
     }
 
+    const inputElement = useRef(null);
+    useEffect(() => {
+      if (inputElement.current) {
+        inputElement.current.focus();
+      }
+    }, []);
 
     return(
         <div class="container-flex">
@@ -24,10 +31,12 @@ export default function Reman(){
                 <NavBar></NavBar>
             </div>
             <div className="reman"> 
+            <div className="row">
                 <h1>Reman Teardown Print Label Station</h1>
+                </div>
                 <div className="reman-container">
                     <label>Enter Part Number:</label>
-                    <input type="text" placeholder="XXXXXX-RX"></input>
+                    <input  ref={inputElement} type="text" placeholder="XXXXXX-RX"></input>
                     <div className="reman-label-preview">
                         <label>Label Preview:</label>
                         <img src={placeholder_label} height={200} width={400}/>{''}
