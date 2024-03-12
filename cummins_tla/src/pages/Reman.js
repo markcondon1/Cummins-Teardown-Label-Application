@@ -3,10 +3,11 @@ import {useNavigate} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
 import placeholder_label from "./components/placeholder_label.png"
+import {useSelector} from "react-redux";
 
 export default function Reman(){
     const navigate = useNavigate();
-
+    const user = useSelector(state => state.user);
     const reman=()=>{
         navigate("/app/Reman");
     }

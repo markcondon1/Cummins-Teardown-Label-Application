@@ -48,15 +48,25 @@ function NavBar(){
     const logout=()=>{
         navigate("/");
     }
+    const reman=()=>{
+        navigate("/app/Reman");
+    }
+    const teardown = () => {
+        navigate("/app/teardownTray");
+    }
+
+    const firstFit = () =>{
+        navigate("/app/firstFit");
+    }
     return (
       
         <Navbar id="navbar" bg="primary" data-bs-theme="dark">
 
         <Menu>
 
-          <a id="first-fit" className="menu-item" href="/app/firstFit">First Fit</a>
-          <a id="teardown-tray" className="menu-item" href="/app/teardownTray">Teardown Tray</a>
-          <a id="reman" className="menu-item" href="/app/Reman">Reman</a>
+          <Button id="first-fit" variant= "link" className="menu-item" onClick={firstFit}>First Fit</Button>
+          <Button id="teardown-tray" variant= "link" className="menu-item" onClick={teardown}>Teardown Tray</Button>
+          <Button id="reman" variant= "link" className="menu-item" onClick={reman}>Reman</Button>
         </Menu>
         <Container>
           <Navbar.Brand href="">
