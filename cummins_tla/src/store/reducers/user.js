@@ -1,9 +1,10 @@
-import {GET_USER,SET_USER,RESET_USER} from "../actionTypes/user";
+import {GET_USER,SET_USER,RESET_USER, AUTHENTICATE_USER} from "../actionTypes/user";
 
 const initialHistory ={
     firstname: '',
     lastname: '',
-    userid: ''
+    userid: '',
+    userAuth: false
 }
 
 const userReducer = (state = initialHistory, action) => {
@@ -17,6 +18,11 @@ const userReducer = (state = initialHistory, action) => {
             };
         case RESET_USER:
             return initialHistory;
+        case AUTHENTICATE_USER:
+            return {
+                ...state,
+                userAuth: action.payload.userAuth,
+            };
         default:
             return state;
     }

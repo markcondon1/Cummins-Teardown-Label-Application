@@ -1,4 +1,4 @@
-import { SET_USER, RESET_USER } from '../actionTypes/user';
+import { SET_USER, RESET_USER, AUTHENTICATE_USER } from '../actionTypes/user';
 
 export const setUser = (user) => ({
     type: SET_USER,
@@ -8,3 +8,8 @@ export const setUser = (user) => ({
 export const resetUser = () => ({
     type: RESET_USER,
 });
+
+export const userAuth = (user) => ({
+    type: AUTHENTICATE_USER,
+    payload: user,
+})

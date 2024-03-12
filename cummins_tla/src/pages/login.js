@@ -8,7 +8,7 @@ import {useEffect, useState} from "react";
 import axios, {AxiosHeaders } from "axios";
 import { supabase } from '../supabase';
 import {SET_USER} from "../store/actionTypes/user";
-import {setUser} from "../store/actions/user";
+import {setUser, userAuth} from "../store/actions/user";
 import {useDispatch, useSelector} from "react-redux";
 
 export default function Login(){
@@ -36,6 +36,9 @@ export default function Login(){
             const data = await response.json();
             console.log(data); // Handle the response from the server
             if (data.success){
+                dispatch(userAuth({
+                    userAuth: true
+                }))
 //dispatch to set user
                 dispatch(setUser({
                     firstname: data.user.firstname,
@@ -46,6 +49,9 @@ export default function Login(){
                 console.log('User data dispatched:', user);
                 navigate('/app/home');
             } else {
+                dispatch(userAuth({
+                    userAuth: false,
+                }))
                 setNotification('Incorrect username or password');
                 setTimeout(() => setNotification(''), 5000);
             }
