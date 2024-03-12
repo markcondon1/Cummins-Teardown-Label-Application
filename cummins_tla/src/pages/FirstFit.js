@@ -20,9 +20,8 @@ export default function FirstFit(){
 
 
     return(
-        <div className="container-fluid">
+        <div className="container-flex">
                 <NavBar />
-
                 <div className= "row mt-3">
                     <h1>First Fit Teardown</h1>
                     <div className="col-md-6">

@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 //import logo from './logo.png';
 import './App.css';
 
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import FirstFit from "./pages/FirstFit";
 import Reman from "./pages/Reman";
 import TeardownTray from "./pages/TeardownTray";
