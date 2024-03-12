@@ -31,11 +31,11 @@ function App() {
           <Router>
               <Routes>
                   <Route exact path="/" element={<Login/>} />
-                  <Route exact path="/app" element={<ProtectedRoute><App/></ProtectedRoute>} />
-                  <Route exact path="/app/home" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />
-                  <Route exact path="/app/firstFit" element={<ProtectedRoute><FirstFit/></ProtectedRoute>} />
-                  <Route exact path="/app/Reman" element={<ProtectedRoute><Reman/></ProtectedRoute>} />
-                  <Route exact path="/app/teardownTray" element={<ProtectedRoute><TeardownTray/></ProtectedRoute>} />
+                  <Route exact path="/app" element={<App/>} />
+                  <Route exact path="/app/home" element={<Dashboard/>} />
+                  <Route exact path="/app/firstFit" element={<FirstFit/> }/>
+                  <Route exact path="/app/Reman" element={<Reman/>} />
+                  <Route exact path="/app/teardownTray" element={<TeardownTray/>} />
               </Routes>
           </Router>
       </div>
