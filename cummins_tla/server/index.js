@@ -22,25 +22,7 @@ pool.on('error', (err, client) => {
     process.exit(-1);
 });
 
-async function postZplAndReturnImageName(zpl) {
-    const printerIpAddress = '10.92.0.167'; // Set your printer IP address here
-    const parameters = new URLSearchParams({
-        data: zpl,
-        dev: 'R',
-        oname: 'UNKNOWN',
-        otype: 'ZPL',
-        prev: 'Preview Label',
-        pw: ''
-    });
 
-    const response = await axios.post(`http://${printerIpAddress}/zpl`, parameters);
-    const html = await response.text();
-
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    const imageName = doc.querySelector('img').getAttribute('alt').substring(2).slice(0, -4);
-
-    return imageName;
-}
 
 app.get('/api/data', async (req, res) => {
     try {
@@ -91,13 +73,13 @@ app.post('/api/login', async (req, res) => {
 
 //printer logic
 
-app.post('/api/printlabel', async (req, res) => {
-    const zpl = `^XA
-^FO50,100^A0N,50,50^FB500,2,0,C^FD4040880^FS
-^FO50,180^A0N,50,50^FB500,1,0,C^FDShaft&Wheel^FS
-^FO50,250^A0N,50,50^FB500,1,0,C^FDHE451Ve^FS
-^FO`
-});
+// app.post('/api/printlabel', async (req, res) => {
+//     const zpl = `^XA
+// ^FO50,100^A0N,50,50^FB500,2,0,C^FD4040880^FS
+// ^FO50,180^A0N,50,50^FB500,1,0,C^FDShaft&Wheel^FS
+// ^FO50,250^A0N,50,50^FB500,1,0,C^FDHE451Ve^FS
+// ^FO`
+// });
 
 
 
