@@ -1,6 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
+import RemanLabelPreview from "./components/RemanLabelPreview";
 import placeholder_label from "./components/placeholder_label.png"
 import {useSelector} from "react-redux";
 
@@ -31,7 +32,7 @@ export default function Reman(){
                     <input type="text" placeholder="XXXXXX-RX"></input>
                     <div className="reman-label-preview">
                         <label>Label Preview:</label>
-                        <img src={placeholder_label} height={200} width={400}/>{''}
+                        <RemanLabelPreview> </RemanLabelPreview>
                         <Button>Print</Button>
                         </div>
                         
