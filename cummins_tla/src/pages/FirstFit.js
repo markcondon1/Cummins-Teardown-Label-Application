@@ -3,9 +3,15 @@ import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
 import  './page_styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 export default function FirstFit(){
     const navigate = useNavigate();
+    const user = useSelector(state => state.user);
+
+    console.log("user: ", user);
 
     const reman=()=>{
         navigate("/app/Reman");
@@ -20,9 +26,8 @@ export default function FirstFit(){
 
 
     return(
-        <div className="container-fluid">
+        <div className="container-flex">
                 <NavBar />
-
                 <div className= "row mt-3">
                     <h1>First Fit Teardown</h1>
                     <div className="col-md-6">

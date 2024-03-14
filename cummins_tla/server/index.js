@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
+//const fetch = require('node-fetch');
+const axios = require('axios');
 const { Pool } = require('pg');
 
 app.use(cors());
@@ -20,6 +22,8 @@ pool.on('error', (err, client) => {
     process.exit(-1);
 });
 
+
+
 app.get('/api/data', async (req, res) => {
     try {
         const { rows } = await pool.query('SELECT * FROM users');
@@ -30,6 +34,15 @@ app.get('/api/data', async (req, res) => {
     }
 });
 
+app.get('/api/mesComponents', async (req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
+        res.json(rows);
+    } catch (error) {
+        console.error('Error executing query', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -66,6 +79,17 @@ app.post('/api/login', async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
+
+//printer logic
+
+// app.post('/api/printlabel', async (req, res) => {
+//     const zpl = `^XA
+// ^FO50,100^A0N,50,50^FB500,2,0,C^FD4040880^FS
+// ^FO50,180^A0N,50,50^FB500,1,0,C^FDShaft&Wheel^FS
+// ^FO50,250^A0N,50,50^FB500,1,0,C^FDHE451Ve^FS
+// ^FO`
+// });
+
 
 
 app.listen(8080, () => {

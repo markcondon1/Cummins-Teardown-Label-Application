@@ -250,11 +250,11 @@ label {
     background-color: #e0e0e0;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    height:550px;
+    height:530px;
     width: 800px;
     font-size: 50px;
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding-top: 40px;
+    padding-bottom: 40px;
 }
 
 .reman{
@@ -273,7 +273,8 @@ label {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-size: 40px;
-    padding-top: 50px;
+    padding-top: 25px;
+    height:535px;
     width: 800px;
 }
 
