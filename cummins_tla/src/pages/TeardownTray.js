@@ -1,9 +1,20 @@
+import React, { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
 import jsPDF from "jspdf";
 export default function TeardownTray() {
+    //handles focusing input box
+    const inputElement = useRef(null);
+    useEffect(() => {
+    if (inputElement.current) {
+      inputElement.current.focus();
+    }
+  }, []);
+
+
+
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
 
@@ -55,6 +66,8 @@ export default function TeardownTray() {
         navigate("/app/firstFit");
     }
 
+    
+
     return (
         <div class="container-flex">
             <div>
@@ -64,7 +77,7 @@ export default function TeardownTray() {
                 <h1>Teardown Tray Components Label Station</h1>
                 <div className="teardown-container">
                     <label>Enter Value:</label>
-                    <input type="text" placeholder="Value" />
+                    <input ref={inputElement} type="text" placeholder="Value" />
 
                     <Button onClick={printLabel}>print</Button>
                 </div>
