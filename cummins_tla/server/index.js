@@ -34,10 +34,10 @@ app.get('/api/data', async (req, res) => {
     }
 });
 
-app.get('/api/mesComponents', async (req, res) => {
+app.post('/api/mesComponents', async (req, res) => {
     try {
         const { rows } = await pool.query('SELECT "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
-        res.json(rows);
+        res.json({success: true, message:'woohoo', rows });
     } catch (error) {
         console.error('Error executing query', error);
         res.status(500).json({ error: 'Internal server error' });
