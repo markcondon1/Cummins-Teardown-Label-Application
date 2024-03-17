@@ -74,7 +74,7 @@ function NavBar(){
             Cummins Unified Teardown Label Application
           </Navbar.Brand>
           <div className="user-id">
-              <h6> {user.lastname}, {user.firstname}</h6>
+              <h6> {user.lastname}, {user.firstname} [{user.userid}]</h6>
           </div>
 
           <Button onClick={logout} >Logout</Button>
