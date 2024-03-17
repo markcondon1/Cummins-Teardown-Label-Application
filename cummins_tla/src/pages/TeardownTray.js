@@ -74,6 +74,7 @@ export default function TeardownTray() {
 ^FO50,180^A0N,50,50^FB500,1,0,C^FD${name}^FS
 ^FO50,250^A0N,50,50^FB500,1,0,C^FD${restOfDescription}^FS
 ^FO50,340^A0N,50,50^FB500,2,0,C^FD${date} ${time}^FS
+^FO5,80^GB600,350,3^FS
 ^XZ
 `;
 
