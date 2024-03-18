@@ -34,7 +34,7 @@ export default function Reman(){
     const [data, setData] = useState({});
 
     const handleReman = async () => {
-        let item_segment1 = document.getElementById('remanInput').value;
+        let item_segment1 = document.getElementById("remanInput").value;
         try {
             const response = await fetch('http://localhost:8080/api/reman', {
                 method: 'POST',
@@ -48,8 +48,6 @@ export default function Reman(){
             if(temp.success)
             {
                 setData(temp.data);
-
-                console.log(data);
             }
         } catch (error) {
             console.error('Error: ', error);
@@ -114,11 +112,11 @@ export default function Reman(){
                 <h1>Reman Teardown Print Label Station</h1>
                 <div className="reman-container">
                     <label>Enter Part Number:</label>
-                    <input ref={inputElement} type="text" placeholder="XXXXXX-RX"></input>
+                    <input ref={inputElement} type="text" placeholder="XXXXXX-RX" id="remanInput" onBlur={handleReman}></input>
                     <div className="reman-label-preview">
                         <label>Label Preview:</label>
                         <RemanLabelPreview> </RemanLabelPreview>
-                        <Button>Print</Button>
+                        <Button onClick={printLabel}>Print</Button>
                         </div>
                         
 
