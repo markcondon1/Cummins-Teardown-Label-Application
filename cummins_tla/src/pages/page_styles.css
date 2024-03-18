@@ -166,11 +166,36 @@
     border: 1px solid #dee2e6;
 }
 
+.ticket-details {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    align-items: center;
+    gap: 10px; 
+    justify-content: center;
+}
+
+.card-body .ticket-details p,
+.card-body .components-list p {
+    letter-spacing: 0px;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    font-size: 21px;
+}
+
+.components-list div {
+    margin: 10px;
+    font-size: large;
+}
+
+
 .print-controls {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .print-qty {
@@ -190,7 +215,7 @@
 .radio-buttons {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    align-items: center;
     margin-bottom: 15px;
 }
 
@@ -203,6 +228,9 @@
     border-radius: 4px;
     margin-left: auto;
     margin-top: 10px;
+    height: 75px;
+    width: 130px;
+    font-size: 21px;
 }
 
 .radio-buttons input[type="radio"] {
@@ -227,6 +255,8 @@ input[type="number"] {
 .auto-print {
     display: flex;
     align-items: center;
+    margin-top: auto;
+    font-size: large;
 }
 
 select {

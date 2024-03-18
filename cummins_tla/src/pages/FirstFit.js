@@ -8,6 +8,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 
 export default function FirstFit(){
+
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
 
@@ -38,13 +39,18 @@ export default function FirstFit(){
                                 <input type="text" placeholder="Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s"></input>
                                 </div>
                                 <div className="ticket-details">
-                                    <p>ID21: 5606202</p>
-                                    <p>Model: HE300VG</p>
+                                    <p>ID21: </p>
+                                    <div id="iD21">5606202</div>
+                                    <p>Model: </p>
+                                    <div id ="model">HE300VG</div>
                                 </div>
                                 <div className="components-list">
                                     <p>Turbine Housing</p>
+                                    <div id="turbineHousing">TD5499586</div>
                                     <p>Compressor Housing</p>
+                                    <div id="compressorHousing">5500259</div>
                                     <p>Shroud Plate</p>
+                                    <div id="shroudPlate">N/A</div>
                                 </div>
                                 <div className="radio-buttons">
                                     <label>Print:</label>
