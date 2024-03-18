@@ -68,7 +68,7 @@ export default function Reman(){
             const date =`${month}/${day}/${year}`
             const time = `${hours}:${minutes}:${seconds}`;
 
-            const matrixContent = `P${data.ITEM_SEGMENT1}S${data.COMP_SERIAL_NUMBER}VTDRC`;
+            const matrixContent = `P${data.ITEM_SEGMENT1}${data.COMP_SERIAL_NUMBER}VTDRC`;
 
             // ZPL content for the label
             const zpl =
@@ -78,11 +78,24 @@ export default function Reman(){
             ^FO40,0^ADN,30,20^BCN,30,Y,N,N,N^FD${data.ITEM_SEGMENT1}^FS
             
             ^FX Logo
-            ^FO15,80^GFA,480,480,8,,L07JFE1FE,K07KFCC7E,J03LFC03E,J0LFC233E,I03KF7C187E,I07JFE3110FE,001KFEE18FFE,003LF91C7FE,007LF88DFFE,00LFC847FFE,01LF844IFE,01LF023IFE,03KFC613IFE,07KF831JFE,07JFE239JFE,0KFC71KFE,0KF638KFE,1JFE11BKFE,1JFC10LFE,3JF189LFE,3IFE1C7LFE,3IF98C6,3IF18F8,7FFD0C6,7FF88EC,7DFC47C,78CC278,60C62F8,61C71F8,47E0FF8,47F0FF8,478BFF8,410IFC,601IFE,703JF,3CKFC,3SFE,:1SFE,::0SFE,:07RFE,03RFE,:01RFE,00RFE,007QFE,003QFE,001QFE,I0QFE,I03PFE,I01PFE,J07OFE,K0OFE!K01NFEDM03LFC,,^FS
+            ^FO15,80^GFA,480,480,8,,L07JFE1FE,K07KFCC7E,J03LFC03E,
+            J0LFC233E,I03KF7C187E,I07JFE3110FE,001KFEE18FFE,
+            003LF91C7FE,007LF88DFFE,00LFC847FFE,01LF844IFE,
+            01LF023IFE,03KFC613IFE,07KF831JFE,07JFE239JFE,
+            0KFC71KFE,0KF638KFE,1JFE11BKFE,1JFC10LFE,
+            3JF189LFE,3IFE1C7LFE,3IF98C6,3IF18F8,
+            7FFD0C6,7FF88EC,7DFC47C,78CC278,
+            60C62F8,61C71F8,47E0FF8,47F0FF8,
+            478BFF8,410IFC,601IFE,703JF,
+            3CKFC,3SFE,:1SFE,::0SFE,
+            :07RFE,03RFE,:01RFE,00RFE,
+            007QFE,003QFE,001QFE,
+            I0QFE,I03PFE,I01PFE,
+            J07OFE,K0OFE!K01NFEDM03LFC,,^FS
             
             ^FX Date/Time
-            ^FO80,85^AFN,10,10^FD ${time}^FS
-            ^FO80,120^AFN,10,10^FD ${date}^FS
+            ^FO80,85^AFN,10,10^FD${time}^FS
+            ^FO80,120^AFN,10,10^FD${date}^FS
             
             ^FX User ID
             ^FO250,95^ASN,1,1,^FD${user.userid}^FS
@@ -91,8 +104,8 @@ export default function Reman(){
             ^FO40,160^ADN,10,10^FD${matrixContent}^FS
             
             ^FX Data Matrix
-            ^FO380,65^BXN,5,200,18,18,3,,1^FD${matrixContent}^FS
-            
+            ^FO380,65^BXN,5,200,18,18,3,,1
+            ^FD${matrixContent}^FS
             ^XZ`;
 
             // Create a new instance of jsPDF
