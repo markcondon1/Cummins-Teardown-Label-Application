@@ -3,10 +3,13 @@ import { useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
 import jsPDF from "jspdf";
+import {useState} from "react";
 export default function TeardownTray() {
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
-
+    const [componentNumber, setComponentNumber] = useState('');
+    const [componentDescription, setComponentDescription] = useState('');
+    const [validInput, setValidInput] = useState(false);
     //getting components for time and date
     const currentDate = new Date();
 
@@ -16,6 +19,45 @@ export default function TeardownTray() {
     const hours = String(currentDate.getHours()).padStart(2, '0');
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    let componentEntry ;
+
+
+    const handleComponent = async (numberEntry)=>{
+        try{
+            const response = await fetch('http://localhost:8080/api/mesComponents', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({componentNumber, componentDescription }),
+            });
+            const data = await response.json();
+            data.rows.forEach(row => {
+                if(numberEntry === row.COMPONENT_ITEM_NUMBER){
+                    setComponentNumber(numberEntry);
+                    setComponentDescription(row.COMPONENT_DESCRIPTION);
+                    console.log("SUCCESS ");
+                    setValidInput(true);
+                }else{
+                    //  setValidInput(false);
+                }
+                // console.log('COMPONENT_ITEM_NUMBER:', row.COMPONENT_ITEM_NUMBER);
+                // console.log('COMPONENT_DESCRIPTION:', row.COMPONENT_DESCRIPTION);
+
+            });
+            console.log("is input valid? ", validInput);
+            console.log(data); // Handle the response from the server
+        } catch (error) {
+            console.error('Error:', error);
+
+        }
+
+    }
+
+    const parts = componentDescription.split(' ');
+    const name = parts[0];
+    const restOfDescription = parts.slice(1).join(' ');
+
 
 
     console.log(`Current Date: ${year}-${month}-${day}`);
@@ -27,11 +69,12 @@ export default function TeardownTray() {
         const time = `${hours}:${minutes}:${seconds}`;
         console.log(date, time);
         // ZPL content for the label
-       const zpl =`^XA
-^FO50,100^A0N,50,50^FB500,2,0,C^FD4040880^FS
-^FO50,180^A0N,50,50^FB500,1,0,C^FDShaft&Wheel^FS
-^FO50,250^A0N,50,50^FB500,1,0,C^FDHE451Ve^FS
+        const zpl =`^XA
+^FO50,100^A0N,50,50^FB500,2,0,C^FD${componentNumber}^FS
+^FO50,180^A0N,50,50^FB500,1,0,C^FD${name}^FS
+^FO50,250^A0N,50,50^FB500,1,0,C^FD${restOfDescription}^FS
 ^FO50,340^A0N,50,50^FB500,2,0,C^FD${date} ${time}^FS
+^FO5,80^GB600,350,3^FS
 ^XZ
 `;
 
@@ -64,7 +107,9 @@ export default function TeardownTray() {
                 <h1>Teardown Tray Components Label Station</h1>
                 <div className="teardown-container">
                     <label>Enter Value:</label>
-                    <input type="text" placeholder="Value" />
+                    <input type="text"
+                           placeholder="Value"
+                           onKeyDown={(e) => handleComponent(e.target.value)} />
 
                     <Button onClick={printLabel}>print</Button>
                 </div>

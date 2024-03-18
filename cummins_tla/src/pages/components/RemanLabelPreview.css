@@ -1,0 +1,55 @@
+.label-preview-container{
+    display: block;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    height: 300px;
+    width: 600px;
+    text-align: left;
+    border-radius: 10px;
+}
+
+.row{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 0%;
+}
+
+.row h2{
+   font-size: 34px;
+   margin-left: 15px;
+   letter-spacing: 6px;
+}
+
+.logo {
+    width: 75px;
+    height: auto;
+    margin: 0%;
+}
+.data-matrix{
+    margin-top: 100px;
+    margin-left: 80px;
+    text-align: right;
+    width: 200px;
+    height: auto;
+}
+
+.row p{
+    font-size: 16px;
+    letter-spacing: 3px;
+}
+
+.col-1 p{
+    padding-top: 40px;
+    font-size: 16px;
+    letter-spacing: 3px;
+}
+
+
+.long h2{
+    padding-top: 15px;
+    width: 320px;
+    font-size: 21px;
+    letter-spacing: 0.1px;
+}

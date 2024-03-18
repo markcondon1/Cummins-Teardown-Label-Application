@@ -256,6 +256,29 @@ label {
     align-items: center;
     display: flex;
     flex-direction: column;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.teardown-header{
+
+    border-bottom: 1px solid #dee2e6;
+    padding: 10px 15px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333333;
+}
+
+.teardown-header h1{
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+    margin: 20px 0;
+    text-align: center;
 }
 
 .teardown-container{
@@ -263,14 +286,13 @@ label {
     align-items: center;
     display: flex;
     flex-direction: column;
-    background-color: #e0e0e0;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     height:530px;
     width: 800px;
     font-size: 50px;
-    padding-top: 40px;
-    padding-bottom: 40px;
+    padding: 20px;
+    color: #212529;
 }
 
 .reman{
@@ -280,6 +302,19 @@ label {
     flex-direction: column;
 }
 
+.reman h1{
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.reman label{
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
 .reman-container{
     justify-content: center;
     align-items: center;
@@ -289,8 +324,7 @@ label {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-size: 40px;
-    padding-top: 25px;
-    height:535px;
+    height:550px;
     width: 800px;
 }
 
@@ -300,11 +334,9 @@ label {
     display: flex;
     flex-direction: column;
     padding-top: 25px;
-    padding-bottom: 45px;
 }
 
 .reman-label-preview button{
-    margin-top: 10px;
-    font-size: 25px;
-    width: 100px;
+    font-size: 15px;
+    width: 55px;
 }
