@@ -29,6 +29,7 @@ export default function Reman(){
                 <div className="reman-container">
                     <label>Enter Part Number:</label>
                     <input type="text" placeholder="XXXXXX-RX"></input>
+                    <Button>Submit</Button>
                     <div className="reman-label-preview">
                         <label>Label Preview:</label>
                         <img src={placeholder_label} height={200} width={400}/>{''}
