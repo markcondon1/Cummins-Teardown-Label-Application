@@ -35,7 +35,7 @@ export default function FirstFit(){
                             <div className="card-header">Reject Tickets</div>
                             <div className="card-body">
                                 <div className="scanned-variables">
-                                <p>Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s</p>
+                                <input type="text" placeholder="Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s"></input>
                                 </div>
                                 <div className="ticket-details">
                                     <p>ID21: 5606202</p>
