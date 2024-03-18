@@ -5,6 +5,7 @@ import placeholder_label from "./components/placeholder_label.png"
 import {useSelector} from "react-redux";
 import jsPDF from "jspdf";
 import { getDropdownMenuPlacement } from "react-bootstrap/esm/DropdownMenu";
+import { useState } from "react";
 
 export default function Reman(){
     const navigate = useNavigate();
@@ -20,21 +21,25 @@ export default function Reman(){
         navigate("/app/firstFit");
     }
 
+    const [data, setData] = useState({});
+
     const handleReman = async () => {
-        const item_segment1 = document.getElementById('item_segment1').value;
+        let item_segment1 = document.getElementById('remanInput').value;
         try {
             const response = await fetch('http://localhost:8080/api/reman', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ item_segment1 }),
+                body: JSON.stringify({item_segment1}),
             });
-            const data = await response.json();
-            console.log(data);
-            if(data.success)
+            const temp = await response.json();
+            console.log(temp);
+            if(temp.success)
             {
-                printLabel(data);
+                setData(temp.data);
+
+                console.log(data);
             }
         } catch (error) {
             console.error('Error: ', error);
@@ -42,7 +47,7 @@ export default function Reman(){
     };
    
        // data that will go inside the zebra printer language
-       const printLabel = (data) => {
+       const printLabel = () => {
             //getting components for time and date
             const currentDate = new Date();
             const year = currentDate.getFullYear(); // Get the current year
@@ -55,10 +60,32 @@ export default function Reman(){
             const date =`${month}/${day}/${year}`
             const time = `${hours}:${minutes}:${seconds}`;
 
-            const matrixContent = `P${data.item_segment1}S${data.comp_serial_number}VTDRC`;
+            const matrixContent = `P${data.ITEM_SEGMENT1}S${data.COMP_SERIAL_NUMBER}VTDRC`;
 
             // ZPL content for the label
-            const zpl =``;
+            const zpl =
+            `^XA
+
+            ^FX Barcode and associated text
+            ^FO40,0^ADN,30,20^BCN,30,Y,N,N,N^FD${data.ITEM_SEGMENT1}^FS
+            
+            ^FX Logo
+            ^FO15,80^GFA,480,480,8,,L07JFE1FE,K07KFCC7E,J03LFC03E,J0LFC233E,I03KF7C187E,I07JFE3110FE,001KFEE18FFE,003LF91C7FE,007LF88DFFE,00LFC847FFE,01LF844IFE,01LF023IFE,03KFC613IFE,07KF831JFE,07JFE239JFE,0KFC71KFE,0KF638KFE,1JFE11BKFE,1JFC10LFE,3JF189LFE,3IFE1C7LFE,3IF98C6,3IF18F8,7FFD0C6,7FF88EC,7DFC47C,78CC278,60C62F8,61C71F8,47E0FF8,47F0FF8,478BFF8,410IFC,601IFE,703JF,3CKFC,3SFE,:1SFE,::0SFE,:07RFE,03RFE,:01RFE,00RFE,007QFE,003QFE,001QFE,I0QFE,I03PFE,I01PFE,J07OFE,K0OFE!K01NFEDM03LFC,,^FS
+            
+            ^FX Date/Time
+            ^FO80,85^AFN,10,10^FD ${time}^FS
+            ^FO80,120^AFN,10,10^FD ${date}^FS
+            
+            ^FX User ID
+            ^FO250,95^ASN,1,1,^FD${user.userid}^FS
+            
+            ^FX Data matrix content text
+            ^FO40,160^ADN,10,10^FD${matrixContent}^FS
+            
+            ^FX Data Matrix
+            ^FO380,65^BXN,5,200,18,18,3,,1^FD${matrixContent}^FS
+            
+            ^XZ`;
 
             // Create a new instance of jsPDF
             const doc = new jsPDF();
@@ -77,14 +104,14 @@ export default function Reman(){
                 <h1>Reman Teardown Print Label Station</h1>
                 <div className="reman-container">
                     <label>Enter Part Number:</label>
-                    <input type="text" id="item_segment1" placeholder="XXXXXX-RX" onSubmit={handleReman}></input>
+                    <input type="text" placeholder="XXXXXX-RX" id="remanInput" onBlur={handleReman}></input>
                     <div className="reman-label-preview">
                         <label>Label Preview:</label>
                         <img src={placeholder_label} height={200} width={400}/>{''}
-                        <Button>Print</Button>
-                        </div>
+                        <Button onClick={printLabel}>Print</Button>
+                    </div>
                         
-                    
+
                 </div>
                 
             </div>
