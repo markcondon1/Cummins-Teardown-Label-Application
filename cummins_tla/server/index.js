@@ -68,14 +68,14 @@ app.post('/api/reman', async (req, res) => {
     const {item_segment1} = req.body;
     try {
         // Query database 
-        const query = 'SELECT "ITEM_SEGMENT1","COMP_SERIAL_NUMBER" FROM "mes_scrap_info" WHERE "ITEM_SEGMENT1" = $1';
+        const query = 'SELECT "ITEM_SEGMENT1" FROM "mes_scrap_info" WHERE "ITEM_SEGMENT1" = $1';
         const { rows } = await pool.query(query, [item_segment1]);
 
         if (rows.length >= 1) { //do this because I am unsure of what we are querying still
             //success
             const data = rows[0];
-            const { ITEM_SEGMENT1, COMP_SERIAL_NUMBER } = data;
-            res.json({ success: true, message: 'Query successful', data: {ITEM_SEGMENT1, COMP_SERIAL_NUMBER}});
+            const { ITEM_SEGMENT1} = data;
+            res.json({ success: true, message: 'Query successful', data: {ITEM_SEGMENT1}});
         } else {
             // No entries with the specified part number
             res.status(401).json({ success: false, message: 'Invalid part number'});

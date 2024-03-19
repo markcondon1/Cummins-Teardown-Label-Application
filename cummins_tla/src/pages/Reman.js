@@ -65,17 +65,29 @@ export default function Reman(){
             const minutes = String(currentDate.getMinutes()).padStart(2, '0');
             const seconds = String(currentDate.getSeconds()).padStart(2, '0');
             
-            const date =`${month}/${day}/${year}`
+            const date =`${month}/${day}/${year}`;
             const time = `${hours}:${minutes}:${seconds}`;
+           
+            const twoDigitYear = year.toString().slice(-2);
 
-            const matrixContent = `P${data.ITEM_SEGMENT1}${data.COMP_SERIAL_NUMBER}VTDRC`;
+            let start = new Date(currentDate.getFullYear(), 0, 0);
+            let diff = (currentDate - start) + ((start.getTimezoneOffset() - currentDate.getTimezoneOffset()) * 60 * 1000);
+            let oneDay = 1000 * 60 * 60 * 24;
+            let dayOfYear = Math.floor(diff / oneDay).toString().padStart(3,'0');
+
+            const serial = handleSerial().toString().padStart(4,'0');
+
+            const itemsegment = data.ITEM_SEGMENT1.toString().padStart(11,'0');
+
+            const matrixContent = `P${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
+            //P0xxxxxxx-rxSYYJJJSSSSVTDRC
 
             // ZPL content for the label
             const zpl =
             `^XA
-
             ^FX Barcode and associated text
-            ^FO40,0^ADN,30,20^BCN,30,Y,N,N,N^FD${data.ITEM_SEGMENT1}^FS
+            ^FO40,0^ADN,30,20^BCN,30,Y,N,N,N
+            ^FD${data.ITEM_SEGMENT1}^FS
             
             ^FX Logo
             ^FO15,80^GFA,480,480,8,,L07JFE1FE,K07KFCC7E,J03LFC03E,
@@ -101,10 +113,11 @@ export default function Reman(){
             ^FO250,95^ASN,1,1,^FD${user.userid}^FS
             
             ^FX Data matrix content text
-            ^FO40,160^ADN,10,10^FD${matrixContent}^FS
+            ^FO35,160^ADN,10,10
+            ^FD${matrixContent}^FS
             
             ^FX Data Matrix
-            ^FO380,65^BXN,5,200,18,18,3,,1
+            ^FO380,65^BXN,5,200,20,20,3,,1
             ^FD${matrixContent}^FS
             ^XZ`;
 
@@ -115,6 +128,34 @@ export default function Reman(){
             // Save PDF
             doc.save('label.pdf');
        }
+
+       const handleSerial = () =>{
+            const currentDate = new Date();
+            if(localStorage.getItem('serialData') !== null){
+                let serialData = JSON.parse(localStorage.getItem('serialData'));
+                const localDate = new Date(serialData.date);
+                if(localDate.getDate() === currentDate.getDate() && localDate.getMonth() === currentDate.getMonth()){
+                    serialData.serial += 1;
+                    localStorage.setItem('serialData', JSON.stringify(serialData))
+                    return JSON.parse(localStorage.getItem('serialData')).serial;
+                } else{
+                    localStorage.removeItem('serialData');
+                    return createSerial();
+                }
+            } else{
+                return createSerial();
+            }
+       };
+
+       const createSerial = () =>{
+            const currentDate = new Date();
+            const serialData = {
+                serial:1,
+                date:currentDate,
+            };
+            localStorage.setItem('serialData', JSON.stringify(serialData))
+            return JSON.parse(localStorage.getItem('serialData')).serial;
+       };
 
     return(
         <div class="container-flex">
