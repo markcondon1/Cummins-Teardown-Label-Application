@@ -166,8 +166,6 @@ export default function Reman(){
                 <h1>Reman Teardown Print Label Station</h1>
                 <div className="reman-container">
                     <label>Enter Part Number:</label>
-                    <input type="text" placeholder="XXXXXX-RX"></input>
-                    <Button>Submit</Button>
                     <input ref={inputElement} type="text" placeholder="XXXXXX-RX" id="remanInput" onBlur={handleReman}></input>
                     <div className="reman-label-preview">
                         <label>Label Preview:</label>
