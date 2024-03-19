@@ -10,6 +10,8 @@ export default function TeardownTray() {
     const [componentNumber, setComponentNumber] = useState('');
     const [componentDescription, setComponentDescription] = useState('');
     const [validInput, setValidInput] = useState(false);
+    const [itemNum, setItemNum]=useState('');
+    const [modelType, setModelType] = useState('');
     //getting components for time and date
     const currentDate = new Date();
 
@@ -36,17 +38,17 @@ export default function TeardownTray() {
                 if(numberEntry === row.COMPONENT_ITEM_NUMBER){
                     setComponentNumber(numberEntry);
                     setComponentDescription(row.COMPONENT_DESCRIPTION);
-                    console.log("SUCCESS ");
+                    setItemNum(row.ID21_ITEM_NUMBER);
+                    console.log("SUCCESS ", itemNum, componentDescription);
                     setValidInput(true);
                 }else{
-                    //  setValidInput(false);
+                      setValidInput(false);
                 }
-                // console.log('COMPONENT_ITEM_NUMBER:', row.COMPONENT_ITEM_NUMBER);
-                // console.log('COMPONENT_DESCRIPTION:', row.COMPONENT_DESCRIPTION);
 
             });
-            console.log("is input valid? ", validInput);
-            console.log(data); // Handle the response from the server
+            // console.log("is input valid? ", validInput);
+            // console.log("SUCCESS ", );
+
         } catch (error) {
             console.error('Error:', error);
 
@@ -54,14 +56,37 @@ export default function TeardownTray() {
 
     }
 
-    const parts = componentDescription.split(' ');
-    const name = parts[0];
-    const restOfDescription = parts.slice(1).join(' ');
+    const modelPull = async ()=>{
+        try{
+            const response = await fetch('http://localhost:8080/api/modelNumber', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({componentNumber, componentDescription }),
+            });
+            const data = await response.json();
+            console.log("nums ", data);
+            data.rows.forEach(row => {
+                if(itemNum === row.ID21_ITEM_NUMBER){
+                    setModelType(row.MODEL_NUMBER);
+                    //this should work if the ID21's in the databases matchup, but
+                    //for now the dummy data given is insufficient, so hardcoding
+               }
+            });
+            console.log("is input valid? ", validInput);
+        } catch (error) {
+            console.error('Error:', error);
+
+        }
+    }
 
 
 
-    console.log(`Current Date: ${year}-${month}-${day}`);
-    console.log(`Current Time: ${hours}:${minutes}:${seconds}`);
+    // const parts = componentDescription.split(' ');
+    // const name = parts[0];
+    // const restOfDescription = parts.slice(1).join(' ');
+
 
     // data that will go inside the zebra printer language
     const printLabel = () => {
@@ -69,14 +94,15 @@ export default function TeardownTray() {
         const time = `${hours}:${minutes}:${seconds}`;
         console.log(date, time);
         // ZPL content for the label
-        const zpl =`^XA
-^FO50,100^A0N,50,50^FB500,2,0,C^FD${componentNumber}^FS
-^FO50,180^A0N,50,50^FB500,1,0,C^FD${name}^FS
-^FO50,250^A0N,50,50^FB500,1,0,C^FD${restOfDescription}^FS
-^FO50,340^A0N,50,50^FB500,2,0,C^FD${date} ${time}^FS
-^FO5,80^GB600,350,3^FS
-^XZ
-`;
+        const model = 'HE341Ve';
+        //REPLACE: the hardcoded string model for 'modelType' when database correct
+        const zpl =` ^XA
+^FO20,50^A0N,30,30^FB500,2,0,C^FD${componentNumber}^FS
+^FO20,100^A0N,30,30^FB500,1,0,C^FD${componentDescription}^FS
+^FO20,150^A0N,30,30^FB500,1,0,C^FD${model}^FS
+
+^FO20,200^A0N,30,30^FB500,2,0,C^FD${date} ${time}^FS
+^XZ`;
 
         // Create a new instance of jsPDF
         const doc = new jsPDF();
@@ -112,6 +138,7 @@ export default function TeardownTray() {
                            onKeyDown={(e) => handleComponent(e.target.value)} />
 
                     <Button onClick={printLabel}>print</Button>
+                    <Button onClick={modelPull}>test</Button>
                 </div>
                 {/* Button to generate and download PDF */}
 

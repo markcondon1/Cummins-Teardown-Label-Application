@@ -34,8 +34,18 @@ app.get('/api/data', async (req, res) => {
 
 app.post('/api/mesComponents', async (req, res) => {
     try {
-        const { rows } = await pool.query('SELECT "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
+        const { rows } = await pool.query('SELECT "COMPONENT_ITEM_NUMBER", "ID21_ITEM_NUMBER" , "COMPONENT_DESCRIPTION" FROM mes_bom_components');
         res.json({success: true, message:'woohoo', rows });
+    } catch (error) {
+        console.error('Error executing query', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/api/modelNumber', async (req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER", "MODEL_NUMBER"  FROM mes_wip_info');
+        res.json({success: true, message:'slay', rows });
     } catch (error) {
         console.error('Error executing query', error);
         res.status(500).json({ error: 'Internal server error' });
