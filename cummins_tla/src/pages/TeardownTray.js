@@ -138,7 +138,7 @@ export default function TeardownTray() {
                            onKeyDown={(e) => handleComponent(e.target.value)} />
 
                     <Button onClick={printLabel}>print</Button>
-                    <Button onClick={modelPull}>test</Button>
+
                 </div>
                 {/* Button to generate and download PDF */}
 
