@@ -34,6 +34,17 @@ export default function Reman(){
     const [zpl, setZpl] = useState(null);
     const [notification, setNotification] = useState(null);
 
+    const currentDate = new Date();
+    const year = currentDate.getFullYear(); // Get the current year
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+    const date =`${month}/${day}/${year}`;
+    const time = `${hours}:${minutes}:${seconds}`;
+
     const handleReman = async () => {
         const item_segment1 = document.getElementById("remanInput").value.toString();
         const validationRegex = /\A[1-9]{7,8}\-RX\Z/;
@@ -65,16 +76,7 @@ export default function Reman(){
 
     const generateLabel = (data) =>{
         //getting components for time and date
-        const currentDate = new Date();
-        const year = currentDate.getFullYear(); // Get the current year
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        const day = String(currentDate.getDate()).padStart(2, '0');
-        const hours = String(currentDate.getHours()).padStart(2, '0');
-        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-        
-        const date =`${month}/${day}/${year}`;
-        const time = `${hours}:${minutes}:${seconds}`;
+
        
         const twoDigitYear = year.toString().slice(-2);
 
@@ -155,6 +157,12 @@ export default function Reman(){
             setNotification('No label generated. Please try again.');
             setTimeout(() => setNotification(''), 5000);
         }
+        const printLog = {
+            date: date,
+            time: time,
+            userID: user.userid,
+        }
+        console.log("print log", printLog);
     };
 
     const handleSerial = () =>{

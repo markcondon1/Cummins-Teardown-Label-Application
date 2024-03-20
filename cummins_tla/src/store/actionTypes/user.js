@@ -3,3 +3,4 @@ export const GET_USER ='GET_USER';
 export const RESET_USER = 'RESET_USER';
 
 export const AUTHENTICATE_USER = 'AUTHENTICATE_USER';
+export const PRINT_LOG = 'PRINT_LOG';

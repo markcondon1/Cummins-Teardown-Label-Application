@@ -110,6 +110,14 @@ export default function TeardownTray() {
         doc.text(zpl, 10, 10);
         // Save PDF
         doc.save('label.pdf');
+
+        const printLog = {
+            date: date,
+            time: time,
+            userID: user.userid,
+        }
+        console.log("print log", printLog);
+
     }
 
     const reman = () => {
