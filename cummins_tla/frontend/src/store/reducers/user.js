@@ -4,8 +4,7 @@ const initialHistory ={
     firstname: '',
     lastname: '',
     userid: '',
-    userAuth: false,
-
+    userAuth: false
 }
 
 const userReducer = (state = initialHistory, action) => {

@@ -24,8 +24,25 @@ function NavBar(){
 
 
     useEffect(() => {
+        // const fetchUserData = async () => {
+        //
+        //     try {
+        //         const response = await fetch('http://localhost:8080/api/login', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //             },
+        //             body: JSON.stringify({ username, firstname,lastname }),
+        //         });
+        //         const data = await response.json();
+        //         console.log(data);
+        //     } catch (error) {
+        //         console.error('Error fetching user data:', error);
+        //     }
+        // };
 
-       // console.log("user: ", user);
+        //fetchUserData();
+        console.log("user: ", user);
     }, []);
 
     const logout=()=>{
