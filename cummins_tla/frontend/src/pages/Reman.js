@@ -147,7 +147,7 @@ export default function Reman(){
             setNotification('Internal server error');
             setTimeout(() => setNotification(''), 5000);
         }   
-    };
+    }
 
     const printLabel = () =>{
         if(zpl !== null)
