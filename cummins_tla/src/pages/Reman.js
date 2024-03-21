@@ -47,7 +47,7 @@ export default function Reman(){
 
     const handleReman = async () => {
         const item_segment1 = document.getElementById("remanInput").value.toString();
-        const validationRegex = /\A[0-9]{7,8}\-RX\Z/;
+        const validationRegex = /^\d{7,8}\-RX$/;
         console.log(`Test Result for ${item_segment1}: ${validationRegex.test(item_segment1)}`);
         if (validationRegex.test(item_segment1)){
             try {
