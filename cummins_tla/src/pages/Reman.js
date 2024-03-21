@@ -47,7 +47,8 @@ export default function Reman(){
 
     const handleReman = async () => {
         const item_segment1 = document.getElementById("remanInput").value.toString();
-        const validationRegex = /\A[1-9]{7,8}\-RX\Z/;
+        const validationRegex = /\A[0-9]{7,8}\-RX\Z/;
+        console.log(`Test Result for ${item_segment1}: ${validationRegex.test(item_segment1)}`);
         if (validationRegex.test(item_segment1)){
             try {
                 const response = await fetch('http://localhost:8080/api/reman', {
@@ -129,13 +130,13 @@ export default function Reman(){
         const width = 2.5;
         const height = 1;
         try{
-            const response = await fetch(`http://api.labelary.com/v1/printers/${dpmm}dpmm/labels/${width}x${height}/0/`,
+            const response = await fetch(`http://api.labelary.com/v1/printers/${dpmm}dpmm/labels/${width}x${height}/0/${zpl}/`,
             {
-                method:"POST",
+                method:"GET",
                 headers:{
                     'Content-Type':'application/x-www-form-urlencoded',
+                    'Accept':'image/png',
                 },
-                body: JSON.stringify(zpl),
             });
             const responseBlob = await response.blob();
             const imgsrc = URL.createObjectURL(responseBlob);
