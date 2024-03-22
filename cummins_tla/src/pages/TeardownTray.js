@@ -130,7 +130,7 @@ export default function TeardownTray() {
                 <NavBar />
             </div>
             <div className="teardown">
-                <h1>Teardown Tray Components Label Station</h1>
+                <h1 className="teardown-header">Teardown Tray Components Label Station</h1>
                 <div className="teardown-container">
                     <label>Enter Value:</label>
                     <input type="text"

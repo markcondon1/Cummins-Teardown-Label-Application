@@ -7,6 +7,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { slide as Menu } from 'react-burger-menu';
 import logo from './logo.png';
+import { FaUser } from "react-icons/fa";
 import './NavBar.css';
 import {useEffect, useState} from "react";
 import axios from "axios";
@@ -63,7 +64,6 @@ function NavBar(){
         <Navbar id="navbar" bg="primary" data-bs-theme="dark">
 
         <Menu>
-
           <Button id="first-fit" variant= "link" className="menu-item" onClick={firstFit}>First Fit</Button>
           <Button id="teardown-tray" variant= "link" className="menu-item" onClick={teardown}>Teardown Tray</Button>
           <Button id="reman" variant= "link" className="menu-item" onClick={reman}>Reman</Button>
@@ -71,13 +71,15 @@ function NavBar(){
         <Container>
           <Navbar.Brand href="">
             <img src={logo} height={60} width={60}/>{''}
-            Cummins Unified Teardown Label Application
+            
           </Navbar.Brand>
+          <p className="title">Cummins Unified Teardown Label Application</p>
+          
           <div className="user-id">
               <h6> {user.lastname}, {user.firstname} [{user.userid}]</h6>
           </div>
 
-          <Button onClick={logout} >Logout</Button>
+          <Button className="logout-button" onClick={logout} >Logout</Button>
         </Container>
       </Navbar>
     )

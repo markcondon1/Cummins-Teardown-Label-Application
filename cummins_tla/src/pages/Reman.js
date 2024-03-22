@@ -192,7 +192,9 @@ export default function Reman(){
                 <NavBar></NavBar>
             </div>
             <div className="reman"> 
+                <div className="reman-header">
                 <h1>Reman Teardown Print Label Station</h1>
+                </div>
                 <div className="reman-container">
                     <label>Enter Part Number:</label>
                     <input ref={inputElement} type="text" placeholder="XXXXXX-RX" id="remanInput" onKeyDown={(e) => e.key === 'Enter' && handleReman()}></input>

@@ -17,7 +17,34 @@ export default function FirstFit(){
 
     console.log("user: ", user);
 
-<<<<<<< HEAD
+    const handleComponent = async (numberEntry)=>{
+        try{
+            const response = await fetch('http://localhost:8080/api/mesComponents', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({itemNum, componentDescription }),
+            });
+            const data = await response.json();
+            data.rows.forEach(row => {
+                    setItemNum(row.ID21_ITEM_NUMBER);
+                    setComponentDescription(row.COMPONENT_DESCRIPTION);
+                console.log(itemNum, componentDescription);
+
+
+            });
+
+
+        } catch (error) {
+            console.error('Error:', error);
+
+        }
+
+    }
+    handleComponent();
+
+
     var compressorBool = false;
     var turbineBool = false;
 
@@ -117,41 +144,6 @@ export default function FirstFit(){
             // Save PDF
             doc.save('label.pdf');
         }
-=======
-    const handleComponent = async (numberEntry)=>{
-        try{
-            const response = await fetch('http://localhost:8080/api/mesComponents', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({itemNum, componentDescription }),
-            });
-            const data = await response.json();
-            data.rows.forEach(row => {
-                    setItemNum(row.ID21_ITEM_NUMBER);
-                    setComponentDescription(row.COMPONENT_DESCRIPTION);
-                console.log(itemNum, componentDescription);
-
-
-            });
-
-
-        } catch (error) {
-            console.error('Error:', error);
-
-        }
-
-    }
-    handleComponent();
-
-
-    const reman=()=>{
-        navigate("/app/Reman");
-    }
-    const teardown = () => {
-        navigate("/app/teardownTray");
->>>>>>> d020df8e64a93991fb0f9b67621a4d44e8442aaf
     }
 
 
