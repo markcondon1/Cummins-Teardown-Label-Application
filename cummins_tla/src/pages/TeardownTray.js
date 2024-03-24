@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
 import jsPDF from "jspdf";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 export default function TeardownTray() {
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
@@ -34,11 +34,13 @@ export default function TeardownTray() {
                 body: JSON.stringify({componentNumber, componentDescription }),
             });
             const data = await response.json();
+            console.log("data ", data);
             data.rows.forEach(row => {
                 if(numberEntry === row.COMPONENT_ITEM_NUMBER){
                     setComponentNumber(numberEntry);
-                    setComponentDescription(row.COMPONENT_DESCRIPTION);
                     setItemNum(row.ID21_ITEM_NUMBER);
+                    setComponentDescription(row.COMPONENT_DESCRIPTION);
+
                     console.log("SUCCESS ", itemNum, componentDescription);
                     setValidInput(true);
                 }else{
@@ -55,6 +57,13 @@ export default function TeardownTray() {
         }
 
     }
+    useEffect(() => {
+        console.log("itemNum updated:", itemNum);
+    }, [itemNum]);
+
+    useEffect(() => {
+        console.log("componentDescription updated:", componentDescription);
+    }, [componentDescription]);
 
     const modelPull = async ()=>{
         try{

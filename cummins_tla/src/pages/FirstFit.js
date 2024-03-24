@@ -12,29 +12,42 @@ export default function FirstFit(){
 
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
+    const [numberEntry, setNumberEntry] = useState('');
     const [itemNum, setItemNum]=useState('');
     const [componentDescription, setComponentDescription] = useState('');
+    const [dbComponentNum, setDbComponentNum] = useState('');
+    const [dbComponentid, setdbComponentid] = useState('');
+    const [componentNum, setComponentNum] = useState('');
+    const [modelType, setModelType] = useState('');
 
     console.log("user: ", user);
 
     const handleComponent = async (numberEntry)=>{
         try{
-            const response = await fetch('http://localhost:8080/api/mesComponents', {
+            const response = await fetch('http://localhost:8080/api/firstFit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({itemNum, componentDescription }),
+                body: JSON.stringify({ dbComponentNum, dbComponentid }),
             });
             const data = await response.json();
-            data.rows.forEach(row => {
-                    setItemNum(row.ID21_ITEM_NUMBER);
-                    setComponentDescription(row.COMPONENT_DESCRIPTION);
-                console.log(itemNum, componentDescription);
+            console.log("entry: ", numberEntry);
+            console.log("data ", data);
+            //component number stored from index 1 to 8
+           setComponentNum(numberEntry.substring(2,9));
 
+            console.log("component number ", componentNum);
+            for (const row of data.rows) {
+                if (componentNum === row.COMPONENT_ITEM_NUMBER) {
 
-            });
+                    setdbComponentid(row.ID21_ITEM_NUMBER);
+                    setDbComponentNum(row.COMPONENT_ITEM_NUMBER);
+                    await modelPull();
 
+                    console.log(" num and id", dbComponentNum, dbComponentid);
+                }
+            }
 
         } catch (error) {
             console.error('Error:', error);
@@ -42,7 +55,34 @@ export default function FirstFit(){
         }
 
     }
-    handleComponent();
+
+    const modelPull = async ()=>{
+        try{
+            const response = await fetch('http://localhost:8080/api/modelNumber', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({dbComponentNum, dbComponentid }),
+            });
+            const data = await response.json();
+
+            data.rows.forEach(row => {
+           //    console.log("models ", row.MODEL_NUMBER);
+                if(dbComponentid === row.ID21_ITEM_NUMBER){
+                    setModelType(row.MODEL_NUMBER);
+                    //this should work if the ID21's in the databases matchup, but
+                    //for now the dummy data given is insufficient, so hardcoding
+                    console.log("succes: model type ", modelType);
+                }
+            });
+
+        } catch (error) {
+            console.error('Error:', error);
+
+        }
+    }
+
 
 
     var compressorBool = false;
@@ -88,7 +128,7 @@ export default function FirstFit(){
         
             ^FX Turbine/Compressor Housing
             ^FO5,55^A 0,30,30^FD Turbine Housing:^FS
-            ^FO310,55^A 0,30,30^FD3592787^FS
+            ^FO310,55^A 0,30,30^FD${dbComponentNum}^FS
         
             ^FX TD SQ
             ^FO5,85^A 0,30,30^FD TD SEQ:^FS
@@ -203,13 +243,14 @@ export default function FirstFit(){
                             <div className="card-header">Reject Tickets</div>
                             <div className="card-body">
                                 <div className="scanned-variables">
-                                <input type="text" placeholder="Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s"></input>
+                                <input type="text" placeholder="Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s"
+                                       onKeyDown={(e) => handleComponent(e.target.value)}></input>
                                 </div>
                                 <div className="ticket-details">
                                     <p>ID21: </p>
-                                    <div id="iD21">5606202</div>
+                                    <div id="iD21">{dbComponentid}</div>
                                     <p>Model: </p>
-                                    <div id ="model">HE300VG</div>
+                                    <div id ="model">{modelType}</div>
                                 </div>
                                 <div className="components-list">
                                     <p>Turbine Housing</p>
