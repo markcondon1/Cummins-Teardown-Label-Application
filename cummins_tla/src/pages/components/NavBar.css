@@ -1,6 +1,6 @@
 /* Position and sizing of burger button */
 .bm-burger-button {
-    position: fixed;
+    position: absolute;
     width: 36px;
     height: 30px;
     left: 42px;
@@ -35,6 +35,7 @@
   .bm-menu-wrap {
     position: fixed;
     height: 100%;
+    top:0px;
   }
   
   /* General sidebar styles */
@@ -62,6 +63,7 @@
   
   /* Styling of overlay */
   .bm-overlay {
+    top:0px;
     background: rgba(0, 0, 0, 0.3);
   }
 
@@ -72,6 +74,7 @@
     color: #d1d1d1;
     margin-bottom: 10px;
     text-align: left;
+    font-size: 24px;
     text-decoration: none;
     transition: color 0.2s;
   }
@@ -80,18 +83,25 @@
     color: #ffffff;
   }
 
-  .user-id{
+  .user-id h6{
     padding-left:450px;
     color:#ffffff;
     font-size: 25px;
   }
 
   .logout-button{
-    background: #fff;
-  color: red;
-  border: 2px solid red;
-  border-radius: 3px;
-  padding: 5px 10px;
+    background-color: #373a47;
+  color: #e0e0e0;
+  width: max-content;
   }
   
-  
+.title{
+  font-size: 25px;
+  color:#ffffff;
+  width: 550px;
+  padding-top: 10px;
+}
+
+.navbar{
+  max-height: 100px;
+}
