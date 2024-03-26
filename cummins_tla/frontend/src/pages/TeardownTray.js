@@ -65,6 +65,34 @@ export default function TeardownTray() {
         console.log("componentDescription updated:", componentDescription);
     }, [componentDescription]);
 
+
+    const fetchModelNumbers = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/getModel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                // Add any request body if needed
+                // body: JSON.stringify({ key: 'value' })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch model numbers');
+            }
+
+            const data = await response.json();
+            // Process the data (model numbers) received from the backend
+            console.log('Model Numbers:', data);
+            // Update your UI or perform other actions with the model numbers
+        } catch (error) {
+            console.error('Error fetching model numbers:', error.message);
+        }
+    };
+
+// Call the fetchModelNumbers function when needed
+    fetchModelNumbers();
+
     const modelPull = async ()=>{
         try{
             const response = await fetch('http://localhost:8080/api/modelNumber', {
