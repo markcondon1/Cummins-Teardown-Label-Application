@@ -34,7 +34,10 @@ export default function Login(){
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ username, password }),
+
             });
+            console.log('Request Body:', JSON.stringify({ username, password }));
+
             const data = await response.json();
             console.log(data); // Handle the response from the server
             if (data.success){

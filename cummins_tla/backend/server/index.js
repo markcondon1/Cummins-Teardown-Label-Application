@@ -9,6 +9,35 @@ const { Pool } = require('pg');
 app.use(cors());
 app.use(bodyParser.json());
 
+
+//set up sequelize ORM
+const sequelize = require('./database/sequelize');
+const {DataTypes, QueryTypes, Sequelize} = require("sequelize");
+
+
+
+// Define the User model
+const User = sequelize.define('users', {
+},
+{
+    tableName: 'users',
+});
+
+// Syncing User model with the database table "users"
+(async () => {
+    try {
+        await sequelize.sync();
+        console.log('User model synced successfully.');
+    } catch (error) {
+        console.error('Error syncing User model:', error);
+    } finally {
+      //  sequelize.close();
+        // Close the connection after syncing
+    }
+})();
+
+
+
 const pool = new Pool({
     user: 'postgres.paixptuglhwecgkdjfwm',
     host: 'aws-0-us-east-1.pooler.supabase.com',
@@ -22,10 +51,11 @@ pool.on('error', (err, client) => {
     process.exit(-1);
 });
 
-app.get('/api/data', async (req, res) => {
+
+app.get('/api/mesComponents', async (req, res) => {
     try {
-        const { rows } = await pool.query('SELECT * FROM users');
-        res.json(rows);
+        const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER" , "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
+        res.json({success: true, message:'success', rows });
     } catch (error) {
         console.error('Error executing query', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -68,12 +98,13 @@ app.post('/api/login', async (req, res) => {
 
     try {
         // Query  database to find the user with the trying to login
-        const query = 'SELECT userid, firstname, lastname, password FROM users WHERE userid = $1 AND password = $2';
-        const { rows } = await pool.query(query, [username, password]);
-
-        if (rows.length === 1) {
+        const query = 'SELECT userid, password FROM users WHERE userid = :username AND password = :password';
+        const [user, metadata] = await sequelize.query(query, {
+            replacements: { username, password },
+            type: QueryTypes.SELECT
+        });
+        if (user) {
             // User found, authentication successful
-            const user = rows[0];
             const { userid, firstname, lastname } = user;
             res.json({ success: true, message: 'Login successful', user: { userid, firstname, lastname } });
         } else {
@@ -89,7 +120,7 @@ app.post('/api/login', async (req, res) => {
 app.post('/api/reman', async (req, res) => {
     const {item_segment1} = req.body;
     try {
-        // Query database 
+        // Query database
         const query = 'SELECT "ITEM_SEGMENT1" FROM "mes_scrap_info" WHERE "ITEM_SEGMENT1" = $1';
         const { rows } = await pool.query(query, [item_segment1]);
 
