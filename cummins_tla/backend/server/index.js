@@ -23,6 +23,24 @@ const User = sequelize.define('users', {
     tableName: 'users',
 });
 
+const mes_bom_components = sequelize.define('mes_bom_components',{
+},
+    {
+        tableName: 'mes_bom_components',
+    });
+
+const mes_linerejection_= sequelize.define('mes_scrap_info', {
+},
+    {
+        tableName: 'mes_bom_components',
+
+});
+
+ const mes_wip_info = sequelize.define('mes_wip_info', {
+ },
+     {tableName: 'mes_wip_info',
+ });
+
 // Syncing User model with the database table "users"
 (async () => {
     try {
