@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect } from 'react';
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
 import jsPDF from "jspdf";
 import {useState} from "react";
+
 export default function TeardownTray() {
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
@@ -63,6 +65,13 @@ export default function TeardownTray() {
     console.log(`Current Date: ${year}-${month}-${day}`);
     console.log(`Current Time: ${hours}:${minutes}:${seconds}`);
 
+
+    useEffect(() => {
+        if(componentDescription) {
+            printLabel();
+        }
+    }, [componentDescription]);
+
     // data that will go inside the zebra printer language
     const printLabel = () => {
         const date =`${month}/${day}/${year}`
@@ -85,6 +94,17 @@ export default function TeardownTray() {
         // Save PDF
         doc.save('label.pdf');
     }
+
+    const handleInputChange = (e) => {
+        const inputValue = e.target.value;
+        // Allow only numbers and limit length to 7
+        if (/^\d{0,7}$/.test(inputValue)) {
+            setComponentNumber(inputValue);
+            if (inputValue.length === 7) {
+                handleComponent(inputValue);
+            }
+        }
+    };   
 
     const reman = () => {
         navigate("/app/Reman");
@@ -109,12 +129,11 @@ export default function TeardownTray() {
                     <label>Enter Value:</label>
                     <input type="text"
                            placeholder="Value"
-                           onKeyDown={(e) => handleComponent(e.target.value)} />
-
-                    <Button onClick={printLabel}>print</Button>
+                           value={componentNumber}
+                           onChange={handleInputChange}
+                           
+                    />
                 </div>
-                {/* Button to generate and download PDF */}
-
             </div>
         </div>
     );
