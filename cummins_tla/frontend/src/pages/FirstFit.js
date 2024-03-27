@@ -52,7 +52,7 @@ export default function FirstFit(){
 
     const modelPull = async ()=>{
         try{
-            const data = await apiWrapper('api/modelNumber', 'POST', {dbComponentNum, dbComponentid});
+            const data = await apiWrapper('api/modelNumber', 'GET', {dbComponentNum, dbComponentid});
 
             data.rows.forEach(row => {
            //    console.log("models ", row.MODEL_NUMBER);
