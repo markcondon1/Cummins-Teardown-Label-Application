@@ -80,18 +80,7 @@ app.get('/api/mesComponents', async (req, res) => {
     }
 });
 
-app.post('/api/mesComponents', async (req, res) => {
-    try {
-        const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER" , "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
-        res.json({success: true, message:'success', rows });
-    } catch (error) {
-        console.error('Error executing query', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-
-app.post('/api/firstFit', async (req, res) => {
+app.get('/api/firstFit', async (req, res) => {
     try {
         const { rows } = await pool.query('SELECT "COMPONENT_ITEM_NUMBER", "ID21_ITEM_NUMBER" FROM mes_bom_components');
         res.json({success: true, message:'success', rows });
@@ -101,8 +90,7 @@ app.post('/api/firstFit', async (req, res) => {
     }
 });
 
-
-app.post('/api/modelNumber', async (req, res) => {
+app.get('/api/modelNumber', async (req, res) => {
     try {
         const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER", "MODEL_NUMBER"  FROM mes_wip_info');
         res.json({success: true, message:'slay', rows });
@@ -111,6 +99,7 @@ app.post('/api/modelNumber', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 

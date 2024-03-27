@@ -27,7 +27,7 @@ export default function TeardownTray() {
 
     const handleComponent = async (numberEntry)=>{
         try{
-            const data = await apiWrapper('api/mesComponents', 'POST', {componentNumber, componentDescription });
+            const data = await apiWrapper('api/mesComponents', 'GET', {componentNumber, componentDescription });
             console.log("data ", data);
             data.rows.forEach(row => {
                 if(numberEntry === row.COMPONENT_ITEM_NUMBER){
@@ -61,7 +61,7 @@ export default function TeardownTray() {
 
     const modelPull = async ()=>{
         try{
-            const data = await apiWrapper('api/modelNumber', 'POST', {componentNumber, componentDescription });
+            const data = await apiWrapper('api/modelNumber', 'GET', {componentNumber, componentDescription });
             console.log("nums ", data);
             data.rows.forEach(row => {
                 if(itemNum === row.ID21_ITEM_NUMBER){
