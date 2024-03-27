@@ -7,6 +7,7 @@ import jsPDF from "jspdf";
 import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {apiWrapper} from "../apiWrapper";
 
 export default function FirstFit(){
 
@@ -24,14 +25,7 @@ export default function FirstFit(){
 
     const handleComponent = async (numberEntry)=>{
         try{
-            const response = await fetch('http://localhost:8080/api/firstFit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ dbComponentNum, dbComponentid }),
-            });
-            const data = await response.json();
+            const data = await apiWrapper('api/firstFit', 'POST', {dbComponentNum, dbComponentid});
             console.log("entry: ", numberEntry);
             console.log("data ", data);
             //component number stored from index 1 to 8
@@ -58,14 +52,7 @@ export default function FirstFit(){
 
     const modelPull = async ()=>{
         try{
-            const response = await fetch('http://localhost:8080/api/modelNumber', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({dbComponentNum, dbComponentid }),
-            });
-            const data = await response.json();
+            const data = await apiWrapper('api/modelNumber', 'POST', {dbComponentNum, dbComponentid});
 
             data.rows.forEach(row => {
            //    console.log("models ", row.MODEL_NUMBER);

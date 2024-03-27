@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
 import jsPDF from "jspdf";
 import {useEffect, useState} from "react";
+import { apiWrapper } from "../apiWrapper";
 export default function TeardownTray() {
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
@@ -26,14 +27,7 @@ export default function TeardownTray() {
 
     const handleComponent = async (numberEntry)=>{
         try{
-            const response = await fetch('http://localhost:8080/api/mesComponents', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({componentNumber, componentDescription }),
-            });
-            const data = await response.json();
+            const data = await apiWrapper('api/mesComponents', 'POST', {componentNumber, componentDescription });
             console.log("data ", data);
             data.rows.forEach(row => {
                 if(numberEntry === row.COMPONENT_ITEM_NUMBER){
@@ -67,14 +61,7 @@ export default function TeardownTray() {
 
     const modelPull = async ()=>{
         try{
-            const response = await fetch('http://localhost:8080/api/modelNumber', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({componentNumber, componentDescription }),
-            });
-            const data = await response.json();
+            const data = await apiWrapper('api/modelNumber', 'POST', {componentNumber, componentDescription });
             console.log("nums ", data);
             data.rows.forEach(row => {
                 if(itemNum === row.ID21_ITEM_NUMBER){
