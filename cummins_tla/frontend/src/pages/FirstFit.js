@@ -25,7 +25,7 @@ export default function FirstFit(){
 
     const handleComponent = async (numberEntry)=>{
         try{
-            const data = await apiWrapper('api/firstFit', 'POST', {dbComponentNum, dbComponentid});
+            const data = await apiWrapper('api/firstFit', 'GET', {dbComponentNum, dbComponentid});
             console.log("entry: ", numberEntry);
             console.log("data ", data);
             //component number stored from index 1 to 8

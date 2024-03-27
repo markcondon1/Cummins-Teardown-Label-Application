@@ -71,6 +71,8 @@ pool.on('error', (err, client) => {
 
 
 app.get('/api/mesComponents', async (req, res) => {
+    const componentNumber = req.query.componentNumber;
+    const componentDescription =  req.query.componentDescription;
     try {
         const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER" , "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
         res.json({success: true, message:'success', rows });
@@ -81,6 +83,8 @@ app.get('/api/mesComponents', async (req, res) => {
 });
 
 app.get('/api/firstFit', async (req, res) => {
+ const componentNumber = req.query.dbComponentNum;
+ const componentID = req.query.dbComponentid;
     try {
         const { rows } = await pool.query('SELECT "COMPONENT_ITEM_NUMBER", "ID21_ITEM_NUMBER" FROM mes_bom_components');
         res.json({success: true, message:'success', rows });
@@ -92,6 +96,8 @@ app.get('/api/firstFit', async (req, res) => {
 
 app.get('/api/modelNumber', async (req, res) => {
     try {
+        const componentNumber = req.query.componentNumber;
+        const componentDescription =  req.query.componentDescription;
         const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER", "MODEL_NUMBER"  FROM mes_wip_info');
         res.json({success: true, message:'slay', rows });
     } catch (error) {
