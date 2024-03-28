@@ -43,10 +43,12 @@ export default function Reman(){
             try {
                 const input = {item:item_segment1};
                 const temp = await apiWrapper('api/reman', 'GET', input);
-                console.log(temp);
                 if(temp.success)
                 {
                     generateLabel(item_segment1);
+                } else {
+                    setNotification('Incorrect part number');
+                    setTimeout(() => setNotification(''), 5000);
                 }
             } catch (error) {
                 console.error('Error: ', error);
