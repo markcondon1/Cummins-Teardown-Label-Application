@@ -23,22 +23,22 @@ const User = sequelize.define('users', {
     tableName: 'users',
 });
 
-const mes_bom_components = sequelize.define('mes_bom_components',{
+const MES_BOM_COMPONENTS = sequelize.define('mes_bom_components',{
 },
     {
-        tableName: 'mes_bom_components',
+        tableName: 'MES_BOM_COMPONENTS',
     });
 
-const mes_linerejection_= sequelize.define('mes_scrap_info', {
+const MES_LINEREJECTION= sequelize.define('mes_scrap_info', {
 },
     {
-        tableName: 'mes_bom_components',
+        tableName: 'MES_LINEREJECTION',
 
 });
 
- const mes_wip_info = sequelize.define('mes_wip_info', {
+ const MES_WIP_INFO = sequelize.define('mes_wip_info', {
  },
-     {tableName: 'mes_wip_info',
+     {tableName: 'MES_WIP_INFO',
  });
 
 // Syncing User model with the database table "users"
@@ -71,8 +71,6 @@ pool.on('error', (err, client) => {
 
 
 app.get('/api/mesComponents', async (req, res) => {
-    const componentNumber = req.query.componentNumber;
-    const componentDescription =  req.query.componentDescription;
     try {
         const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER" , "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
         res.json({success: true, message:'success', rows });
@@ -82,11 +80,9 @@ app.get('/api/mesComponents', async (req, res) => {
     }
 });
 
-app.get('/api/firstFit', async (req, res) => {
- const componentNumber = req.query.dbComponentNum;
- const componentID = req.query.dbComponentid;
+app.post('/api/mesComponents', async (req, res) => {
     try {
-        const { rows } = await pool.query('SELECT "COMPONENT_ITEM_NUMBER", "ID21_ITEM_NUMBER" FROM mes_bom_components');
+        const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER" ,"PICK_FLAG", "COMMODITY_TYPE", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
         res.json({success: true, message:'success', rows });
     } catch (error) {
         console.error('Error executing query', error);
@@ -94,24 +90,45 @@ app.get('/api/firstFit', async (req, res) => {
     }
 });
 
-app.get('/api/modelNumber', async (req, res) => {
+
+app.post('/api/firstFit', async (req, res) => {
+    const modelNumber = req.body;
     try {
-        const componentNumber = req.query.componentNumber;
-        const componentDescription =  req.query.componentDescription;
-        const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER", "MODEL_NUMBER"  FROM mes_wip_info');
-        res.json({success: true, message:'slay', rows });
+        const query = 'SELECT "COMPONENT_ITEM_NUMBER", "ID21_ITEM_NUMBER" FROM mes_bom_components';
+        const { rows } = await sequelize.query(query, {
+            replacements: modelNumber,
+            type: QueryTypes.SELECT
+        });
+        res.json({success: true, message:'success', rows });
     } catch (error) {
         console.error('Error executing query', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
+
+app.post('/api/modelNumber', async (req, res) => {
+    const modelNumber = req.body;
+    try {
+        const query = 'SELECT "ID21_ITEM_NUMBER", "MODEL_NUMBER"  FROM mes_wip_info'
+        const { rows } = await sequelize.query(query, {
+            replacements: modelNumber,
+            type: QueryTypes.SELECT
+            }
+
+        );
+        res.json({success: true, message:'slay', rows });
+    } catch (error) {
+        console.error('Error executing query', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
         // Query  database to find the user with the trying to login
-        const query = 'SELECT userid, firstname, lastname FROM users WHERE userid = :username AND password = :password';
+        const query = 'SELECT userid, password, firstname,lastname FROM users WHERE userid = :username AND password = :password';
         const [user, metadata] = await sequelize.query(query, {
             replacements: { username, password },
             type: QueryTypes.SELECT
@@ -130,22 +147,56 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-app.get('/api/reman', async (req, res) => {
-    const item_segment1 = req.query.item;
+app.post('/api/reman', async (req, res) => {
+    const {item_segment1} = req.body;
     try {
         // Query database
         const query = 'SELECT "ITEM_SEGMENT1" FROM "mes_scrap_info" WHERE "ITEM_SEGMENT1" = $1';
-        const { rows } = await pool.query(query, [item_segment1]);
+        const { rows } = await sequelize.query(query, {
+            replacements: item_segment1,
+            type:QueryTypes.SELECT
+        });
+
 
         if (rows.length >= 1) {
-            res.json({ success: true, message: 'Success!'});
+            //success
+            const data = rows[0];
+            const { ITEM_SEGMENT1} = data;
+            res.json({ success: true, message: 'Query successful', data: {ITEM_SEGMENT1}});
         } else {
             // No entries with the specified part number
             res.status(401).json({ success: false, message: 'Invalid part number'});
         }
+
     } catch (error) {
         console.error('Error executing query', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+const getModelNumbers = async () => {
+    try {
+        const modelNumbers = await MES_BOM_COMPONENTS.findAll({
+            attributes: [[sequelize.fn('DISTINCT', sequelize.col('mw.MODEL_NUMBER')), 'MODEL_NUMBER']],
+            include: [{
+                model: MES_WIP_INFO,
+                where: sequelize.literal('MES_BOM_COMPONENTS.ORG_ID = MES_WIP_INFO.ORG_ID AND MES_BOM_COMPONENTS.ID21_ITEM_NUMBER = MES_WIP_INFO.ID21_ITEM_NUMBER AND MES_BOM_COMPONENTS.WIP_JOB_NUMBER = MES_WIP_INFO.WIP_JOB_NUMBER')
+            }],
+            raw: true
+        });
+        return modelNumbers;
+    } catch (error) {
+        throw new Error('Error fetching model numbers: ' + error.message);
+    }
+};
+
+
+app.post('/getModel', async (req, res) => {
+    try {
+        const modelNumbers = await getModelNumbers();
+        res.json(modelNumbers);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 
