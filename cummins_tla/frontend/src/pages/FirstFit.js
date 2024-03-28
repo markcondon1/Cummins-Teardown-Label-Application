@@ -25,23 +25,32 @@ export default function FirstFit(){
 
     const handleComponent = async (numberEntry)=>{
         try{
-            const data = await apiWrapper('api/firstFit', 'GET', {dbComponentNum, dbComponentid});
+            let dbComponentNum = '';
+            let dbComponentid = '';
+
+            //doing testing to see if i can query table based on these values
+            // dbComponentNum = numberEntry.substring(0, 7);
+            // dbComponentid = numberEntry.substring(7, 14);
+
+            dbComponentNum = 1234567;
+            dbComponentid = 891010;
+
+            const data = await apiWrapper('api/mesComponents', 'GET', {dbComponentNum, dbComponentid});
             console.log("entry: ", numberEntry);
             console.log("data ", data);
-            //component number stored from index 1 to 8
-           setComponentNum(numberEntry.substring(2,9));
 
-            console.log("component number ", componentNum);
-            for (const row of data.rows) {
-                if (componentNum === row.COMPONENT_ITEM_NUMBER) {
-
-                    setdbComponentid(row.ID21_ITEM_NUMBER);
-                    setDbComponentNum(row.COMPONENT_ITEM_NUMBER);
-                    await modelPull();
-
-                    console.log(" num and id", dbComponentNum, dbComponentid);
-                }
-            }
+            console.log("component and id ", dbComponentNum, dbComponentid);
+            // console.log("component number ", componentNum);
+            // for (const row of data.rows) {
+            //     if (componentNum === row.COMPONENT_ITEM_NUMBER) {
+            //
+            //         setdbComponentid(row.ID21_ITEM_NUMBER);
+            //         setDbComponentNum(row.COMPONENT_ITEM_NUMBER);
+            //         await modelPull();
+            //
+            //         console.log(" num and id", dbComponentNum, dbComponentid);
+            //     }
+            // }
 
         } catch (error) {
             console.error('Error:', error);

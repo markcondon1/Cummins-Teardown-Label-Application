@@ -26,19 +26,19 @@ const User = sequelize.define('users', {
 const MES_BOM_COMPONENTS = sequelize.define('mes_bom_components',{
 },
     {
-        tableName: 'MES_BOM_COMPONENTS',
+        tableName: 'mes_bom_components',
     });
 
 const MES_LINEREJECTION= sequelize.define('mes_scrap_info', {
 },
     {
-        tableName: 'MES_LINEREJECTION',
+        tableName: 'mes_linerejection_info',
 
 });
 
  const MES_WIP_INFO = sequelize.define('mes_wip_info', {
  },
-     {tableName: 'MES_WIP_INFO',
+     {tableName: 'mes_wip_info',
  });
 
 // Syncing User model with the database table "users"
@@ -71,19 +71,69 @@ pool.on('error', (err, client) => {
 
 
 app.get('/api/mesComponents', async (req, res) => {
+    const { id21_number, component_number } = req.query; // Use req.query for GET requests
     try {
-        const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER" , "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
-        res.json({success: true, message:'success', rows });
+        const query = `
+            SELECT "ID21_ITEM_NUMBER", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION"
+            FROM mes_bom_components
+            WHERE "COMPONENT_ITEM_NUMBER" = :component_number
+            AND "ID21_ITEM_NUMBER" = :id21_number
+        `;
+        const [component, metadata] = await sequelize.query(query, {
+            replacements: { id21_number, component_number }, // Use named replacements
+            type: QueryTypes.SELECT
+        });
+        if (component) {
+            res.json({ success: true, message: 'Component found', component });
+        } else {
+            res.status(404).json({ success: false, message: 'Component not found' });
+        }
+    } catch (error) {
+        console.error('Error executing query', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+app.post('/api/mesComponents', async (req, res) => {
+    const { id21_number, component_number } = req.body;
+    try {
+        const query = `
+            SELECT "ID21_ITEM_NUMBER", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION"
+            FROM mes_bom_components
+            WHERE "COMPONENT_ITEM_NUMBER" = :component_number
+              AND "ID21_ITEM_NUMBER" = :id21_number
+        `;
+        const [component, metadata] = await sequelize.query(query, {
+            replacements: { id21_number, component_number },
+            type: QueryTypes.SELECT
+        });
+        if (component) {
+            res.json({ success: true, message: 'Component found', component });
+        } else {
+            res.status(404).json({ success: false, message: 'Component not found' });
+        }
     } catch (error) {
         console.error('Error executing query', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
+
 app.post('/api/mesComponents', async (req, res) => {
+    const { id21_number, component_number } = req.body;
     try {
-        const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER" ,"PICK_FLAG", "COMMODITY_TYPE", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
-        res.json({success: true, message:'success', rows });
+        const query = `
+        SELECT "ID21_ITEM_NUMBER", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION"
+        FROM mes_bom_components
+        WHERE "COMPONENT_ITEM_NUMBER" = $2
+        AND "ID21_ITEM_NUMBER" = $1
+    `;
+        const[component, metadata ] = await sequelize.query(query, {
+            replacements: {id21_number, component_number},
+            type: QueryTypes.SELECT
+        });
+      if(component) {
+          res.json({ success: true, message: 'Login successful', component: {component_number, id21_number} });
+      }
     } catch (error) {
         console.error('Error executing query', error);
         res.status(500).json({ error: 'Internal server error' });
