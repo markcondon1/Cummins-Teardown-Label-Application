@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
 import jsPDF from "jspdf";
 import {useEffect, useState} from "react";
+import { apiWrapper } from "../apiWrapper";
 export default function TeardownTray() {
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
@@ -26,34 +27,31 @@ export default function TeardownTray() {
 
     const handleComponent = async (numberEntry)=>{
         try{
-            const response = await fetch('http://localhost:8080/api/mesComponents', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({componentNumber, componentDescription }),
-            });
-            const data = await response.json();
-            console.log("data ", data);
-            data.rows.forEach(row => {
-                if(numberEntry === row.COMPONENT_ITEM_NUMBER){
-                    setComponentNumber(numberEntry);
-                    setItemNum(row.ID21_ITEM_NUMBER);
-                    setComponentDescription(row.COMPONENT_DESCRIPTION);
+            const input = {item:numberEntry};
+            const data = await apiWrapper('api/teardowntray', 'GET', input);
+            if (data.success) {
+                console.log("data ", data);
+            }else{
+                console.log("fail");
+            }
+            // data.rows.forEach(row => {
+            //     if(numberEntry === row.COMPONENT_ITEM_NUMBER){
+            //         setComponentNumber(numberEntry);
+            //         setItemNum(row.ID21_ITEM_NUMBER);
+            //         setComponentDescription(row.COMPONENT_DESCRIPTION);
+            //
+            //         console.log("SUCCESS ", itemNum, componentDescription);
+            //         setValidInput(true);
+            //     }else{
+            //           setValidInput(false);
+            //     }
 
-                    console.log("SUCCESS ", itemNum, componentDescription);
-                    setValidInput(true);
-                }else{
-                      setValidInput(false);
-                }
-
-            });
+         //   });
             // console.log("is input valid? ", validInput);
             // console.log("SUCCESS ", );
 
         } catch (error) {
             console.error('Error:', error);
-
         }
 
     }
@@ -65,16 +63,37 @@ export default function TeardownTray() {
         console.log("componentDescription updated:", componentDescription);
     }, [componentDescription]);
 
-    const modelPull = async ()=>{
-        try{
-            const response = await fetch('http://localhost:8080/api/modelNumber', {
+
+    const fetchModelNumbers = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/getModel', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({componentNumber, componentDescription }),
+                // Add any request body if needed
+                // body: JSON.stringify({ key: 'value' })
             });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch model numbers');
+            }
+
             const data = await response.json();
+            // Process the data (model numbers) received from the backend
+            console.log('Model Numbers:', data);
+            // Update your UI or perform other actions with the model numbers
+        } catch (error) {
+            console.error('Error fetching model numbers:', error.message);
+        }
+    };
+
+// Call the fetchModelNumbers function when needed
+    fetchModelNumbers();
+
+    const modelPull = async ()=>{
+        try{
+            const data = await apiWrapper('api/modelNumber', 'GET', {componentNumber, componentDescription });
             console.log("nums ", data);
             data.rows.forEach(row => {
                 if(itemNum === row.ID21_ITEM_NUMBER){
@@ -113,8 +132,8 @@ export default function TeardownTray() {
         const model = 'HE341Ve';
         //REPLACE: the hardcoded string model for 'modelType' when database correct
         const zpl =` ^XA
-^FO20,50^A0N,30,30^FB500,2,0,C^FD${componentNumber}^FS
-^FO20,100^A0N,30,30^FB500,1,0,C^FD${componentDescription}^FS
+^FO20,50^A0N,30,30^FB500,2,0,C^FD3519163^FS
+^FO20,100^A0N,30,30^FB500,1,0,C^FDSCREW.DRIVE^FS
 ^FO20,150^A0N,30,30^FB500,1,0,C^FD${model}^FS
 
 ^FO20,200^A0N,30,30^FB500,2,0,C^FD${date} ${time}^FS

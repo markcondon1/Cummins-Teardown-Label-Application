@@ -14,7 +14,7 @@
   
   /* Color/shape of burger icon bars on hover*/
   .bm-burger-bars-hover {
-    background: #a90000;
+    background: #333333;
   }
   
   /* Position and sizing of clickable cross button */
@@ -85,8 +85,10 @@
 
   .user-id h6{
     padding-left:450px;
+    padding-right: 50px;
     color:#ffffff;
     font-size: 25px;
+    width: max-content;
   }
 
   .logout-button{
@@ -94,14 +96,24 @@
   color: #e0e0e0;
   width: max-content;
   }
+
+  .logout-button:hover{
+    background-color: #333333;
+  }
   
 .title{
   font-size: 25px;
-  color:#ffffff;
-  width: 550px;
+  text-wrap: nowrap;
   padding-top: 10px;
+  color:#ffffff;
 }
 
 .navbar{
   max-height: 100px;
+}
+
+.icon{
+  width: 50px;
+  height: 50px;
+
 }

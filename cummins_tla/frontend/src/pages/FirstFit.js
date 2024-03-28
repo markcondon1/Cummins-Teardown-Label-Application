@@ -7,6 +7,7 @@ import jsPDF from "jspdf";
 import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {apiWrapper} from "../apiWrapper";
 
 export default function FirstFit(){
 
@@ -20,34 +21,39 @@ export default function FirstFit(){
     const [componentNum, setComponentNum] = useState('');
     const [modelType, setModelType] = useState('');
 
+    const [radioSetting, setRadio] = useState('')
+    const onOptionChange = e => {setRadio(e.target.value)}
+
     console.log("user: ", user);
 
     const handleComponent = async (numberEntry)=>{
         try{
-            const response = await fetch('http://localhost:8080/api/firstFit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ dbComponentNum, dbComponentid }),
-            });
-            const data = await response.json();
+            let dbComponentNum = '';
+            let dbComponentid = '';
+
+            //doing testing to see if i can query table based on these values
+            // dbComponentNum = numberEntry.substring(0, 7);
+            // dbComponentid = numberEntry.substring(7, 14);
+
+            dbComponentNum = 1234567;
+            dbComponentid = 891010;
+
+            const data = await apiWrapper('api/mesComponents', 'GET', {dbComponentNum, dbComponentid});
             console.log("entry: ", numberEntry);
             console.log("data ", data);
-            //component number stored from index 1 to 8
-           setComponentNum(numberEntry.substring(2,9));
 
-            console.log("component number ", componentNum);
-            for (const row of data.rows) {
-                if (componentNum === row.COMPONENT_ITEM_NUMBER) {
-
-                    setdbComponentid(row.ID21_ITEM_NUMBER);
-                    setDbComponentNum(row.COMPONENT_ITEM_NUMBER);
-                    await modelPull();
-
-                    console.log(" num and id", dbComponentNum, dbComponentid);
-                }
-            }
+            console.log("component and id ", dbComponentNum, dbComponentid);
+            // console.log("component number ", componentNum);
+            // for (const row of data.rows) {
+            //     if (componentNum === row.COMPONENT_ITEM_NUMBER) {
+            //
+            //         setdbComponentid(row.ID21_ITEM_NUMBER);
+            //         setDbComponentNum(row.COMPONENT_ITEM_NUMBER);
+            //         await modelPull();
+            //
+            //         console.log(" num and id", dbComponentNum, dbComponentid);
+            //     }
+            // }
 
         } catch (error) {
             console.error('Error:', error);
@@ -58,14 +64,7 @@ export default function FirstFit(){
 
     const modelPull = async ()=>{
         try{
-            const response = await fetch('http://localhost:8080/api/modelNumber', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({dbComponentNum, dbComponentid }),
-            });
-            const data = await response.json();
+            const data = await apiWrapper('api/modelNumber', 'GET', {dbComponentNum, dbComponentid});
 
             data.rows.forEach(row => {
            //    console.log("models ", row.MODEL_NUMBER);
@@ -84,12 +83,6 @@ export default function FirstFit(){
     }
 
 
-
-    var compressorBool = false;
-    var turbineBool = false;
-
-    console.log(compressorBool);
-
     const printLabel = () => {
         const currentDate = new Date();
         const year = currentDate.getFullYear(); // Get the current year
@@ -106,16 +99,17 @@ export default function FirstFit(){
         
         const date =`${month}/${day}/${year}`;
         const time = `${hours}:${minutes}:${seconds}`;
+        console.log("printer log:", user.userid, time, date);
+        createPrintLog(user.userid, time, date);
 
         const twoDigitYear = year.toString().slice(-2);
 
         const serial = handleSerial().toString().padStart(4,'0');
 
-        console.log("compressor "+compressorBool);
-        if(turbineBool = true)
+        if((radioSetting == "turbine") || (radioSetting == "both"))
         {
             const itemsegment = ``;
-
+            console.log(radioSetting +" radio setting INSIDE turbine");
         const matrixContent = `P${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
             const zpl = `
             ^XA
@@ -135,7 +129,7 @@ export default function FirstFit(){
             ^FO310,85^A 0,30,30^FD2402070053 ^FS
         
             ^FO180,145^BXN,5,200,20,20,3,,1
-                ^FD${matrixContent}^FS
+            ^FD${matrixContent}^FS
         
             ^XZ 
             `;
@@ -147,9 +141,9 @@ export default function FirstFit(){
             doc.save('label.pdf');
             
         }
-        if(compressorBool == true)
+        if((radioSetting == "compressor") || (radioSetting == "both"))
         {
-            console.log("inside")
+            console.log(radioSetting +" radio setting INSIDE turbine");
             
         
             const itemsegment = ``;
@@ -183,9 +177,20 @@ export default function FirstFit(){
             doc.text(zpl, 10, 10);
             // Save PDF
             doc.save('label.pdf');
+
+
+
+
         }
     }
 
+    const createPrintLog = async(id, time, date ) => {
+        try {
+            const response = await apiWrapper('api/printerLogs', 'POST', {id, time, date});
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     const handleSerial = () =>{
         const currentDate = new Date();
@@ -214,24 +219,6 @@ export default function FirstFit(){
         localStorage.setItem('serialData', JSON.stringify(serialData))
         return JSON.parse(localStorage.getItem('serialData')).serial;
     };
-
-    function updateBool(radioInput){
-        if(radioInput == 1){
-            console.log("radioinput 1")
-            turbineBool = true;
-            compressorBool = false;
-        }
-        else if(radioInput == 2){
-            console.log("radioinput 2")
-            turbineBool = false;
-            compressorBool = true;
-        }
-        else if(radioInput == 3){
-            console.log("radioinput 3")
-            turbineBool = true;
-            compressorBool = true;
-        }
-    }
 
     return(
         <div className="container-flex">
@@ -262,11 +249,11 @@ export default function FirstFit(){
                                 </div>
                                 <div className="radio-buttons">
                                     <label>Print:</label>
-                                    <input type="radio" name="component" value="turbine" id="turbine" onClick={updateBool(1)}/>
+                                    <input type="radio" name="component" value="turbine" id="turbine" onChange={onOptionChange}/>
                                     <label htmlFor="turbine">Turbine Housing</label>
-                                    <input type="radio" name="component" value="compressor" id="compressor" onClick={updateBool(2)}/>
+                                    <input type="radio" name="component" value="compressor" id="compressor" onClick={onOptionChange}/>
                                     <label htmlFor="compressor">Compressor Housing</label>
-                                    <input type="radio" name="component" value="both" id="both" onClick={updateBool(3)}/>
+                                    <input type="radio" name="component" value="both" id="both" onClick={onOptionChange}/>
                                     <label htmlFor="both">Both</label>
                                 </div>
                                 <div className="print-controls">

@@ -23,24 +23,28 @@ const User = sequelize.define('users', {
     tableName: 'users',
 });
 
-const mes_bom_components = sequelize.define('mes_bom_components',{
+const MES_BOM_COMPONENTS = sequelize.define('mes_bom_components',{
 },
     {
         tableName: 'mes_bom_components',
     });
 
-const mes_linerejection_= sequelize.define('mes_scrap_info', {
+const MES_LINEREJECTION= sequelize.define('mes_scrap_info', {
 },
     {
-        tableName: 'mes_bom_components',
+        tableName: 'mes_scrap_info',
 
 });
 
- const mes_wip_info = sequelize.define('mes_wip_info', {
+ const MES_WIP_INFO = sequelize.define('mes_wip_info', {
  },
      {tableName: 'mes_wip_info',
  });
+const PRINT_LOGS = sequelize.define('printer_logs', {
 
+},
+    {tableName: 'printer_logs',
+});
 // Syncing User model with the database table "users"
 (async () => {
     try {
@@ -53,8 +57,6 @@ const mes_linerejection_= sequelize.define('mes_scrap_info', {
         // Close the connection after syncing
     }
 })();
-
-
 
 const pool = new Pool({
     user: 'postgres.paixptuglhwecgkdjfwm',
@@ -71,29 +73,98 @@ pool.on('error', (err, client) => {
 
 
 app.get('/api/mesComponents', async (req, res) => {
+    const { id21_number, component_number } = req.query; // Use req.query for GET requests
     try {
-        const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER" , "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
-        res.json({success: true, message:'success', rows });
+        const query = `
+            SELECT "ID21_ITEM_NUMBER", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION"
+            FROM mes_bom_components
+            WHERE "COMPONENT_ITEM_NUMBER" = :component_number
+            AND "ID21_ITEM_NUMBER" = :id21_number
+        `;
+        const [component, metadata] = await sequelize.query(query, {
+            replacements: { id21_number, component_number }, // Use named replacements
+            type: QueryTypes.SELECT
+        });
+        if (component) {
+            res.json({ success: true, message: 'Component found', component });
+        } else {
+            res.status(404).json({ success: false, message: 'Component not found' });
+        }
     } catch (error) {
         console.error('Error executing query', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+app.get('/api/teardowntray', async (req, res) => {
+    const { component_number } = req.query.item;
+    try {
+        const query = ` SELECT "COMPONENT_ITEM_NUMBER" FROM mes_bom_components "COMPONENT_ITEM_NUMBER" = :component_number`;
+        const [component, metadata] = await sequelize.query(query, {
+            replacements: {componentNumber: component_number },
+            type: QueryTypes.SELECT,
+        });
+        if (component) {
+            res.json({ success: true, message: 'Query successful'});
+        } else {
+            // No entries with the specified part number
+            res.status(401).json({ success: false, message: 'Invalid part number'});
+        }
+    } catch (error) {
+        console.error('Error executing query', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
 
 app.post('/api/mesComponents', async (req, res) => {
+    const { id21_number, component_number } = req.body;
     try {
-        const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER" , "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
-        res.json({success: true, message:'success', rows });
+        const query = `
+        SELECT "ID21_ITEM_NUMBER", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION"
+        FROM mes_bom_components
+        WHERE "COMPONENT_ITEM_NUMBER" = $2
+        AND "ID21_ITEM_NUMBER" = $1
+    `;
+        const[component, metadata ] = await sequelize.query(query, {
+            replacements: {id21_number, component_number},
+            type: QueryTypes.SELECT
+        });
+      if(component) {
+          res.json({ success: true, message: 'Login successful', component: {component_number, id21_number} });
+      }
     } catch (error) {
         console.error('Error executing query', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
+app.post('api/printerLogs', async (req, res) => {
+    const {userid, time, date} = req.body;
+    try{
+        const query = 'INSERT INTO printer_logs (userId, time_printed, date_printed) VALUES (:userid, :current_time, :current_date)';
+        const[log, metadata ] = await sequelize.query(query, {
+            replacements: { userid, time,date},
+            type: QueryTypes.INSERT,
+        });
+        if(log){
+            res.json({ success: true, message: 'Login successful', log });
+
+        }
+    } catch (error) {
+        console.error('Error executing query', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
 
 app.post('/api/firstFit', async (req, res) => {
+    const modelNumber = req.body;
     try {
-        const { rows } = await pool.query('SELECT "COMPONENT_ITEM_NUMBER", "ID21_ITEM_NUMBER" FROM mes_bom_components');
+        const query = 'SELECT "COMPONENT_ITEM_NUMBER", "ID21_ITEM_NUMBER" FROM mes_bom_components';
+        const { rows } = await sequelize.query(query, {
+            replacements: modelNumber,
+            type: QueryTypes.SELECT
+        });
         res.json({success: true, message:'success', rows });
     } catch (error) {
         console.error('Error executing query', error);
@@ -103,8 +174,15 @@ app.post('/api/firstFit', async (req, res) => {
 
 
 app.post('/api/modelNumber', async (req, res) => {
+    const modelNumber = req.body;
     try {
-        const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER", "MODEL_NUMBER"  FROM mes_wip_info');
+        const query = 'SELECT "ID21_ITEM_NUMBER", "MODEL_NUMBER"  FROM mes_wip_info'
+        const { rows } = await sequelize.query(query, {
+            replacements: modelNumber,
+            type: QueryTypes.SELECT
+            }
+
+        );
         res.json({success: true, message:'slay', rows });
     } catch (error) {
         console.error('Error executing query', error);
@@ -116,7 +194,7 @@ app.post('/api/login', async (req, res) => {
 
     try {
         // Query  database to find the user with the trying to login
-        const query = 'SELECT userid, password FROM users WHERE userid = :username AND password = :password';
+        const query = 'SELECT userid, password, firstname,lastname FROM users WHERE userid = :username AND password = :password';
         const [user, metadata] = await sequelize.query(query, {
             replacements: { username, password },
             type: QueryTypes.SELECT
@@ -135,18 +213,18 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-app.post('/api/reman', async (req, res) => {
-    const {item_segment1} = req.body;
+app.get('/api/reman', async (req, res) => {
+    const item_segment1 = req.query.item;
     try {
         // Query database
-        const query = 'SELECT "ITEM_SEGMENT1" FROM "mes_scrap_info" WHERE "ITEM_SEGMENT1" = $1';
-        const { rows } = await pool.query(query, [item_segment1]);
-
-        if (rows.length >= 1) {
+        const query = 'SELECT "ITEM_SEGMENT1" FROM "mes_scrap_info" WHERE "ITEM_SEGMENT1" = :item_segment1';
+        const [item, metadata] = await sequelize.query(query, {
+            replacements: {item_segment1: item_segment1},
+            type:QueryTypes.SELECT
+        });
+        if (item) {
             //success
-            const data = rows[0];
-            const { ITEM_SEGMENT1} = data;
-            res.json({ success: true, message: 'Query successful', data: {ITEM_SEGMENT1}});
+            res.json({ success: true, message: 'Query successful'});
         } else {
             // No entries with the specified part number
             res.status(401).json({ success: false, message: 'Invalid part number'});
@@ -155,6 +233,32 @@ app.post('/api/reman', async (req, res) => {
     } catch (error) {
         console.error('Error executing query', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+const getModelNumbers = async () => {
+    try {
+        const modelNumbers = await MES_BOM_COMPONENTS.findAll({
+            attributes: [[sequelize.fn('DISTINCT', sequelize.col('mw.MODEL_NUMBER')), 'MODEL_NUMBER']],
+            include: [{
+                model: MES_WIP_INFO,
+                where: sequelize.literal('MES_BOM_COMPONENTS.ORG_ID = MES_WIP_INFO.ORG_ID AND MES_BOM_COMPONENTS.ID21_ITEM_NUMBER = MES_WIP_INFO.ID21_ITEM_NUMBER AND MES_BOM_COMPONENTS.WIP_JOB_NUMBER = MES_WIP_INFO.WIP_JOB_NUMBER')
+            }],
+            raw: true
+        });
+        return modelNumbers;
+    } catch (error) {
+        throw new Error('Error fetching model numbers: ' + error.message);
+    }
+};
+
+
+app.post('/getModel', async (req, res) => {
+    try {
+        const modelNumbers = await getModelNumbers();
+        res.json(modelNumbers);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 

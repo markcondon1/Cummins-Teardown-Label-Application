@@ -8,6 +8,8 @@ import {useSelector} from "react-redux";
 import jsPDF from "jspdf";
 import { getDropdownMenuPlacement } from "react-bootstrap/esm/DropdownMenu";
 import { useState } from "react";
+import { apiWrapper } from "../apiWrapper"
+import { func } from "prop-types";
 
 export default function Reman(){
     //handles focusing input box
@@ -37,21 +39,16 @@ export default function Reman(){
     const handleReman = async () => {
         const item_segment1 = document.getElementById("remanInput").value.toString();
         const validationRegex = /^\d{7,8}\-RX$/;
-        console.log(`Test Result for ${item_segment1}: ${validationRegex.test(item_segment1)}`);
         if (validationRegex.test(item_segment1)){
             try {
-                const response = await fetch('http://localhost:8080/api/reman', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({item_segment1}),
-                });
-                const temp = await response.json();
-                console.log(temp);
+                const input = {item:item_segment1};
+                const temp = await apiWrapper('api/reman', 'GET', input);
                 if(temp.success)
                 {
-                    generateLabel(temp.data);
+                    generateLabel(item_segment1);
+                } else {
+                    setNotification('Incorrect part number');
+                    setTimeout(() => setNotification(''), 5000);
                 }
             } catch (error) {
                 console.error('Error: ', error);
@@ -64,7 +61,7 @@ export default function Reman(){
         }
     };
 
-    const generateLabel = (data) =>{
+    const generateLabel = (item_segment1)  =>{
         //getting components for time and date
         const currentDate = new Date();
         const year = currentDate.getFullYear(); // Get the current year
@@ -86,7 +83,7 @@ export default function Reman(){
 
         const serial = handleSerial().toString().padStart(4,'0');
 
-        const itemsegment = data.ITEM_SEGMENT1.toString().padStart(11,'0');
+        const itemsegment = item_segment1.toString().padStart(11,'0');
 
         const matrixContent = `P${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
         //P0xxxxxxx-rxSYYJJJSSSSVTDRC
@@ -96,7 +93,7 @@ export default function Reman(){
         `^XA
         ^FX Barcode and associated text
         ^FO40,0^ADN,30,20^BCN,30,Y,N,N,N
-        ^FD${data.ITEM_SEGMENT1}^FS
+        ^FD${item_segment1}^FS
         
         ^FX Logo
         ^FO15,80^GFA,480,480,8,,L07JFE1FE,K07KFCC7E,J03LFC03E,J0LFC233E,I03KF7C187E,I07JFE3110FE,001KFEE18FFE,003LF91C7FE,007LF88DFFE,00LFC847FFE, 01LF844IFE,01LF023IFE,03KFC613IFE,07KF831JFE,07JFE239JFE,0KFC71KFE,0KF638KFE,1JFE11BKFE,1JFC10LFE,3JF189LFE,3IFE1C7LFE,3IF98C6,3IF18F8,7FFD0C6,7FF88EC,7DFC47C,78CC278,60C62F8,61C71F8,47E0FF8,47F0FF8,478BFF8,410IFC,601IFE,703JF,3CKFC,3SFE,:1SFE,::0SFE,:07RFE,03RFE,:01RFE,00RFE,007QFE,003QFE,001QFE,I0QFE,I03PFE,I01PFE,J07OFE,K0OFE!K01NFEDM03LFC,,^FS
@@ -109,7 +106,7 @@ export default function Reman(){
         ^FO250,95^ASN,1,1,^FD${user.userid}^FS
         
         ^FX Data matrix content text
-        ^FO35,160^ADN,10,10
+        ^FO25,160^ADN,10,10
         ^FD${matrixContent}^FS
         
         ^FX Data Matrix
@@ -132,7 +129,6 @@ export default function Reman(){
             {
                 method:"GET",
                 headers:{
-                    'Content-Type':'application/x-www-form-urlencoded',
                     'Accept':'image/png',
                 },
             });
@@ -150,8 +146,14 @@ export default function Reman(){
     const printLabel = () =>{
         if(zpl !== null)
         {
-            setNotification('Printing unavailable.');
-            setTimeout(() => setNotification(''), 5000);
+            // Create a new instance of jsPDF
+            const doc = new jsPDF();
+            // Add ZPL content to PDF
+            var img = new Image();
+            img.src = document.getElementById('remanLabelPreview').getAttribute('src');;
+            doc.addImage(img, 'png', 0, 40, 200, 80);
+            // Save PDF
+            doc.save('label.pdf');
         } else {
             setNotification('No label generated. Please try again.');
             setTimeout(() => setNotification(''), 5000);

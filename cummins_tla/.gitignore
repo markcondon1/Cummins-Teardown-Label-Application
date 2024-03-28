@@ -23,5 +23,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Ignore .env files
-.env
+# Ignore .env files for username and password
+backend/server/.env
