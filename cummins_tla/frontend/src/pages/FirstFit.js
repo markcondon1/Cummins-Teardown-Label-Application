@@ -179,9 +179,21 @@ export default function FirstFit(){
             doc.text(zpl, 10, 10);
             // Save PDF
             doc.save('label.pdf');
+
+            console.log("printer log:", user.userid, time, date);
+            createPrintLog(user.userid, time, date);
+
+
         }
     }
 
+    const createPrintLog = async(id, time, date ) => {
+        try {
+            const response = await apiWrapper('api/printerlogs', 'POST', {id, time, date});
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     const handleSerial = () =>{
         const currentDate = new Date();
