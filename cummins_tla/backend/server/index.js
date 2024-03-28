@@ -40,7 +40,11 @@ const MES_LINEREJECTION= sequelize.define('mes_scrap_info', {
  },
      {tableName: 'mes_wip_info',
  });
+const PRINT_LOGS = sequelize.define('printer_logs', {
 
+},
+    {tableName: 'printer_logs',
+});
 // Syncing User model with the database table "users"
 (async () => {
     try {
@@ -118,6 +122,7 @@ app.post('/api/mesComponents', async (req, res) => {
 });
 
 
+
 app.post('/api/mesComponents', async (req, res) => {
     const { id21_number, component_number } = req.body;
     try {
@@ -140,6 +145,23 @@ app.post('/api/mesComponents', async (req, res) => {
     }
 });
 
+app.post('api/printerLogs', async (req, res) => {
+    const {userid, time, date} = req.body;
+    try{
+        const query = 'INSERT INTO printer_logs (userId, time_printed, date_printed) VALUES (:userid, :current_time, :current_date)';
+        const[log, metadata ] = await sequelize.query(query, {
+            replacements: { userid, time,date},
+            type: QueryTypes.INSERT,
+        });
+        if(log){
+            res.json({ success: true, message: 'Login successful', log });
+
+        }
+    } catch (error) {
+        console.error('Error executing query', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
 
 app.post('/api/firstFit', async (req, res) => {
     const modelNumber = req.body;
