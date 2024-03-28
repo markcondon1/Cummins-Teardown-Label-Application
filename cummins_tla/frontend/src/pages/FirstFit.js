@@ -99,6 +99,8 @@ export default function FirstFit(){
         
         const date =`${month}/${day}/${year}`;
         const time = `${hours}:${minutes}:${seconds}`;
+        console.log("printer log:", user.userid, time, date);
+        createPrintLog(user.userid, time, date);
 
         const twoDigitYear = year.toString().slice(-2);
 
@@ -176,8 +178,7 @@ export default function FirstFit(){
             // Save PDF
             doc.save('label.pdf');
 
-            console.log("printer log:", user.userid, time, date);
-            createPrintLog(user.userid, time, date);
+
 
 
         }
@@ -185,7 +186,7 @@ export default function FirstFit(){
 
     const createPrintLog = async(id, time, date ) => {
         try {
-            const response = await apiWrapper('api/printerlogs', 'POST', {id, time, date});
+            const response = await apiWrapper('api/printerLogs', 'POST', {id, time, date});
         } catch (error) {
             console.error('Error:', error);
         }
