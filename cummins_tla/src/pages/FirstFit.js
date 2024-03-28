@@ -15,6 +15,9 @@ export default function FirstFit(){
     const [itemNum, setItemNum]=useState('');
     const [componentDescription, setComponentDescription] = useState('');
 
+    const [radioSetting, setRadio] = useState('')
+    const onOptionChange = e => {setRadio(e.target.value)}
+
     console.log("user: ", user);
 
     const handleComponent = async (numberEntry)=>{
@@ -44,12 +47,6 @@ export default function FirstFit(){
     }
     handleComponent();
 
-
-    var compressorBool = false;
-    var turbineBool = false;
-
-    console.log(compressorBool);
-
     const printLabel = () => {
         const currentDate = new Date();
         const year = currentDate.getFullYear(); // Get the current year
@@ -71,11 +68,10 @@ export default function FirstFit(){
 
         const serial = handleSerial().toString().padStart(4,'0');
 
-        console.log("compressor "+compressorBool);
-        if(turbineBool = true)
+        if((radioSetting == "turbine") || (radioSetting == "both"))
         {
             const itemsegment = ``;
-
+            console.log(radioSetting +" radio setting INSIDE turbine");
         const matrixContent = `P${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
             const zpl = `
             ^XA
@@ -95,7 +91,7 @@ export default function FirstFit(){
             ^FO310,85^A 0,30,30^FD2402070053 ^FS
         
             ^FO180,145^BXN,5,200,20,20,3,,1
-                ^FD${matrixContent}^FS
+            ^FD${matrixContent}^FS
         
             ^XZ 
             `;
@@ -107,9 +103,9 @@ export default function FirstFit(){
             doc.save('label.pdf');
             
         }
-        if(compressorBool == true)
+        if((radioSetting == "compressor") || (radioSetting == "both"))
         {
-            console.log("inside")
+            console.log(radioSetting +" radio setting INSIDE turbine");
             
         
             const itemsegment = ``;
@@ -221,11 +217,11 @@ export default function FirstFit(){
                                 </div>
                                 <div className="radio-buttons">
                                     <label>Print:</label>
-                                    <input type="radio" name="component" value="turbine" id="turbine" onClick={updateBool(1)}/>
+                                    <input type="radio" name="component" value="turbine" id="turbine" onChange={onOptionChange}/>
                                     <label htmlFor="turbine">Turbine Housing</label>
-                                    <input type="radio" name="component" value="compressor" id="compressor" onClick={updateBool(2)}/>
+                                    <input type="radio" name="component" value="compressor" id="compressor" onClick={onOptionChange}/>
                                     <label htmlFor="compressor">Compressor Housing</label>
-                                    <input type="radio" name="component" value="both" id="both" onClick={updateBool(3)}/>
+                                    <input type="radio" name="component" value="both" id="both" onClick={onOptionChange}/>
                                     <label htmlFor="both">Both</label>
                                 </div>
                                 <div className="print-controls">

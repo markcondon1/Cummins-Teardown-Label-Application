@@ -62,23 +62,22 @@ function NavBar(){
     return (
       
         <Navbar id="navbar" bg="primary" data-bs-theme="dark">
-
         <Menu>
           <Button id="first-fit" variant= "link" className="menu-item" onClick={firstFit}>First Fit</Button>
           <Button id="teardown-tray" variant= "link" className="menu-item" onClick={teardown}>Teardown Tray</Button>
           <Button id="reman" variant= "link" className="menu-item" onClick={reman}>Reman</Button>
         </Menu>
+        
         <Container>
           <Navbar.Brand href="">
             <img src={logo} height={60} width={60}/>{''}
-            
           </Navbar.Brand>
           <p className="title">Cummins Unified Teardown Label Application</p>
-          
+          <FaUser />
           <div className="user-id">
               <h6> {user.lastname}, {user.firstname} [{user.userid}]</h6>
           </div>
-
+          
           <Button className="logout-button" onClick={logout} >Logout</Button>
         </Container>
       </Navbar>
