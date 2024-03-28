@@ -27,27 +27,31 @@ export default function TeardownTray() {
 
     const handleComponent = async (numberEntry)=>{
         try{
-            const data = await apiWrapper('api/mesComponents', 'GET', {componentNumber, componentDescription });
-            console.log("data ", data);
-            data.rows.forEach(row => {
-                if(numberEntry === row.COMPONENT_ITEM_NUMBER){
-                    setComponentNumber(numberEntry);
-                    setItemNum(row.ID21_ITEM_NUMBER);
-                    setComponentDescription(row.COMPONENT_DESCRIPTION);
+            const input = {item:numberEntry};
+            const data = await apiWrapper('api/teardowntray', 'GET', input);
+            if (data.success) {
+                console.log("data ", data);
+            }else{
+                console.log("fail");
+            }
+            // data.rows.forEach(row => {
+            //     if(numberEntry === row.COMPONENT_ITEM_NUMBER){
+            //         setComponentNumber(numberEntry);
+            //         setItemNum(row.ID21_ITEM_NUMBER);
+            //         setComponentDescription(row.COMPONENT_DESCRIPTION);
+            //
+            //         console.log("SUCCESS ", itemNum, componentDescription);
+            //         setValidInput(true);
+            //     }else{
+            //           setValidInput(false);
+            //     }
 
-                    console.log("SUCCESS ", itemNum, componentDescription);
-                    setValidInput(true);
-                }else{
-                      setValidInput(false);
-                }
-
-            });
+         //   });
             // console.log("is input valid? ", validInput);
             // console.log("SUCCESS ", );
 
         } catch (error) {
             console.error('Error:', error);
-
         }
 
     }
