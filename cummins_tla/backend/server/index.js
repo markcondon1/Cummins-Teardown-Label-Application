@@ -97,23 +97,19 @@ app.get('/api/mesComponents', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-app.post('/api/mesComponents', async (req, res) => {
-    const { id21_number, component_number } = req.body;
+app.get('/api/teardowntray', async (req, res) => {
+    const { component_number } = req.query.item;
     try {
-        const query = `
-            SELECT "ID21_ITEM_NUMBER", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION"
-            FROM mes_bom_components
-            WHERE "COMPONENT_ITEM_NUMBER" = :component_number
-              AND "ID21_ITEM_NUMBER" = :id21_number
-        `;
+        const query = ` SELECT "COMPONENT_ITEM_NUMBER" FROM mes_bom_components "COMPONENT_ITEM_NUMBER" = :component_number`;
         const [component, metadata] = await sequelize.query(query, {
-            replacements: { id21_number, component_number },
-            type: QueryTypes.SELECT
+            replacements: {componentNumber: component_number },
+            type: QueryTypes.SELECT,
         });
         if (component) {
-            res.json({ success: true, message: 'Component found', component });
+            res.json({ success: true, message: 'Query successful'});
         } else {
-            res.status(404).json({ success: false, message: 'Component not found' });
+            // No entries with the specified part number
+            res.status(401).json({ success: false, message: 'Invalid part number'});
         }
     } catch (error) {
         console.error('Error executing query', error);
