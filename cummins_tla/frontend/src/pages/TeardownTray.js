@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
 import jsPDF from "jspdf";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import { apiWrapper } from "../apiWrapper";
 export default function TeardownTray() {
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
@@ -26,19 +27,14 @@ export default function TeardownTray() {
 
     const handleComponent = async (numberEntry)=>{
         try{
-            const response = await fetch('http://localhost:8080/api/mesComponents', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({componentNumber, componentDescription }),
-            });
-            const data = await response.json();
+            const data = await apiWrapper('api/mesComponents', 'GET', {componentNumber, componentDescription });
+            console.log("data ", data);
             data.rows.forEach(row => {
                 if(numberEntry === row.COMPONENT_ITEM_NUMBER){
                     setComponentNumber(numberEntry);
-                    setComponentDescription(row.COMPONENT_DESCRIPTION);
                     setItemNum(row.ID21_ITEM_NUMBER);
+                    setComponentDescription(row.COMPONENT_DESCRIPTION);
+
                     console.log("SUCCESS ", itemNum, componentDescription);
                     setValidInput(true);
                 }else{
@@ -55,17 +51,45 @@ export default function TeardownTray() {
         }
 
     }
+    useEffect(() => {
+        console.log("itemNum updated:", itemNum);
+    }, [itemNum]);
+
+    useEffect(() => {
+        console.log("componentDescription updated:", componentDescription);
+    }, [componentDescription]);
+
+
+    const fetchModelNumbers = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/getModel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                // Add any request body if needed
+                // body: JSON.stringify({ key: 'value' })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch model numbers');
+            }
+
+            const data = await response.json();
+            // Process the data (model numbers) received from the backend
+            console.log('Model Numbers:', data);
+            // Update your UI or perform other actions with the model numbers
+        } catch (error) {
+            console.error('Error fetching model numbers:', error.message);
+        }
+    };
+
+// Call the fetchModelNumbers function when needed
+    fetchModelNumbers();
 
     const modelPull = async ()=>{
         try{
-            const response = await fetch('http://localhost:8080/api/modelNumber', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({componentNumber, componentDescription }),
-            });
-            const data = await response.json();
+            const data = await apiWrapper('api/modelNumber', 'GET', {componentNumber, componentDescription });
             console.log("nums ", data);
             data.rows.forEach(row => {
                 if(itemNum === row.ID21_ITEM_NUMBER){

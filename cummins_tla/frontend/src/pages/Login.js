@@ -11,6 +11,7 @@ import { supabase } from '../supabase';
 import {SET_USER} from "../store/actionTypes/user";
 import {setUser, userAuth} from "../store/actions/user";
 import {useDispatch, useSelector} from "react-redux";
+import { apiWrapper } from "../apiWrapper";
 
 export default function Login(){
     const navigate = useNavigate();
@@ -28,14 +29,7 @@ export default function Login(){
 
         // Make an HTTP request to the login endpoint
         try {
-            const response = await fetch('http://localhost:8080/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-            });
-            const data = await response.json();
+            const data = await apiWrapper('api/login', 'POST', { username, password });
             console.log(data); // Handle the response from the server
             if (data.success){
                 dispatch(userAuth({
@@ -65,13 +59,9 @@ export default function Login(){
     };
     const fetchUserData = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/data");
-            const data = await response.json();
+            const data = await apiWrapper('api/data', 'GET');
             setUsers(data); // Set the users state with the fetched data
             console.log("users= ", data);
-
-
-
         } catch (error) {
             console.error("Error fetching user data:", error);
         }

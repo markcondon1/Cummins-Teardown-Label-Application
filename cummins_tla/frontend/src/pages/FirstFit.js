@@ -7,13 +7,19 @@ import jsPDF from "jspdf";
 import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {apiWrapper} from "../apiWrapper";
 
 export default function FirstFit(){
 
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
+    const [numberEntry, setNumberEntry] = useState('');
     const [itemNum, setItemNum]=useState('');
     const [componentDescription, setComponentDescription] = useState('');
+    const [dbComponentNum, setDbComponentNum] = useState('');
+    const [dbComponentid, setdbComponentid] = useState('');
+    const [componentNum, setComponentNum] = useState('');
+    const [modelType, setModelType] = useState('');
 
     const [radioSetting, setRadio] = useState('')
     const onOptionChange = e => {setRadio(e.target.value)}
@@ -22,22 +28,32 @@ export default function FirstFit(){
 
     const handleComponent = async (numberEntry)=>{
         try{
-            const response = await fetch('http://localhost:8080/api/mesComponents', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({itemNum, componentDescription }),
-            });
-            const data = await response.json();
-            data.rows.forEach(row => {
-                    setItemNum(row.ID21_ITEM_NUMBER);
-                    setComponentDescription(row.COMPONENT_DESCRIPTION);
-                console.log(itemNum, componentDescription);
+            let dbComponentNum = '';
+            let dbComponentid = '';
 
+            //doing testing to see if i can query table based on these values
+            // dbComponentNum = numberEntry.substring(0, 7);
+            // dbComponentid = numberEntry.substring(7, 14);
 
-            });
+            dbComponentNum = 1234567;
+            dbComponentid = 891010;
 
+            const data = await apiWrapper('api/mesComponents', 'GET', {dbComponentNum, dbComponentid});
+            console.log("entry: ", numberEntry);
+            console.log("data ", data);
+
+            console.log("component and id ", dbComponentNum, dbComponentid);
+            // console.log("component number ", componentNum);
+            // for (const row of data.rows) {
+            //     if (componentNum === row.COMPONENT_ITEM_NUMBER) {
+            //
+            //         setdbComponentid(row.ID21_ITEM_NUMBER);
+            //         setDbComponentNum(row.COMPONENT_ITEM_NUMBER);
+            //         await modelPull();
+            //
+            //         console.log(" num and id", dbComponentNum, dbComponentid);
+            //     }
+            // }
 
         } catch (error) {
             console.error('Error:', error);
@@ -45,7 +61,27 @@ export default function FirstFit(){
         }
 
     }
-    handleComponent();
+
+    const modelPull = async ()=>{
+        try{
+            const data = await apiWrapper('api/modelNumber', 'GET', {dbComponentNum, dbComponentid});
+
+            data.rows.forEach(row => {
+           //    console.log("models ", row.MODEL_NUMBER);
+                if(dbComponentid === row.ID21_ITEM_NUMBER){
+                    setModelType(row.MODEL_NUMBER);
+                    //this should work if the ID21's in the databases matchup, but
+                    //for now the dummy data given is insufficient, so hardcoding
+                    console.log("succes: model type ", modelType);
+                }
+            });
+
+        } catch (error) {
+            console.error('Error:', error);
+
+        }
+    }
+
 
     const printLabel = () => {
         const currentDate = new Date();
@@ -84,7 +120,7 @@ export default function FirstFit(){
         
             ^FX Turbine/Compressor Housing
             ^FO5,55^A 0,30,30^FD Turbine Housing:^FS
-            ^FO310,55^A 0,30,30^FD3592787^FS
+            ^FO310,55^A 0,30,30^FD${dbComponentNum}^FS
         
             ^FX TD SQ
             ^FO5,85^A 0,30,30^FD TD SEQ:^FS
@@ -199,13 +235,14 @@ export default function FirstFit(){
                             <div className="card-header">Reject Tickets</div>
                             <div className="card-body">
                                 <div className="scanned-variables">
-                                <input type="text" placeholder="Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s"></input>
+                                <input type="text" placeholder="Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s"
+                                       onKeyDown={(e) => handleComponent(e.target.value)}></input>
                                 </div>
                                 <div className="ticket-details">
                                     <p>ID21: </p>
-                                    <div id="iD21">5606202</div>
+                                    <div id="iD21">{dbComponentid}</div>
                                     <p>Model: </p>
-                                    <div id ="model">HE300VG</div>
+                                    <div id ="model">{modelType}</div>
                                 </div>
                                 <div className="components-list">
                                     <p>Turbine Housing</p>
