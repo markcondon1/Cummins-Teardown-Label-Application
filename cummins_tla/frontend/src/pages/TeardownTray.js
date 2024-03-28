@@ -121,8 +121,8 @@ export default function TeardownTray() {
         const model = 'HE341Ve';
         //REPLACE: the hardcoded string model for 'modelType' when database correct
         const zpl =` ^XA
-^FO20,50^A0N,30,30^FB500,2,0,C^FD${componentNumber}^FS
-^FO20,100^A0N,30,30^FB500,1,0,C^FD${componentDescription}^FS
+^FO20,50^A0N,30,30^FB500,2,0,C^FD3519163^FS
+^FO20,100^A0N,30,30^FB500,1,0,C^FDSCREW.DRIVE^FS
 ^FO20,150^A0N,30,30^FB500,1,0,C^FD${model}^FS
 
 ^FO20,200^A0N,30,30^FB500,2,0,C^FD${date} ${time}^FS
