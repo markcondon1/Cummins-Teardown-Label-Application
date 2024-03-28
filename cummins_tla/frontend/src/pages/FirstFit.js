@@ -207,24 +207,6 @@ export default function FirstFit(){
         return JSON.parse(localStorage.getItem('serialData')).serial;
     };
 
-    function updateBool(radioInput){
-        if(radioInput == 1){
-            console.log("radioinput 1")
-            turbineBool = true;
-            compressorBool = false;
-        }
-        else if(radioInput == 2){
-            console.log("radioinput 2")
-            turbineBool = false;
-            compressorBool = true;
-        }
-        else if(radioInput == 3){
-            console.log("radioinput 3")
-            turbineBool = true;
-            compressorBool = true;
-        }
-    }
-
     return(
         <div className="container-flex">
                 <NavBar />
