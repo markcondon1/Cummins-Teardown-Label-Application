@@ -13,6 +13,7 @@ export default function TeardownTray() {
     const [validInput, setValidInput] = useState(false);
     const [itemNum, setItemNum]=useState('');
     const [modelType, setModelType] = useState('');
+    const [myInput, setMyInput] = useState('');
     //getting components for time and date
     const currentDate = new Date();
 
@@ -24,31 +25,25 @@ export default function TeardownTray() {
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
     let componentEntry ;
 
-
-    const handleComponent = async (numberEntry)=>{
+//weh
+    const handleComponent = async ()=>{
         try{
-            const input = {item:numberEntry};
-            const data = await apiWrapper('api/teardowntray', 'GET', input);
+         //   const input = {item:numberEntry};
+            const newVal = parseInt(myInput);
+            console.log("input ", newVal);
+            const input = {item: newVal};
+            const data = await apiWrapper('api/teardowntray', 'POST', {newVal});
             if (data.success) {
                 console.log("data ", data);
+                setComponentDescription(data.COMPONENT_DESCRIPTION);
+                console.log("descript ", componentDescription);
+
+                setComponentNumber(data.COMPONENT_ITEM_NUMBER);
             }else{
                 console.log("fail");
+                
             }
-            // data.rows.forEach(row => {
-            //     if(numberEntry === row.COMPONENT_ITEM_NUMBER){
-            //         setComponentNumber(numberEntry);
-            //         setItemNum(row.ID21_ITEM_NUMBER);
-            //         setComponentDescription(row.COMPONENT_DESCRIPTION);
-            //
-            //         console.log("SUCCESS ", itemNum, componentDescription);
-            //         setValidInput(true);
-            //     }else{
-            //           setValidInput(false);
-            //     }
 
-         //   });
-            // console.log("is input valid? ", validInput);
-            // console.log("SUCCESS ", );
 
         } catch (error) {
             console.error('Error:', error);
