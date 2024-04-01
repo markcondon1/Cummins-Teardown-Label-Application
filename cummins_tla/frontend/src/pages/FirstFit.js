@@ -23,6 +23,9 @@ export default function FirstFit(){
 
     console.log("user: ", user);
 
+    const [radioSetting, setRadio] = useState('')
+    const onOptionChange = e => {setRadio(e.target.value)}
+
     const handleComponent = async (numberEntry)=>{
         try{
             let dbComponentNum = '';
@@ -108,7 +111,7 @@ export default function FirstFit(){
         const serial = handleSerial().toString().padStart(4,'0');
 
         console.log("compressor "+compressorBool);
-        if(turbineBool = true)
+        if((radioSetting == "turbine") || (radioSetting == "both"))
         {
             const itemsegment = ``;
 
@@ -131,7 +134,7 @@ export default function FirstFit(){
             ^FO310,85^A 0,30,30^FD2402070053 ^FS
         
             ^FO180,145^BXN,5,200,20,20,3,,1
-                ^FD${matrixContent}^FS
+            ^FD${matrixContent}^FS
         
             ^XZ 
             `;
@@ -143,7 +146,7 @@ export default function FirstFit(){
             doc.save('label.pdf');
             
         }
-        if(compressorBool == true)
+        if((radioSetting == "compressor") || (radioSetting == "both"))
         {
             console.log("inside")
             
@@ -258,11 +261,11 @@ export default function FirstFit(){
                                 </div>
                                 <div className="radio-buttons">
                                     <label>Print:</label>
-                                    <input type="radio" name="component" value="turbine" id="turbine" onClick={updateBool(1)}/>
+                                    <input type="radio" name="component" value="turbine" id="turbine" onChange={onOptionChange}/>
                                     <label htmlFor="turbine">Turbine Housing</label>
-                                    <input type="radio" name="component" value="compressor" id="compressor" onClick={updateBool(2)}/>
+                                    <input type="radio" name="component" value="compressor" id="compressor" onChange={onOptionChange}/>
                                     <label htmlFor="compressor">Compressor Housing</label>
-                                    <input type="radio" name="component" value="both" id="both" onClick={updateBool(3)}/>
+                                    <input type="radio" name="component" value="both" id="both" onChange={onOptionChange}/>
                                     <label htmlFor="both">Both</label>
                                 </div>
                                 <div className="print-controls">
