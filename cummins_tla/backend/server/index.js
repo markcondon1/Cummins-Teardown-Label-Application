@@ -205,22 +205,18 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-app.post('/api/reman', async (req, res) => {
-    const {item_segment1} = req.body;
+app.get('/api/reman', async (req, res) => {
+    const item_segment1 = req.query.item;
     try {
         // Query database
-        const query = 'SELECT "ITEM_SEGMENT1" FROM "mes_scrap_info" WHERE "ITEM_SEGMENT1" = $1';
-        const { rows } = await sequelize.query(query, {
-            replacements: item_segment1,
+        const query = 'SELECT "ITEM_SEGMENT1" FROM "mes_scrap_info" WHERE "ITEM_SEGMENT1" = :item_segment1';
+        const [item, metadata] = await sequelize.query(query, {
+            replacements: {item_segment1: item_segment1},
             type:QueryTypes.SELECT
         });
-
-
-        if (rows.length >= 1) {
+        if (item) {
             //success
-            const data = rows[0];
-            const { ITEM_SEGMENT1} = data;
-            res.json({ success: true, message: 'Query successful', data: {ITEM_SEGMENT1}});
+            res.json({ success: true, message: 'Query successful'});
         } else {
             // No entries with the specified part number
             res.status(401).json({ success: false, message: 'Invalid part number'});
