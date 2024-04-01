@@ -15,6 +15,10 @@ export default function FirstFit(){
     const [numberEntry, setNumberEntry] = useState('');
     const [itemNum, setItemNum]=useState('');
     const [componentDescription, setComponentDescription] = useState('');
+
+    const [componentOptions, setComponentOptions] = useState([]);
+    const [selectedComponent, setSelectedComponent] = useState(''); 
+
     const [dbComponentNum, setDbComponentNum] = useState('');
     const [dbComponentid, setdbComponentid] = useState('');
     const [componentNum, setComponentNum] = useState('');
@@ -233,6 +237,22 @@ export default function FirstFit(){
         }
     }
 
+
+    useEffect(() => {
+        const fetchComponents = async () => {
+          try {
+            const response = await axios.get('http://localhost:8080/api/mesComponents');
+            if (response.data && response.data.rows) {
+              setComponentOptions(response.data.rows);
+            }
+          } catch (error) {
+            console.error('Error fetching component data:', error);
+          }
+        };
+    
+        fetchComponents();
+      }, []);
+
     return(
         <div className="container-flex">
                 <NavBar />
@@ -284,9 +304,13 @@ export default function FirstFit(){
                         <div className="card">
                             <div className="card-header">Components</div>
                                 <div className="card-body">
-                                <label htmlFor="components">Components</label>
-                                <select id="components">
-                                    <option value="5500259">5500259. Compressor Housing</option>
+                                <label htmlFor="components">Select Components</label>
+                                <select id="components" className="form-control">
+                                    {componentOptions.map((component, index) => (
+                                        <option key={index} value={component.ID21_ITEM_NUMBER}>
+                                            {`${component.ID21_ITEM_NUMBER} - ${component.COMPONENT_DESCRIPTION}`}
+                                        </option>
+                                    ))}
                                 </select>
                                 <div className="print-qty">
                                     <label htmlFor="printQty">Print Qty:</label>

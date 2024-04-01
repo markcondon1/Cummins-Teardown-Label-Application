@@ -72,7 +72,7 @@ pool.on('error', (err, client) => {
 
 app.get('/api/mesComponents', async (req, res) => {
     try {
-        const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER" , "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components');
+        const { rows } = await pool.query('SELECT "ID21_ITEM_NUMBER" , "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION", "COMMODITY_TYPE" FROM mes_bom_components');
         res.json({success: true, message:'success', rows });
     } catch (error) {
         console.error('Error executing query', error);
