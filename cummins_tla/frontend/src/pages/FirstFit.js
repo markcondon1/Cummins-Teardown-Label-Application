@@ -25,32 +25,36 @@ export default function FirstFit(){
 
     const handleComponent = async (numberEntry)=>{
         try{
-            let dbComponentNum = '';
-            let dbComponentid = '';
-
+            const compString = numberEntry.substring(2,9);
+            const newVal = parseInt(compString);
+            console.log("new vale: ", newVal);
             //doing testing to see if i can query table based on these values
             // dbComponentNum = numberEntry.substring(0, 7);
             // dbComponentid = numberEntry.substring(7, 14);
 
-            dbComponentNum = 1234567;
-            dbComponentid = 891010;
+            const data = await apiWrapper('api/teardowntray', 'POST', {newVal});
+            const model = await apiWrapper('api/getModel', 'POST',{newVal});
 
-            const data = await apiWrapper('api/mesComponents', 'GET', {dbComponentNum, dbComponentid});
-            console.log("entry: ", numberEntry);
-            console.log("data ", data);
+            console.log("model ", model);
+            console.log(typeof model);
+            const modelArray = model.data;
+            console.log(modelArray.MODEL_NUMBER);
+            setModelType(modelArray.MODEL_NUMBER);
+            console.log(typeof model);
+            if (data.success) {
+                console.log(data);
+                console.log(typeof data);
+                const dataArray = data.data;
+                setDbComponentNum(dataArray[0].COMPONENT_NUMBER);
 
-            console.log("component and id ", dbComponentNum, dbComponentid);
-            // console.log("component number ", componentNum);
-            // for (const row of data.rows) {
-            //     if (componentNum === row.COMPONENT_ITEM_NUMBER) {
-            //
-            //         setdbComponentid(row.ID21_ITEM_NUMBER);
-            //         setDbComponentNum(row.COMPONENT_ITEM_NUMBER);
-            //         await modelPull();
-            //
-            //         console.log(" num and id", dbComponentNum, dbComponentid);
-            //     }
-            // }
+                setdbComponentid(dataArray[0].ID21_ITEM_NUMBER);
+                setComponentDescription(dataArray[0].COMPONENT_DESCRIPTION);
+
+            }else{
+                console.log("fail");
+
+            }
+
 
         } catch (error) {
             console.error('Error:', error);
@@ -58,28 +62,6 @@ export default function FirstFit(){
         }
 
     }
-
-    const modelPull = async ()=>{
-        try{
-            const data = await apiWrapper('api/modelNumber', 'GET', {dbComponentNum, dbComponentid});
-
-            data.rows.forEach(row => {
-           //    console.log("models ", row.MODEL_NUMBER);
-                if(dbComponentid === row.ID21_ITEM_NUMBER){
-                    setModelType(row.MODEL_NUMBER);
-                    //this should work if the ID21's in the databases matchup, but
-                    //for now the dummy data given is insufficient, so hardcoding
-                    console.log("succes: model type ", modelType);
-                }
-            });
-
-        } catch (error) {
-            console.error('Error:', error);
-
-        }
-    }
-
-
 
     var compressorBool = false;
     var turbineBool = false;

@@ -33,15 +33,27 @@ export default function TeardownTray() {
             console.log("input ", newVal);
             const input = {item: newVal};
             const data = await apiWrapper('api/teardowntray', 'POST', {newVal});
-            if (data.success) {
-                console.log("data ", data);
-                setComponentDescription(data.COMPONENT_DESCRIPTION);
-                console.log("descript ", componentDescription);
+            const model = await apiWrapper('api/getModel', 'POST',{newVal});
 
-                setComponentNumber(data.COMPONENT_ITEM_NUMBER);
+                console.log("model ", model);
+                console.log(typeof model);
+                const modelArray = model.data;
+                console.log(modelArray.MODEL_NUMBER);
+                setModelType(modelArray.MODEL_NUMBER);
+
+
+            console.log(typeof model);
+            if (data.success) {
+                console.log(data);
+                console.log(typeof data);
+                const dataArray = data.data;
+
+                setComponentNumber(dataArray[0].ID21_ITEM_NUMBER);
+                setComponentDescription(dataArray[0].COMPONENT_DESCRIPTION);
+
             }else{
                 console.log("fail");
-                
+
             }
 
 
@@ -59,38 +71,29 @@ export default function TeardownTray() {
     }, [componentDescription]);
 
 
-    const fetchModelNumbers = async () => {
-        try {
-            const response = await fetch('http://localhost:8080/getModel', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                // Add any request body if needed
-                // body: JSON.stringify({ key: 'value' })
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch model numbers');
-            }
-
-            const data = await response.json();
-            // Process the data (model numbers) received from the backend
-            console.log('Model Numbers:', data);
-            // Update your UI or perform other actions with the model numbers
-        } catch (error) {
-            console.error('Error fetching model numbers:', error.message);
-        }
-    };
-
-// Call the fetchModelNumbers function when needed
-    fetchModelNumbers();
+//     const fetchModelNumbers = async () => {
+//         try {
+//           const data = await apiWrapper('api/getModel', 'POST',{});
+//             if (data.success) {
+//                 console.log(data);
+//             }
+//
+//             // Process the data (model numbers) received from the backend
+//             console.log('Model Numbers:', data);
+//             // Update your UI or perform other actions with the model numbers
+//         } catch (error) {
+//             console.error('Error fetching model numbers:', error.message);
+//         }
+//     };
+//
+// // Call the fetchModelNumbers function when needed
+//     fetchModelNumbers();
 
     const modelPull = async ()=>{
         try{
             const data = await apiWrapper('api/modelNumber', 'GET', {componentNumber, componentDescription });
             console.log("nums ", data);
-            data.rows.forEach(row => {
+            data.forEach(row => {
                 if(itemNum === row.ID21_ITEM_NUMBER){
                     setModelType(row.MODEL_NUMBER);
                     //this should work if the ID21's in the databases matchup, but
@@ -122,7 +125,7 @@ export default function TeardownTray() {
         const zpl =` ^XA
 ^FO20,50^A0N,30,30^FB500,2,0,C^FD${componentNumber}^FS
 ^FO20,100^A0N,30,30^FB500,1,0,C^FD${componentDescription}^FS
-^FO20,150^A0N,30,30^FB500,1,0,C^FD${model}^FS
+^FO20,150^A0N,30,30^FB500,1,0,C^FD${modelType}^FS
 
 ^FO20,200^A0N,30,30^FB500,2,0,C^FD${date} ${time}^FS
 ^XZ`;

@@ -41,6 +41,17 @@ const MES_LINEREJECTION= sequelize.define('mes_scrap_info', {
      {tableName: 'mes_wip_info',
  });
 
+// MES_WIP_INFO.hasMany(MES_BOM_COMPONENTS, {
+//     foreignKey: 'ORG_ID',
+//    // sourceKey: 'ORG_ID',
+//     constraints: false //
+// });
+//
+// MES_BOM_COMPONENTS.belongsTo(MES_WIP_INFO, {
+//     foreignKey: 'ORG_ID',
+//     targetKey: 'ORG_ID'
+// });
+
  //connect wip and bom tables
 //MES_BOM_COMPONENTS.belongsTo(MES_WIP_INFO, { foreignKey: 'WIP_JOB_NUMBER', targetKey: 'WIP_JOB_NUMBER' });
 
@@ -49,6 +60,7 @@ const MES_LINEREJECTION= sequelize.define('mes_scrap_info', {
     try {
         await sequelize.sync();
         console.log('User model synced successfully.');
+
     } catch (error) {
         console.error('Error syncing User model:', error);
     } finally {
@@ -102,7 +114,7 @@ app.post('/api/teardowntray', async (req, res) => {
     try {
 
       // const query = ` SELECT  "ID21_ITEM_NUMBER", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components "COMPONENT_ITEM_NUMBER" = ${newVal}`;
-       const results = await MES_BOM_COMPONENTS.findAll({
+       const rows = await MES_BOM_COMPONENTS.findAll({
             attributes: ['ID21_ITEM_NUMBER', 'COMPONENT_ITEM_NUMBER', 'COMPONENT_DESCRIPTION', 'ORG_ID','OP_CODE'], // Select specific attributes
            where: sequelize.where(
                sequelize.literal('CAST("COMPONENT_ITEM_NUMBER" AS INTEGER)'), // Cast COMPONENT_ITEM_NUMBER to INTEGER
@@ -110,9 +122,9 @@ app.post('/api/teardowntray', async (req, res) => {
            )
         });
 
-        console.log('Query executed:', results);
-        if (results) {
-            res.json({ success: true, data: results });
+        console.log('Query executed:', rows);
+        if (rows) {
+            res.json({ success: true, data: rows });
         } else {
             res.status(404).json({ success: false, message: 'No results found' });
         }
@@ -122,6 +134,36 @@ app.post('/api/teardowntray', async (req, res) => {
     }
 
 
+});
+
+app.post('/api/getModel', async (req, res) => {
+    const { newVal } = req.body;
+    console.log("input  ", newVal);
+    try {
+        const query = 'SELECT w."MODEL_NUMBER"\n' +
+            'FROM MES_WIP_INFO w\n' +
+            'JOIN MES_BOM_COMPONENTS b\n' +
+            'ON w."ORG_ID" = b."ORG_ID"\n' +
+            'AND w."ID21_ITEM_NUMBER" = b."ID21_ITEM_NUMBER"\n' +
+            'AND w."WIP_JOB_NUMBER" = b."WIP_JOB_NUMBER"\n' +
+            `WHERE b."COMPONENT_ITEM_NUMBER" = '${newVal}';
+`
+        const [model, metadata] = await sequelize.query(query, {
+          //  replacements: { newVal },
+            type: QueryTypes.SELECT
+        });
+
+        console.log('Query executed:', model);
+        if (model) {
+            //   const modelNumber = model.MODEL_NUMBER;
+            res.json({ success: true, data: model });
+        } else {
+            res.status(404).json({ error: 'Model not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching model number:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 
@@ -174,7 +216,7 @@ app.post('/api/modelNumber', async (req, res) => {
             }
 
         );
-        res.json({success: true, message:'slay', rows });
+        res.json({success: true, message:'success', rows });
     } catch (error) {
         console.error('Error executing query', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -232,31 +274,32 @@ app.post('/api/reman', async (req, res) => {
     }
 });
 
-const getModelNumbers = async () => {
-    try {
-        const modelNumbers = await MES_BOM_COMPONENTS.findAll({
-            attributes: [[sequelize.fn('DISTINCT', sequelize.col('mw.MODEL_NUMBER')), 'MODEL_NUMBER']],
-            include: [{
-                model: MES_WIP_INFO,
-                where: sequelize.literal('MES_BOM_COMPONENTS.ORG_ID = MES_WIP_INFO.ORG_ID AND MES_BOM_COMPONENTS.ID21_ITEM_NUMBER = MES_WIP_INFO.ID21_ITEM_NUMBER AND MES_BOM_COMPONENTS.WIP_JOB_NUMBER = MES_WIP_INFO.WIP_JOB_NUMBER')
-            }],
-            raw: true
-        });
-        return modelNumbers;
-    } catch (error) {
-        throw new Error('Error fetching model numbers: ' + error.message);
-    }
-};
+
+// const getComponentModelNumber = async (componentItemNumber) => {
+//     try {
+//         const result = await MES_WIP_INFO.findOne({
+//             attributes: ['MODEL_NUMBER'],
+//             include: [
+//                 {
+//                     model: MES_BOM_COMPONENTS,
+//                     where: { COMPONENT_ITEM_NUMBER: componentItemNumber },
+//                 },
+//             ],
+//         });
+//         return result ? result.MODEL_NUMBER : null;
+//     } catch (error) {
+//         console.error('Error fetching model number:', error);
+//         return null;
+//     }
+// };
+
+// Usage
+// const componentItemNumber = '3596572'; // Example component item number
+// getComponentModelNumber(componentItemNumber).then(modelNumber => {
+//     console.log('Model Number:', modelNumber);
+// });
 
 
-app.post('/getModel', async (req, res) => {
-    try {
-        const modelNumbers = await getModelNumbers();
-        res.json(modelNumbers);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
 
 //printer logic
 
