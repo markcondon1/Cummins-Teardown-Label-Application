@@ -1,33 +1,31 @@
 import Button from "react-bootstrap/Button";
 import {apiWrapper} from "../apiWrapper";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import NavBar from "./components/NavBar";
 
 
 export default function Admin(){
     const [userId, setUserId] = useState('');
-    const handleDelete = async () => {
-        try{
-            console.log("user id ", userId);
-           const input = {item: userId};
-            const deleteUser = await apiWrapper('api/deleteUser', 'POST', {input});
+    const navigate = useNavigate();
 
-
-        }catch (error) {
-            console.error('Error:', error);
-           ;
-        }
+    const deleteUser = ()=>{
+        navigate('/app/admin/deleteUsers');
     }
-
+    const addUser = ()=>{
+        navigate('/app/admin/addUser');
+    }
+    const printer = ()=>{
+        navigate('/app/admin/printerLogs');
+    }
     return(
         <div>
-            <input
-                type="text"
-                value={userId}
-                onChange={(e) => setUserId(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleDelete()}
-                id="userID"
-                placeholder="Enter user ID"
-            />
+            <div>
+                <NavBar />
+            </div>
+           <Button onClick ={deleteUser}>Delete users</Button>
+            <Button onClick ={addUser}> Add users</Button>
+            <Button onClick ={printer}>View Printer Logs</Button>
         </div>
     )
 

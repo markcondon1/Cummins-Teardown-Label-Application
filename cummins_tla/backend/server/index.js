@@ -185,15 +185,15 @@ app.post('/api/login', async (req, res) => {
 
     try {
         // Query  database to find the user with the trying to login
-        const query = 'SELECT userid, password, firstname,lastname FROM users WHERE userid = :username AND password = :password';
+        const query = 'SELECT userid, password, firstname,lastname, admin FROM users WHERE userid = :username AND password = :password';
         const [user, metadata] = await sequelize.query(query, {
             replacements: { username, password },
             type: QueryTypes.SELECT
         });
         if (user) {
             // User found, authentication successful
-            const { userid, firstname, lastname } = user;
-            res.json({ success: true, message: 'Login successful', user: { userid, firstname, lastname } });
+            const { userid, firstname, lastname, admin } = user;
+            res.json({ success: true, message: 'Login successful', user: { userid, firstname, lastname, admin } });
         } else {
             // No user found with the provided credentials
             res.status(401).json({ success: false, message: 'Invalid username or password' });
@@ -220,6 +220,46 @@ app.post('/api/deleteUser', async(req,res)=>{
     } catch (error) {
     console.error('Error deleting user:', error);
     res.status(500).send({ error: 'An error occurred while deleting the user.' });
+    }
+});
+
+app.post('/api/addUser', async(req,res)=>{
+    const { userid, firstname,lastname, password } = req.body;
+    console.log(userid, firstname, lastname,password);
+    const query = 'INSERT INTO users (userid, firstname, lastname, password)\n' +
+        `VALUES ('${userid}', '${firstname}', '${lastname}', '${password}')`;
+    try{
+        const [addUser, metadata] = await sequelize.query(query, {
+            replacements: { userid,firstname,lastname,password },
+            type: QueryTypes.INSERT
+        });
+        if(addUser){
+            res.status(200).send({ message: 'User added successfully.' });
+        } else {
+            res.status(404).send({ error: 'User not found.' });
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).send({ error: 'An error occurred while adding the user.' });
+    }
+});
+
+app.post('/api/printLog', async(req,res)=>{
+
+    const query = `select "userid", "time_printed", "date_printed", "print_station" from printer_logs;`;
+    try{
+        const [logs, metadata] = await sequelize.query(query, {
+
+            type: QueryTypes.SELECT
+        });
+        if(logs){
+            res.status(200).send({ message: 'printer logs found', logs });
+        } else {
+            res.status(404).send({ error: 'logs not found.' });
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).send({ error: 'An error occurred while getting the logs' });
     }
 });
 

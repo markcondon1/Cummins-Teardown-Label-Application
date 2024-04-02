@@ -22,12 +22,16 @@ function NavBar(){
     const [firstname, setFirstname] = useState(null);
     const [lastname, setLastname] = useState(null);
     const [username, setUsername] = useState('');
+    const[isAdmin, setIsAdmin] = useState('');
 
 
     useEffect(() => {
 
         console.log("user: ", user);
+        setIsAdmin(user.admin);
     }, []);
+
+    console.log("is user an admin?", isAdmin);
 
     const logout=()=>{
         navigate("/");

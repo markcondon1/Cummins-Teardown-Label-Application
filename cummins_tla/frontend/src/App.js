@@ -15,6 +15,9 @@ import {BrowserRouter as Router, Navigate, Route, Routes,} from "react-router-do
 import {userAuth} from "./store/actions/user";
 import {useSelector} from "react-redux";
 import Admin from "./pages/Admin";
+import DeleteUser from "./pages/DeleteUser";
+import AddUser from "./pages/AddUser";
+import PrinterLogs from "./pages/PrinterLogs";
 
 function App() {
     const userAuth = useSelector(state => state.user);
@@ -38,6 +41,9 @@ function App() {
                   <Route exact path="/app/Reman" element={<ProtectedRoute><Reman/></ProtectedRoute>} />
                   <Route exact path="/app/teardownTray" element={<ProtectedRoute><TeardownTray/></ProtectedRoute>} />
                   <Route exact path="/app/admin" element={<ProtectedRoute><Admin/></ProtectedRoute>} />
+                  <Route exact path="/app/admin/deleteUsers" element={<ProtectedRoute><DeleteUser/></ProtectedRoute>} />
+                  <Route exact path="/app/admin/addUser" element={<ProtectedRoute><AddUser/></ProtectedRoute>} />
+                  <Route exact path="/app/admin/printerLogs" element={<ProtectedRoute><PrinterLogs/></ProtectedRoute>} />
               </Routes>
           </Router>
       </div>

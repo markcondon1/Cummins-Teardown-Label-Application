@@ -4,7 +4,8 @@ const initialHistory ={
     firstname: '',
     lastname: '',
     userid: '',
-    userAuth: false
+    userAuth: false,
+    admin: false,
 }
 
 const userReducer = (state = initialHistory, action) => {
@@ -14,7 +15,8 @@ const userReducer = (state = initialHistory, action) => {
                 ...state,
                 firstname: action.payload.firstname,
                 lastname: action.payload.lastname,
-                userid: action.payload.userid
+                userid: action.payload.userid,
+                admin: action.payload.admin
             };
         case RESET_USER:
             return initialHistory;

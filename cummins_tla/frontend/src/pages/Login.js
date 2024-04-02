@@ -40,6 +40,7 @@ export default function Login(){
                     firstname: data.user.firstname,
                     lastname: data.user.lastname,
                     userid: data.user.userid,
+                    admin: data.user.admin,
                 }));
                 console.log("first", data.user.firstname);
                 console.log('User data dispatched:', user);
