@@ -25,24 +25,7 @@ function NavBar(){
 
 
     useEffect(() => {
-        // const fetchUserData = async () => {
-        //
-        //     try {
-        //         const response = await fetch('http://localhost:8080/api/login', {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //             body: JSON.stringify({ username, firstname,lastname }),
-        //         });
-        //         const data = await response.json();
-        //         console.log(data);
-        //     } catch (error) {
-        //         console.error('Error fetching user data:', error);
-        //     }
-        // };
 
-        //fetchUserData();
         console.log("user: ", user);
     }, []);
 
@@ -59,6 +42,10 @@ function NavBar(){
     const firstFit = () =>{
         navigate("/app/firstFit");
     }
+
+    const admin = ()=>{
+        navigate("/app/admin");
+    }
     return (
       
         <Navbar id="navbar" bg="primary" data-bs-theme="dark">
@@ -66,6 +53,7 @@ function NavBar(){
           <Button id="first-fit" variant= "link" className="menu-item" onClick={firstFit}>First Fit</Button>
           <Button id="teardown-tray" variant= "link" className="menu-item" onClick={teardown}>Teardown Tray</Button>
           <Button id="reman" variant= "link" className="menu-item" onClick={reman}>Reman</Button>
+          <Button id="admin" variant="link" className="menu-item" onClick={admin}>Admin</Button>
         </Menu>
         
         <Container>

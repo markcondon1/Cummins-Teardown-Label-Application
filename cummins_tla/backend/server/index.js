@@ -203,6 +203,26 @@ app.post('/api/login', async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
+app.post('/api/deleteUser', async(req,res)=>{
+    const { item: userid } = req.body.input;
+    console.log(userid);
+    const query = 'DELETE FROM users WHERE userid = :userid';
+    try{
+    const [deleteUser, metadata] = await sequelize.query(query, {
+        replacements: { userid:userid },
+        type: QueryTypes.DELETE
+    });
+    if(deleteUser){
+        res.status(200).send({ message: 'User deleted successfully.' });
+    } else {
+        res.status(404).send({ error: 'User not found.' });
+    }
+    } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).send({ error: 'An error occurred while deleting the user.' });
+    }
+});
+
 
 app.get('/api/reman', async (req, res) => {
     const item_segment1 = req.query.item;
@@ -227,21 +247,6 @@ app.get('/api/reman', async (req, res) => {
     }
 });
 
-const getModelNumbers = async () => {
-    try {
-        const modelNumbers = await MES_BOM_COMPONENTS.findAll({
-            attributes: [[sequelize.fn('DISTINCT', sequelize.col('mw.MODEL_NUMBER')), 'MODEL_NUMBER']],
-            include: [{
-                model: MES_WIP_INFO,
-                where: sequelize.literal('MES_BOM_COMPONENTS.ORG_ID = MES_WIP_INFO.ORG_ID AND MES_BOM_COMPONENTS.ID21_ITEM_NUMBER = MES_WIP_INFO.ID21_ITEM_NUMBER AND MES_BOM_COMPONENTS.WIP_JOB_NUMBER = MES_WIP_INFO.WIP_JOB_NUMBER')
-            }],
-            raw: true
-        });
-        return modelNumbers;
-    } catch (error) {
-        throw new Error('Error fetching model numbers: ' + error.message);
-    }
-};
 
 app.post('/api/getModel', async (req, res) => {
     const { newVal } = req.body;
@@ -273,15 +278,7 @@ app.post('/api/getModel', async (req, res) => {
     }
 });
 
-//printer logic
 
-// app.post('/api/printlabel', async (req, res) => {
-//     const zpl = `^XA
-// ^FO50,100^A0N,50,50^FB500,2,0,C^FD4040880^FS
-// ^FO50,180^A0N,50,50^FB500,1,0,C^FDShaft&Wheel^FS
-// ^FO50,250^A0N,50,50^FB500,1,0,C^FDHE451Ve^FS
-// ^FO`
-// });
 
 app.listen(8080, () => {
     console.log('server listening on port 8080');

@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import {BrowserRouter as Router, Navigate, Route, Routes,} from "react-router-dom";
 import {userAuth} from "./store/actions/user";
 import {useSelector} from "react-redux";
+import Admin from "./pages/Admin";
 
 function App() {
     const userAuth = useSelector(state => state.user);
@@ -36,6 +37,7 @@ function App() {
                   <Route exact path="/app/firstFit" element={<ProtectedRoute><FirstFit/></ProtectedRoute> }/>
                   <Route exact path="/app/Reman" element={<ProtectedRoute><Reman/></ProtectedRoute>} />
                   <Route exact path="/app/teardownTray" element={<ProtectedRoute><TeardownTray/></ProtectedRoute>} />
+                  <Route exact path="/app/admin" element={<ProtectedRoute><Admin/></ProtectedRoute>} />
               </Routes>
           </Router>
       </div>
