@@ -32,38 +32,38 @@ export default function FirstFit(){
 
     const handleComponent = async (numberEntry)=>{
         try{
-            let dbComponentNum = '';
-            let dbComponentid = '';
+            //    const input = {item:numberEntry};
+             const newVal = parseInt(numberEntry);
+            console.log("input ", newVal);
+            const input = {item: newVal};
+            const data = await apiWrapper('api/teardowntray', 'POST', {newVal});
+            const model = await apiWrapper('api/getModel', 'POST',{newVal});
 
-            //doing testing to see if i can query table based on these values
-            // dbComponentNum = numberEntry.substring(0, 7);
-            // dbComponentid = numberEntry.substring(7, 14);
+            console.log("model ", model);
+            console.log(typeof model);
+            const modelArray = model.data;
+            console.log(modelArray.MODEL_NUMBER);
+            setModelType(modelArray.MODEL_NUMBER);
 
-            dbComponentNum = 1234567;
-            dbComponentid = 891010;
 
-            const data = await apiWrapper('api/mesComponents', 'GET', {dbComponentNum, dbComponentid});
-            console.log("entry: ", numberEntry);
-            console.log("data ", data);
+            console.log(typeof model);
+            if (data.success) {
+                console.log(data);
+                console.log(typeof data);
+                const dataArray = data.data;
 
-            console.log("component and id ", dbComponentNum, dbComponentid);
-            // console.log("component number ", componentNum);
-            // for (const row of data.rows) {
-            //     if (componentNum === row.COMPONENT_ITEM_NUMBER) {
-            //
-            //         setdbComponentid(row.ID21_ITEM_NUMBER);
-            //         setDbComponentNum(row.COMPONENT_ITEM_NUMBER);
-            //         await modelPull();
-            //
-            //         console.log(" num and id", dbComponentNum, dbComponentid);
-            //     }
-            // }
+                setdbComponentid(dataArray[0].ID21_ITEM_NUMBER);
+                setComponentDescription(dataArray[0].COMPONENT_DESCRIPTION);
+
+            }else{
+                console.log("fail");
+
+            }
+
 
         } catch (error) {
             console.error('Error:', error);
-
         }
-
     }
 
     const modelPull = async ()=>{

@@ -28,20 +28,31 @@ export default function TeardownTray() {
 //weh
     const handleComponent = async ()=>{
         try{
-         //   const input = {item:numberEntry};
             const newVal = parseInt(myInput);
             console.log("input ", newVal);
             const input = {item: newVal};
             const data = await apiWrapper('api/teardowntray', 'POST', {newVal});
-            if (data.success) {
-                console.log("data ", data);
-                setComponentDescription(data.COMPONENT_DESCRIPTION);
-                console.log("descript ", componentDescription);
+            const model = await apiWrapper('api/getModel', 'POST',{newVal});
 
-                setComponentNumber(data.COMPONENT_ITEM_NUMBER);
+            console.log("model ", model);
+            console.log(typeof model);
+            const modelArray = model.data;
+            console.log(modelArray.MODEL_NUMBER);
+            setModelType(modelArray.MODEL_NUMBER);
+
+
+            console.log(typeof model);
+            if (data.success) {
+                console.log(data);
+                console.log(typeof data);
+                const dataArray = data.data;
+
+                setComponentNumber(dataArray[0].COMPONENT_ITEM_NUMBER);
+                setComponentDescription(dataArray[0].COMPONENT_DESCRIPTION);
+
             }else{
                 console.log("fail");
-                
+
             }
 
 
@@ -50,65 +61,15 @@ export default function TeardownTray() {
         }
 
     }
-    useEffect(() => {
-        console.log("itemNum updated:", itemNum);
-    }, [itemNum]);
-
-    useEffect(() => {
-        console.log("componentDescription updated:", componentDescription);
-    }, [componentDescription]);
-
-
-    const fetchModelNumbers = async () => {
-        try {
-            const response = await fetch('http://localhost:8080/getModel', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                // Add any request body if needed
-                // body: JSON.stringify({ key: 'value' })
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch model numbers');
-            }
-
-            const data = await response.json();
-            // Process the data (model numbers) received from the backend
-            console.log('Model Numbers:', data);
-            // Update your UI or perform other actions with the model numbers
-        } catch (error) {
-            console.error('Error fetching model numbers:', error.message);
-        }
-    };
-
-// Call the fetchModelNumbers function when needed
-    fetchModelNumbers();
-
-    const modelPull = async ()=>{
-        try{
-            const data = await apiWrapper('api/modelNumber', 'GET', {componentNumber, componentDescription });
-            console.log("nums ", data);
-            data.rows.forEach(row => {
-                if(itemNum === row.ID21_ITEM_NUMBER){
-                    setModelType(row.MODEL_NUMBER);
-                    //this should work if the ID21's in the databases matchup, but
-                    //for now the dummy data given is insufficient, so hardcoding
-               }
-            });
-            console.log("is input valid? ", validInput);
-        } catch (error) {
-            console.error('Error:', error);
-
-        }
-    }
-
-
-
-    // const parts = componentDescription.split(' ');
-    // const name = parts[0];
-    // const restOfDescription = parts.slice(1).join(' ');
+    // useEffect(() => {
+    //     console.log("itemNum updated:", itemNum);
+    // }, [itemNum]);
+    //
+    // useEffect(() => {
+    //     console.log("componentDescription updated:", componentDescription);
+    // }, [componentDescription]);
+    //
+    //
 
 
 

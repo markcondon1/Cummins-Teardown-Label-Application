@@ -109,7 +109,6 @@ app.post('/api/teardowntray', async (req, res) => {
                newVal
            )
         });
-
         console.log('Query executed:', results);
         if (results) {
             res.json({ success: true, data: results });
@@ -244,13 +243,33 @@ const getModelNumbers = async () => {
     }
 };
 
-
-app.post('/getModel', async (req, res) => {
+app.post('/api/getModel', async (req, res) => {
+    const { newVal } = req.body;
+    console.log("input  ", newVal);
     try {
-        const modelNumbers = await getModelNumbers();
-        res.json(modelNumbers);
+        const query = 'SELECT w."MODEL_NUMBER"\n' +
+            'FROM MES_WIP_INFO w\n' +
+            'JOIN MES_BOM_COMPONENTS b\n' +
+            'ON w."ORG_ID" = b."ORG_ID"\n' +
+            'AND w."ID21_ITEM_NUMBER" = b."ID21_ITEM_NUMBER"\n' +
+            'AND w."WIP_JOB_NUMBER" = b."WIP_JOB_NUMBER"\n' +
+            `WHERE b."COMPONENT_ITEM_NUMBER" = '${newVal}';
+`
+        const [model, metadata] = await sequelize.query(query, {
+            //  replacements: { newVal },
+            type: QueryTypes.SELECT
+        });
+
+        console.log('Query executed:', model);
+        if (model) {
+            //   const modelNumber = model.MODEL_NUMBER;
+            res.json({ success: true, data: model });
+        } else {
+            res.status(404).json({ error: 'Model not found' });
+        }
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching model number:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
