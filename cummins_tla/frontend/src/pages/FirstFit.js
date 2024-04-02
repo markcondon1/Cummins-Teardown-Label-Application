@@ -36,7 +36,7 @@ export default function FirstFit(){
              const newVal = parseInt(numberEntry);
             console.log("input ", newVal);
             const input = {item: newVal};
-            const data = await apiWrapper('api/teardowntray', 'POST', {newVal});
+            const data = await apiWrapper('api/firstFit', 'POST', {newVal});
             const model = await apiWrapper('api/getModel', 'POST',{newVal});
 
             console.log("model ", model);

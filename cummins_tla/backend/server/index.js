@@ -148,20 +148,31 @@ app.post('/api/mesComponents', async (req, res) => {
 
 
 app.post('/api/firstFit', async (req, res) => {
-    const modelNumber = req.body;
+    const { newVal } = req.body;
+    console.log("component ", newVal);
     try {
-        const query = 'SELECT "COMPONENT_ITEM_NUMBER", "ID21_ITEM_NUMBER" FROM mes_bom_components';
-        const { rows } = await sequelize.query(query, {
-            replacements: modelNumber,
-            type: QueryTypes.SELECT
-        });
-        res.json({success: true, message:'success', rows });
-    } catch (error) {
-        console.error('Error executing query', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
 
+        // const query = ` SELECT  "ID21_ITEM_NUMBER", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components "COMPONENT_ITEM_NUMBER" = ${newVal}`;
+        const results = await MES_BOM_COMPONENTS.findAll({
+            attributes: ['ID21_ITEM_NUMBER', 'COMPONENT_ITEM_NUMBER', 'COMPONENT_DESCRIPTION', 'ORG_ID','OP_CODE'], // Select specific attributes
+            where: sequelize.where(
+                sequelize.literal('CAST("COMPONENT_ITEM_NUMBER" AS INTEGER)'), // Cast COMPONENT_ITEM_NUMBER to INTEGER
+                newVal
+            )
+        });
+        console.log('Query executed:', results);
+        if (results) {
+            res.json({ success: true, data: results });
+        } else {
+            res.status(404).json({ success: false, message: 'No results found' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while searching.' });
+    }
+
+
+});
 
 app.post('/api/modelNumber', async (req, res) => {
     const modelNumber = req.body;
