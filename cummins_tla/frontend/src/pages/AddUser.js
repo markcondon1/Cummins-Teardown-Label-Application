@@ -62,6 +62,10 @@ export default function AddUser(){
                 id="userID"
                 placeholder="enter password"
             />
+            <div className="admin-checkbox">
+                <input type="checkbox" id="adminPermission" />
+                <label htmlFor="adminPermission">Administrator</label>
+            </div>
         </div>
     )
 
