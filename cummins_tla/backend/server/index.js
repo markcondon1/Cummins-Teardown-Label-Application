@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 //const fetch = require('node-fetch');
 const axios = require('axios');
-const { Pool } = require('pg');
+
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -41,6 +41,12 @@ const MES_LINEREJECTION= sequelize.define('mes_scrap_info', {
      {tableName: 'mes_wip_info',
  });
 
+ const printer_logs = sequelize.define('printer_logs',{
+ },
+     { tableName: 'printer_logs',
+
+     });
+
  //connect wip and bom tables
 //MES_BOM_COMPONENTS.belongsTo(MES_WIP_INFO, { foreignKey: 'WIP_JOB_NUMBER', targetKey: 'WIP_JOB_NUMBER' });
 
@@ -56,21 +62,6 @@ const MES_LINEREJECTION= sequelize.define('mes_scrap_info', {
         // Close the connection after syncing
     }
 })();
-
-
-
-const pool = new Pool({
-    user: 'postgres.paixptuglhwecgkdjfwm',
-    host: 'aws-0-us-east-1.pooler.supabase.com',
-    database: 'postgres',
-    password: 'CumminsTLA_Pass',
-    port: 5432,
-});
-
-pool.on('error', (err, client) => {
-    console.error('Unexpected error on idle client', err);
-    process.exit(-1);
-});
 
 
 app.get('/api/mesComponents', async (req, res) => {
@@ -254,20 +245,52 @@ app.post('/api/addUser', async(req,res)=>{
         res.status(500).send({ error: 'An error occurred while adding the user.' });
     }
 });
+app.post('/api/addLog', async(req,res)=>{
+    const { userid, time_printed,date_printed, print_station } = req.body;
+    console.log(userid, time_printed, date_printed,print_station);
+    const query = 'INSERT INTO printer_logs (userid, time_printed, date_printed, print_station)\n' +
+        `VALUES ('${userid}' , '${time_printed}', '${date_printed}', '${print_station}');`
+    try {
+        const [addLog, metadata] = await sequelize.query(query, {
+            replacements: {userid, time_printed, date_printed, print_station},
+            type: QueryTypes.INSERT
+        });
+        if (addLog) {
+            res.json({
+                success: true,
+                message: 'Print Log successful',
+                addLog: {userid, time_printed, date_printed, print_station}
+            });
+        } else {
+            res.status(404).send({error: 'print log unsuccessful'});
+        }
+    }catch (error) {
+        console.error('Error adding logs', error);
+        res.status(500).send({ error: 'An error occurred while adding the printer log.' });
+    }
+});
 
 app.post('/api/printLog', async(req,res)=>{
 
-    const query = `select "userid", "time_printed", "date_printed", "print_station" from printer_logs;`;
+    const query = `select * from printer_logs;`;
     try{
-        const [logs, metadata] = await sequelize.query(query, {
-
-            type: QueryTypes.SELECT
+        // const [logs, metadata] = await sequelize.query(query, {
+        //     type: QueryTypes.SELECT
+        // });
+        // console.log("Logs: ", logs);
+        //
+        const logs = await printer_logs.findAll({
+            attributes: ['userid','date_printed', 'time_printed', 'print_station']
         });
+         console.log("Logs: ", logs);
+
         if(logs){
             res.status(200).send({ message: 'printer logs found', logs });
+
         } else {
             res.status(404).send({ error: 'logs not found.' });
         }
+
     } catch (error) {
         console.error('Error deleting user:', error);
         res.status(500).send({ error: 'An error occurred while getting the logs' });

@@ -57,7 +57,9 @@ function NavBar(){
           <Button id="first-fit" variant= "link" className="menu-item" onClick={firstFit}>First Fit</Button>
           <Button id="teardown-tray" variant= "link" className="menu-item" onClick={teardown}>Teardown Tray</Button>
           <Button id="reman" variant= "link" className="menu-item" onClick={reman}>Reman</Button>
+            {isAdmin && (
           <Button id="admin" variant="link" className="menu-item" onClick={admin}>Admin</Button>
+            )}
         </Menu>
         
         <Container>
