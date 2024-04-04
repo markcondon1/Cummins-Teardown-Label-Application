@@ -22,6 +22,14 @@ export default function Reman(){
 
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
+    const currentDate = new Date();
+    const year = currentDate.getFullYear(); // Get the current year
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
     const reman=()=>{
         navigate("/app/Reman");
     }
@@ -63,14 +71,7 @@ export default function Reman(){
 
     const generateLabel = (item_segment1)  =>{
         //getting components for time and date
-        const currentDate = new Date();
-        const year = currentDate.getFullYear(); // Get the current year
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        const day = String(currentDate.getDate()).padStart(2, '0');
-        const hours = String(currentDate.getHours()).padStart(2, '0');
-        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-        
+
         const date =`${month}/${day}/${year}`;
         const time = `${hours}:${minutes}:${seconds}`;
        
@@ -158,7 +159,17 @@ export default function Reman(){
             setNotification('No label generated. Please try again.');
             setTimeout(() => setNotification(''), 5000);
         }
+        addPrintLog();
+
     };
+    const addPrintLog = async ()=>{
+        const date_printed =`${month}/${day}/${year}`
+        const time_printed = `${hours}:${minutes}:${seconds}`;
+        const print_station = 'Reman';
+        const userid = user.userid;
+        const data = await apiWrapper('api/addLog', 'POST', {userid, time_printed,date_printed,print_station});
+        console.log(data);
+    }
 
     const handleSerial = () =>{
         const currentDate = new Date();

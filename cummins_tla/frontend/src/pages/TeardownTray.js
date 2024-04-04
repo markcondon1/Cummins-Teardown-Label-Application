@@ -25,7 +25,7 @@ export default function TeardownTray() {
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
     let componentEntry ;
 
-//weh
+
     const handleComponent = async ()=>{
         try{
             const newVal = parseInt(myInput);
@@ -61,15 +61,8 @@ export default function TeardownTray() {
         }
 
     }
-    // useEffect(() => {
-    //     console.log("itemNum updated:", itemNum);
-    // }, [itemNum]);
-    //
-    // useEffect(() => {
-    //     console.log("componentDescription updated:", componentDescription);
-    // }, [componentDescription]);
-    //
-    //
+
+
 
 
 
