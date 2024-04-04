@@ -113,8 +113,7 @@ export default function FirstFit(){
         const twoDigitYear = year.toString().slice(-2);
 
         const serial = handleSerial().toString().padStart(4,'0');
-
-        console.log("compressor "+compressorBool);
+        
         if((radioSetting == "turbine") || (radioSetting == "both"))
         {
             const itemsegment = ``;
@@ -135,7 +134,7 @@ export default function FirstFit(){
         
             ^FX TD SQ
             ^FO5,85^A 0,30,30^FD TD SEQ:^FS
-            ^FO310,85^A 0,30,30^FD2402070053 ^FS
+            ^FO310,85^A 0,30,30^FD${twoDigitYear}${dayOfYear}${serial}^FS
         
             ^FO180,145^BXN,5,200,20,20,3,,1
             ^FD${matrixContent}^FS
@@ -151,10 +150,7 @@ export default function FirstFit(){
             
         }
         if((radioSetting == "compressor") || (radioSetting == "both"))
-        {
-            console.log("inside")
-            
-        
+        {            
             const itemsegment = ``;
 
             const matrixContent = `P${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
@@ -169,11 +165,11 @@ export default function FirstFit(){
 
             ^FX Turbine/Compressor Housing
             ^FO5,55^A 0,30,30^FD Compressor Housing:^FS
-            ^FO310,55^A 0,30,30^FD3592787^FS
+            ^FO310,55^A 0,30,30^FD${dbComponentNum}^FS
 
             ^FX TD SQ
             ^FO5,85^A 0,30,30^FD TD SEQ:^FS
-            ^FO310,85^A 0,30,30^FD2402070053 ^FS
+            ^FO310,85^A 0,30,30^FD${twoDigitYear}${dayOfYear}${serial}^FS
 
             ^FO180,145^BXN,5,200,20,20,3,,1
             ^FD${matrixContent}^FS
@@ -226,41 +222,7 @@ export default function FirstFit(){
         localStorage.setItem('serialData', JSON.stringify(serialData))
         return JSON.parse(localStorage.getItem('serialData')).serial;
     };
-
-    function updateBool(radioInput){
-        if(radioInput == 1){
-            console.log("radioinput 1")
-            turbineBool = true;
-            compressorBool = false;
-        }
-        else if(radioInput == 2){
-            console.log("radioinput 2")
-            turbineBool = false;
-            compressorBool = true;
-        }
-        else if(radioInput == 3){
-            console.log("radioinput 3")
-            turbineBool = true;
-            compressorBool = true;
-        }
-    }
-
-
-    useEffect(() => {
-        const fetchComponents = async () => {
-          try {
-            const response = await axios.get('http://localhost:8080/api/mesComponents');
-            if (response.data && response.data.rows) {
-              setComponentOptions(response.data.rows);
-            }
-          } catch (error) {
-            console.error('Error fetching component data:', error);
-          }
-        };
     
-        fetchComponents();
-      }, []);
-
     return(
         <div className="container-flex">
                 <NavBar />
