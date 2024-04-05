@@ -65,7 +65,7 @@ export default function FirstFit(){
     console.log('Compressor Bool: ', compressorBool);
 
     const printLabel = () => {
-        
+        const currentDate = new Date();
         let start = new Date(currentDate.getFullYear(), 0, 0);
         let diff = (currentDate - start) + ((start.getTimezoneOffset() - currentDate.getTimezoneOffset()) * 60 * 1000);
         let oneDay = 1000 * 60 * 60 * 24;
@@ -73,7 +73,7 @@ export default function FirstFit(){
         
         const time = getDateTime('time');
 
-        const twoDigitYear = year.toString().slice(-2);
+        const twoDigitYear = currentDate.getFullYear().toString().slice(-2);
 
         const serial = handleSerial().toString().padStart(4,'0');
         

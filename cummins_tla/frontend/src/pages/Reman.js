@@ -20,7 +20,7 @@ export default function Reman(){
       inputElement.current.focus();
     }
   }, []);
-
+    const user = useSelector(state => state.user);
     const navigate = useNavigate();
     const date = getDateTime('date');
 
@@ -65,9 +65,10 @@ export default function Reman(){
 
     const generateLabel = (item_segment1)  =>{
         //getting components for time and date
+        const currentDate = new Date();
         const time = getDateTime('time');
        
-        const twoDigitYear = year.toString().slice(-2);
+        const twoDigitYear = currentDate.getFullYear().toString().slice(-2);
 
         let start = new Date(currentDate.getFullYear(), 0, 0);
         let diff = (currentDate - start) + ((start.getTimezoneOffset() - currentDate.getTimezoneOffset()) * 60 * 1000);
