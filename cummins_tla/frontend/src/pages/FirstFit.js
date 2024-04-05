@@ -20,51 +20,37 @@ export default function FirstFit(){
     const [componentOptions, setComponentOptions] = useState([]);
     const [selectedComponent, setSelectedComponent] = useState(''); 
 
-    const [dbComponentNum, setDbComponentNum] = useState('');
-    const [dbComponentid, setdbComponentid] = useState('');
-    const [modelType, setModelType] = useState('');
-    const currentDate = new Date();
-    const year = currentDate.getFullYear(); // Get the current year
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    const hours = String(currentDate.getHours()).padStart(2, '0');
-    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    const [partSerial, setPartSerial] = useState('');
+    const [id21, setid21] = useState('');
+    const [model, setModel] = useState('');
+    const [turbineHousing, setTurbineHousing] = useState('');
+    const [compressorHousing, setCompressorHousing] = useState('');
+    const [shroudPlate, setShroudPlate] = useState('');
 
 
     const [radioSetting, setRadio] = useState('')
     const onOptionChange = e => {setRadio(e.target.value)}
 
-    const handleComponent = async (numberEntry)=>{
+    const handleInput = async (input)=>{
+        //Example input for testing: P1908051718;5324132;
+        //Format Example: P2406802175;5606728;00;Beta Zone 2;10;202;2024-03-11;02:56:46
+        setPartSerial(input.slice(1,11));
+        setid21(input.slice(12,19));
         try{
-            //    const input = {item:numberEntry};
-             const newVal = parseInt(numberEntry);
-            console.log("input ", newVal);
-            const input = {item: newVal};
-            const data = await apiWrapper('api/firstFit', 'POST', {newVal});
-            const model = await apiWrapper('api/getModel', 'POST',{newVal});
-
-            console.log("model ", model);
-            console.log(typeof model);
-            const modelArray = model.data;
-            console.log(modelArray.MODEL_NUMBER);
-            setModelType(modelArray.MODEL_NUMBER);
-
-
-            console.log(typeof model);
-            if (data.success) {
+            const data = await apiWrapper('api/firstFit', 'GET', {serial:partSerial, id21:id21});
+            if(data.success){
                 console.log(data);
-                console.log(typeof data);
-                const dataArray = data.data;
-
-                setdbComponentid(dataArray[0].ID21_ITEM_NUMBER);
-                setComponentDescription(dataArray[0].COMPONENT_DESCRIPTION);
-
-            }else{
-                console.log("fail");
-
+                setModel(data.compressor.MODEL_NUMBER);
+                setTurbineHousing(data.turbine.COMPONENT_ITEM_NUMBER);
+                setCompressorHousing(data.compressor.COMPONENT_ITEM_NUMBER);
+                if(data.shroud){
+                    setShroudPlate(data.shroud.COMPONENT_ITEM_NUMBER);
+                }else{
+                    setShroudPlate('N/A');
+                }
+            } else{
+                console.error('Error in handleInput');
             }
-
 
         } catch (error) {
             console.error('Error:', error);
@@ -74,10 +60,17 @@ export default function FirstFit(){
     var compressorBool = false;
     var turbineBool = false;
 
-    console.log(compressorBool);
+    console.log('Compressor Bool: ', compressorBool);
 
     const printLabel = () => {
-
+        const currentDate = new Date();
+        const year = currentDate.getFullYear(); // Get the current year
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const hours = String(currentDate.getHours()).padStart(2, '0');
+        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+        
         let start = new Date(currentDate.getFullYear(), 0, 0);
         let diff = (currentDate - start) + ((start.getTimezoneOffset() - currentDate.getTimezoneOffset()) * 60 * 1000);
         let oneDay = 1000 * 60 * 60 * 24;
@@ -106,7 +99,7 @@ export default function FirstFit(){
         
             ^FX Turbine/Compressor Housing
             ^FO5,55^A 0,30,30^FD Turbine Housing:^FS
-            ^FO310,55^A 0,30,30^FD${dbComponentNum}^FS
+            ^FO310,55^A 0,30,30^FD${turbineHousing}^FS
         
             ^FX TD SQ
             ^FO5,85^A 0,30,30^FD TD SEQ:^FS
@@ -141,7 +134,7 @@ export default function FirstFit(){
 
             ^FX Turbine/Compressor Housing
             ^FO5,55^A 0,30,30^FD Compressor Housing:^FS
-            ^FO310,55^A 0,30,30^FD${dbComponentNum}^FS
+            ^FO310,55^A 0,30,30^FD${compressorHousing}^FS
 
             ^FX TD SQ
             ^FO5,85^A 0,30,30^FD TD SEQ:^FS
@@ -210,21 +203,21 @@ export default function FirstFit(){
                             <div className="card-body">
                                 <div className="scanned-variables">
                                 <input type="text" placeholder="Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s"
-                                       onKeyDown={(e) => handleComponent(e.target.value)}></input>
+                                       onKeyDown={(e) => handleInput(e.target.value)}></input>
                                 </div>
                                 <div className="ticket-details">
                                     <p>ID21: </p>
-                                    <div id="iD21">{dbComponentid}</div>
+                                    <div id="iD21">{id21}</div>
                                     <p>Model: </p>
-                                    <div id ="model">{modelType}</div>
+                                    <div id ="model">{model}</div>
                                 </div>
                                 <div className="components-list">
                                     <p>Turbine Housing</p>
-                                    <div id="turbineHousing">TD5499586</div>
+                                    <div id="turbineHousing">{turbineHousing}</div>
                                     <p>Compressor Housing</p>
-                                    <div id="compressorHousing">5500259</div>
+                                    <div id="compressorHousing">{compressorHousing}</div>
                                     <p>Shroud Plate</p>
-                                    <div id="shroudPlate">N/A</div>
+                                    <div id="shroudPlate">{shroudPlate}</div>
                                 </div>
                                 <div className="radio-buttons">
                                     <label>Print:</label>

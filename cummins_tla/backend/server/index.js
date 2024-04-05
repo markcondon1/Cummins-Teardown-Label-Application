@@ -299,6 +299,53 @@ app.post('/api/getModel', async (req, res) => {
     }
 });
 
+app.get('/api/firstFit', async (req,res) =>{
+        const serial = req.query.serial;
+        const id21 = req.query.id21;
+        try {
+            // const data = await mes_assy_job_info.findAll({
+            //     attributes: ['ID21_ITEM_NUMBER', 'COMPONENT_ITEM_NUMBER', 'COMPONENT_DESCRIPTION', 'ORG_ID','OP_CODE'], // Select specific attributes
+            //    where: sequelize.where(
+            //        sequelize.literal('CAST("COMPONENT_ITEM_NUMBER" AS INTEGER)'), // Cast COMPONENT_ITEM_NUMBER to INTEGER
+            //        newVal
+            //    )
+
+            // Query database
+            const query = 
+            `SELECT bom."COMPONENT_ITEM_NUMBER", wip."MODEL_NUMBER", bom."COMMODITY_TYPE"
+            FROM mes_assy_job_info AS assy
+            INNER JOIN mes_bom_components AS bom ON assy."ID21_ITEM_NUMBER" = bom."ID21_ITEM_NUMBER"
+            INNER JOIN mes_wip_info AS wip ON bom."WIP_JOB_NUMBER" = wip."WIP_JOB_NUMBER"
+            WHERE (bom."COMMODITY_TYPE" = 'TURBINE HOUSING' OR bom."COMMODITY_TYPE" = 'COMPRESSOR HOUSING' OR bom."COMMODITY_TYPE" = 'SHROUD') AND assy."SERIAL_NUMBER" = :serial AND bom."ID21_ITEM_NUMBER" = :id21
+            ORDER BY bom."COMMODITY_TYPE" ASC`;
+            const data = [] = await sequelize.query(query, {
+                replacements: {serial:serial, id21:id21},
+                type:QueryTypes.SELECT,
+                raw:true,
+            });
+            if (data) {
+                //success
+                console.log(data[0], data[1], data[2]);
+                let shroud, turbine;
+                if(data.length > 2){
+                     shroud = data[1]
+                     turbine = data[2];
+                } else{
+                    shroud = False;
+                    turbine = data[1];
+                }
+                res.json({ success: true, message: 'Query successful', compressor:data[0], shroud:shroud, turbine:turbine });
+            } else {
+                // No entries with the specified part number
+                res.status(401).json({ success: false, message: 'Invalid ID21 or Serial Number'});
+            }
+    
+        } catch (error) {
+            console.error('Error executing query', error);
+            res.status(500).json({ success: false, message: 'Internal server error' });
+        }
+});
+
 app.listen(8080, () => {
     console.log('server listening on port 8080');
 });
