@@ -2,18 +2,13 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-//const fetch = require('node-fetch');
 const axios = require('axios');
-
-
 app.use(cors());
 app.use(bodyParser.json());
-
 
 //set up sequelize ORM
 const sequelize = require('./database/sequelize');
 const {DataTypes, QueryTypes, Sequelize} = require("sequelize");
-
 
 
 // Define the User model
@@ -44,57 +39,23 @@ const MES_LINEREJECTION= sequelize.define('mes_scrap_info', {
  const printer_logs = sequelize.define('printer_logs',{
  },
      { tableName: 'printer_logs',
+   });
 
-     });
-
- //connect wip and bom tables
-//MES_BOM_COMPONENTS.belongsTo(MES_WIP_INFO, { foreignKey: 'WIP_JOB_NUMBER', targetKey: 'WIP_JOB_NUMBER' });
-
-// Syncing User model with the database table "users"
 (async () => {
     try {
         await sequelize.sync();
-        console.log('User model synced successfully.');
+        console.log('database synced successfully.');
     } catch (error) {
-        console.error('Error syncing User model:', error);
-    } finally {
-      //  sequelize.close();
-        // Close the connection after syncing
+        console.error('Error syncing database', error);
     }
 })();
 
-
-app.get('/api/mesComponents', async (req, res) => {
-    const { id21_number, component_number } = req.query; // Use req.query for GET requests
-    try {
-        const query = `
-            SELECT "ID21_ITEM_NUMBER", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION"
-            FROM mes_bom_components
-            WHERE "COMPONENT_ITEM_NUMBER" = :component_number
-            AND "ID21_ITEM_NUMBER" = :id21_number
-        `;
-        const [component, metadata] = await sequelize.query(query, {
-            replacements: { id21_number, component_number }, // Use named replacements
-            type: QueryTypes.SELECT
-        });
-        if (component) {
-            res.json({ success: true, message: 'Component found', component });
-        } else {
-            res.status(404).json({ success: false, message: 'Component not found' });
-        }
-    } catch (error) {
-        console.error('Error executing query', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
 app.post('/api/teardowntray', async (req, res) => {
     const { newVal } = req.body;
     console.log("component ", newVal);
     try {
-
-      // const query = ` SELECT  "ID21_ITEM_NUMBER", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components "COMPONENT_ITEM_NUMBER" = ${newVal}`;
        const results = await MES_BOM_COMPONENTS.findAll({
-            attributes: ['ID21_ITEM_NUMBER', 'COMPONENT_ITEM_NUMBER', 'COMPONENT_DESCRIPTION', 'ORG_ID','OP_CODE'], // Select specific attributes
+            attributes: ['ID21_ITEM_NUMBER', 'COMPONENT_ITEM_NUMBER', 'COMPONENT_DESCRIPTION', 'ORG_ID','OP_CODE'],
            where: sequelize.where(
                sequelize.literal('CAST("COMPONENT_ITEM_NUMBER" AS INTEGER)'), // Cast COMPONENT_ITEM_NUMBER to INTEGER
                newVal
@@ -142,9 +103,7 @@ app.post('/api/firstFit', async (req, res) => {
     const { newVal } = req.body;
     console.log("component ", newVal);
     try {
-
-        // const query = ` SELECT  "ID21_ITEM_NUMBER", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION" FROM mes_bom_components "COMPONENT_ITEM_NUMBER" = ${newVal}`;
-        const results = await MES_BOM_COMPONENTS.findAll({
+             const results = await MES_BOM_COMPONENTS.findAll({
             attributes: ['ID21_ITEM_NUMBER', 'COMPONENT_ITEM_NUMBER', 'COMPONENT_DESCRIPTION', 'ORG_ID','OP_CODE'], // Select specific attributes
             where: sequelize.where(
                 sequelize.literal('CAST("COMPONENT_ITEM_NUMBER" AS INTEGER)'), // Cast COMPONENT_ITEM_NUMBER to INTEGER
@@ -175,9 +134,9 @@ app.post('/api/modelNumber', async (req, res) => {
             }
 
         );
-        res.json({success: true, message:'slay', rows });
+        res.json({success: true, message:'success', rows });
     } catch (error) {
-        console.error('Error executing query', error);
+        console.error('Error executing modl number query', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
@@ -186,18 +145,15 @@ app.post('/api/login', async (req, res) => {
     console.log("user and password ", username, password);
 
     try {
-        // Query  database to find the user with the trying to login
         const query = 'SELECT userid, password, firstname,lastname, admin FROM users WHERE userid = :username AND password = :password';
         const [user, metadata] = await sequelize.query(query, {
             replacements: { username, password },
             type: QueryTypes.SELECT
         });
         if (user) {
-            // User found, authentication successful
             const { userid, firstname, lastname, admin } = user;
             res.json({ success: true, message: 'Login successful', user: { userid, firstname, lastname, admin } });
         } else {
-            // No user found with the provided credentials
             res.status(401).json({ success: false, message: 'Invalid username or password' });
         }
     } catch (error) {
@@ -271,14 +227,8 @@ app.post('/api/addLog', async(req,res)=>{
 });
 
 app.post('/api/printLog', async(req,res)=>{
-
     const query = `select * from printer_logs;`;
     try{
-        // const [logs, metadata] = await sequelize.query(query, {
-        //     type: QueryTypes.SELECT
-        // });
-        // console.log("Logs: ", logs);
-        //
         const logs = await printer_logs.findAll({
             attributes: ['userid','date_printed', 'time_printed', 'print_station']
         });
@@ -338,10 +288,7 @@ app.post('/api/getModel', async (req, res) => {
             //  replacements: { newVal },
             type: QueryTypes.SELECT
         });
-
-        console.log('Query executed:', model);
         if (model) {
-            //   const modelNumber = model.MODEL_NUMBER;
             res.json({ success: true, data: model });
         } else {
             res.status(404).json({ error: 'Model not found' });
@@ -351,8 +298,6 @@ app.post('/api/getModel', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
-
 
 app.listen(8080, () => {
     console.log('server listening on port 8080');

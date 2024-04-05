@@ -3,9 +3,7 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
 import 'bootstrap/dist/css/bootstrap.min.css';
-//import logo from './logo.png';
 import './App.css';
-
 import Login from "./pages/Login";
 import FirstFit from "./pages/FirstFit";
 import Reman from "./pages/Reman";
@@ -21,8 +19,6 @@ import PrinterLogs from "./pages/PrinterLogs";
 
 function App() {
     const userAuth = useSelector(state => state.user);
-
-    console.log("user auth: ", userAuth.userAuth);
     const ProtectedRoute = ({children}) =>{
         if(!userAuth.userAuth){
             return <Navigate to="/"/>;

@@ -18,11 +18,7 @@ export default function PrinterLogs(){
             const input = {item: userId};
             const logPull = await apiWrapper('api/printLog', 'POST', {input});
             console.log("logs ", logPull);
-            // if (logPull.message === 'printer logs found') {
-            //     const logs = logPull.logs;
-            //     console.log("Logs: ", logs);
-            //     console.log("logs type? ", typeof logs);
-            //
+
             let index = 0
                  console.log("length ", logPull.length);
             if (logPull.message === 'printer logs found') {
@@ -38,9 +34,6 @@ export default function PrinterLogs(){
             } else {
                 setRows([]);
             }
-
-               // console.log("rows ",newRows);
-
         }catch (error) {
             console.error('Error:', error);
             ;
@@ -56,7 +49,6 @@ export default function PrinterLogs(){
     { field: 'printStation', headerName: 'Print Station', width: 400 },
 ];
 
-   // console.log("rows ", rows);
 
     return(
         <div>

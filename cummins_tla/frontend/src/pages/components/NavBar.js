@@ -26,12 +26,8 @@ function NavBar(){
 
 
     useEffect(() => {
-
-        console.log("user: ", user);
         setIsAdmin(user.admin);
     }, []);
-
-    console.log("is user an admin?", isAdmin);
 
     const logout=()=>{
         navigate("/");

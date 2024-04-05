@@ -22,7 +22,6 @@ export default function FirstFit(){
 
     const [dbComponentNum, setDbComponentNum] = useState('');
     const [dbComponentid, setdbComponentid] = useState('');
-    const [componentNum, setComponentNum] = useState('');
     const [modelType, setModelType] = useState('');
     const currentDate = new Date();
     const year = currentDate.getFullYear(); // Get the current year
@@ -32,7 +31,6 @@ export default function FirstFit(){
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
-    console.log("user: ", user);
 
     const [radioSetting, setRadio] = useState('')
     const onOptionChange = e => {setRadio(e.target.value)}
@@ -72,28 +70,6 @@ export default function FirstFit(){
             console.error('Error:', error);
         }
     }
-
-    const modelPull = async ()=>{
-        try{
-            const data = await apiWrapper('api/modelNumber', 'GET', {dbComponentNum, dbComponentid});
-
-            data.rows.forEach(row => {
-           //    console.log("models ", row.MODEL_NUMBER);
-                if(dbComponentid === row.ID21_ITEM_NUMBER){
-                    setModelType(row.MODEL_NUMBER);
-                    //this should work if the ID21's in the databases matchup, but
-                    //for now the dummy data given is insufficient, so hardcoding
-                    console.log("succes: model type ", modelType);
-                }
-            });
-
-        } catch (error) {
-            console.error('Error:', error);
-
-        }
-    }
-
-
 
     var compressorBool = false;
     var turbineBool = false;

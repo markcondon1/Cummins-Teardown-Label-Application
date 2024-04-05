@@ -79,13 +79,12 @@ export default function TeardownTray() {
         console.log(date, time);
         // ZPL content for the label
         const model = 'HE341Ve';
-        //REPLACE: the hardcoded string model for 'modelType' when database correct
-        const zpl =` ^XA
-^FO20,50^A0N,30,30^FB500,2,0,C^FD${componentNumber}^FS
-^FO20,100^A0N,30,30^FB500,1,0,C^FD${componentDescription}^FS
-^FO20,150^A0N,30,30^FB500,1,0,C^FD${model}^FS
 
-^FO20,200^A0N,30,30^FB500,2,0,C^FD${date} ${time}^FS
+        const zpl =` ^^XA
+^FO20,50^A0N,24,24^FB500,2,0,C^FD${componentNumber}^FS
+^FO20,80^A0N,24,24^FB500,1,0,C^FD${componentDescription}^FS
+^FO20,110^A0N,24,24^FB500,1,0,C^FD${model}^FS
+^FO20,140^A0N,24,24^FB500,2,0,C^FD${date} ${time}^FS
 ^XZ`;
 
         // Create a new instance of jsPDF
@@ -93,7 +92,7 @@ export default function TeardownTray() {
         // Add ZPL content to PDF
         doc.text(zpl, 10, 10);
         // Save PDF
-        doc.save('label.pdf');
+        doc.save('teardown_label.pdf');
     }
 
     const handleInputChange = (e) => {
