@@ -325,16 +325,20 @@ app.get('/api/firstFit', async (req,res) =>{
             });
             if (data) {
                 //success
-                console.log(data[0], data[1], data[2]);
-                let shroud, turbine;
-                if(data.length > 2){
-                     shroud = data[1]
-                     turbine = data[2];
-                } else{
-                    shroud = False;
-                    turbine = data[1];
-                }
-                res.json({ success: true, message: 'Query successful', compressor:data[0], shroud:shroud, turbine:turbine });
+                let turbine, compressor;
+                let shroud = false;
+                data.forEach(element => {
+                    switch (element.COMMODITY_TYPE){
+                        case 'TURBINE HOUSING':
+                            turbine = element;
+                        case 'COMPRESSOR HOUSING':
+                            compressor = element;
+                        case 'SHROUD':
+                            shroud = element;
+                    }
+                });
+                console.log(compressor, shroud, turbine);
+                res.json({ success: true, message: 'Query successful', compressor:compressor, shroud:shroud, turbine:turbine });
             } else {
                 // No entries with the specified part number
                 res.status(401).json({ success: false, message: 'Invalid ID21 or Serial Number'});
