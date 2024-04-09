@@ -27,7 +27,8 @@ export default function FirstFit(){
     const [turbineHousing, setTurbineHousing] = useState('');
     const [compressorHousing, setCompressorHousing] = useState('');
     const [shroudPlate, setShroudPlate] = useState('');
-
+    const [dropdownArray, setDropdownArray] = useState(["no components found"]);
+    const[componentDropdown, setComponentDropdown] = useState('');
     const date = getDateTime('date');
 
     const [radioSetting, setRadio] = useState('')
@@ -203,6 +204,24 @@ export default function FirstFit(){
             doc.save('label.pdf');
             //addPrintLog();
     }
+    const getDropdown =async (componentNum) =>{
+            if(componentNum.length>2) {
+                setComponentDropdown(componentNum);
+                const dropdown = await apiWrapper('api/getDropdown', 'GET', {component: componentNum});
+                console.log("drop down", dropdown);
+                const dropdownArray = dropdown.dropdown;
+                if (dropdown.success) {
+                    setDropdownArray(dropdownArray);
+                }
+                console.log(dropdown.success);
+                if(!dropdown.success){
+                    console.log("fail");
+                    setComponentDropdown(['no components found']);
+                }
+            }
+
+
+    }
 
     const handleSerial = () =>{
         const currentDate = new Date();
@@ -284,13 +303,23 @@ export default function FirstFit(){
                             <div className="card-header">Components</div>
                                 <div className="card-body">
                                 <label htmlFor="components">Select Components</label>
-                                <select id="components" className="form-control">
-                                    {componentOptions.map((component, index) => (
-                                        <option key={index} value={component.ID21_ITEM_NUMBER}>
-                                            {`${component.ID21_ITEM_NUMBER} - ${component.COMPONENT_DESCRIPTION}`}
-                                        </option>
-                                    ))}
-                                </select>
+                                    <input   type="text"
+                                             onChange={(e) => getDropdown(e.target.value)}
+                                    />
+                                    <select id="components" className="form-control">
+                                        {componentDropdown && dropdownArray.map((item, index) => (
+                                            <option key={index} value={item.value}>
+                                                {`${item.COMPONENT_ITEM_NUMBER}, ${item.COMMODITY_TYPE}`} {/* Assuming each item has 'value' and 'label' properties */}
+                                            </option>
+                                        ))}
+                                    </select>
+                                {/*<select id="components" className="form-control">*/}
+                                {/*    {componentOptions.map((component, index) => (*/}
+                                {/*        <option key={index} value={component.ID21_ITEM_NUMBER}>*/}
+                                {/*            {`${component.ID21_ITEM_NUMBER} - ${component.COMPONENT_DESCRIPTION}`}*/}
+                                {/*        </option>*/}
+                                {/*    ))}*/}
+                                {/*</select>*/}
                                 <div className="print-qty">
                                     <label htmlFor="printQty">Print Qty:</label>
                                     <input type="number" id="printQty" defaultValue="1" />
