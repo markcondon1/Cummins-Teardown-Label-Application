@@ -75,30 +75,6 @@ app.post('/api/teardowntray', async (req, res) => {
 
 });
 
-
-app.post('/api/mesComponents', async (req, res) => {
-    const { id21_number, component_number } = req.body;
-    try {
-        const query = `
-        SELECT "ID21_ITEM_NUMBER", "COMPONENT_ITEM_NUMBER", "COMPONENT_DESCRIPTION"
-        FROM mes_bom_components
-        WHERE "COMPONENT_ITEM_NUMBER" = $2
-        AND "ID21_ITEM_NUMBER" = $1
-    `;
-        const[component, metadata ] = await sequelize.query(query, {
-            replacements: {id21_number, component_number},
-            type: QueryTypes.SELECT
-        });
-      if(component) {
-          res.json({ success: true, message: 'Login successful', component: {component_number, id21_number} });
-      }
-    } catch (error) {
-        console.error('Error executing query', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-
 app.post('/api/firstFit', async (req, res) => {
     const { newVal } = req.body;
     console.log("component ", newVal);
@@ -124,22 +100,6 @@ app.post('/api/firstFit', async (req, res) => {
 
 });
 
-app.post('/api/modelNumber', async (req, res) => {
-    const modelNumber = req.body;
-    try {
-        const query = 'SELECT "ID21_ITEM_NUMBER", "MODEL_NUMBER"  FROM mes_wip_info'
-        const { rows } = await sequelize.query(query, {
-            replacements: modelNumber,
-            type: QueryTypes.SELECT
-            }
-
-        );
-        res.json({success: true, message:'success', rows });
-    } catch (error) {
-        console.error('Error executing modl number query', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     console.log("user and password ", username, password);
@@ -299,17 +259,10 @@ app.post('/api/getModel', async (req, res) => {
     }
 });
 
-app.get('/api/firstFit', async (req,res) =>{
+app.get('/api/firstFit', async (req,res) => {
         const serial = req.query.serial;
         const id21 = req.query.id21;
         try {
-            // const data = await mes_assy_job_info.findAll({
-            //     attributes: ['ID21_ITEM_NUMBER', 'COMPONENT_ITEM_NUMBER', 'COMPONENT_DESCRIPTION', 'ORG_ID','OP_CODE'], // Select specific attributes
-            //    where: sequelize.where(
-            //        sequelize.literal('CAST("COMPONENT_ITEM_NUMBER" AS INTEGER)'), // Cast COMPONENT_ITEM_NUMBER to INTEGER
-            //        newVal
-            //    )
-
             // Query database
             const query = 
             `SELECT bom."COMPONENT_ITEM_NUMBER", wip."MODEL_NUMBER", bom."COMMODITY_TYPE"
@@ -327,7 +280,6 @@ app.get('/api/firstFit', async (req,res) =>{
                 //success
                 let turbine, compressor;
                 let shroud = false;
-                console.log('Data: ', data);
                 data.forEach(element => {
                     console.log(element);
                     switch (element.COMMODITY_TYPE){
@@ -342,20 +294,42 @@ app.get('/api/firstFit', async (req,res) =>{
                             break;
                     }
                 });
-                
-                console.log(compressor, shroud, turbine);
                 res.json({ success: true, message: 'Query successful', compressor:compressor, shroud:shroud, turbine:turbine });
             } else {
                 // No entries with the specified part number
                 res.status(401).json({ success: false, message: 'Invalid ID21 or Serial Number'});
             }
-    
         } catch (error) {
             console.error('Error executing query', error);
             res.status(500).json({ success: false, message: 'Internal server error' });
         }
 });
 
+app.get('/api/getDropdown', async (req,res) => {
+    const component = req.query.component;
+    try{
+        const query = 
+        `SELECT DISTINCT "COMPONENT_ITEM_NUMBER", "COMMODITY_TYPE" 
+        FROM mes_bom_components 
+        WHERE "COMPONENT_ITEM_NUMBER" 
+        LIKE ':component%'`;
+        const dropdown = [] = await sequelize.query(query, {
+            replacements:{component: component},
+            type:QueryTypes.SELECT,
+            raw:true,
+        });
+        if(dropdown.length > 0){
+            //success
+            res.json({ success: true, message: 'Query successful', dropdown:dropdown });
+        } else {
+            // No entries match the search
+            res.status(401).json({ success: false, message: 'Invalid Search'});
+        }
+    } catch{
+        console.error('Error executing query', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
 app.listen(8080, () => {
     console.log('server listening on port 8080');
 });
