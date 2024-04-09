@@ -304,13 +304,8 @@ export default function FirstFit(){
                             <div className="card-header">Components</div>
                                 <div className="card-body">
                                 <label htmlFor="components">Select Components</label>
-                                <select id="components" className="form-control">
-                                    {componentOptions.map((component, index) => (
-                                        <option key={index} value={component.ID21_ITEM_NUMBER}>
-                                            {`${component.ID21_ITEM_NUMBER} - ${component.COMPONENT_DESCRIPTION}`}
-                                        </option>
-                                    ))}
-                                </select>
+                                <input type = "text"
+                                    placeholder = "Enter Component Number"/>
                                 <div className="print-qty">
                                     <label htmlFor="printQty">Print Qty:</label>
                                     <input type="number" id="printQty" defaultValue="1" />

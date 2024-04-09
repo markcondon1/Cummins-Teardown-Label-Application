@@ -25,41 +25,40 @@ export default function TeardownTray() {
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
     let componentEntry ;
 
+    useEffect(() => {
+        if (componentNumber.length === 7) {
+            handleComponent();
+        }
+    }, [componentNumber]);
+
+    useEffect(() => {
+        if (componentDescription) {
+            printLabel();
+        }
+    }, [componentDescription]);
+
 //weh
     const handleComponent = async ()=>{
         try{
-            const newVal = parseInt(myInput);
+            const newVal = parseInt(componentNumber);
             console.log("input ", newVal);
             const input = {item: newVal};
             const data = await apiWrapper('api/teardowntray', 'POST', {newVal});
             const model = await apiWrapper('api/getModel', 'POST',{newVal});
 
-            console.log("model ", model);
-            console.log(typeof model);
-            const modelArray = model.data;
-            console.log(modelArray.MODEL_NUMBER);
-            setModelType(modelArray.MODEL_NUMBER);
-
-
-            console.log(typeof model);
-            if (data.success) {
-                console.log(data);
-                console.log(typeof data);
+            if (data.success && model.success) {
                 const dataArray = data.data;
-
+                const modelArray = model.data;
+                console.log("model ", modelArray.MODEL_NUMBER);
+                setModelType(modelArray.MODEL_NUMBER);
                 setComponentNumber(dataArray[0].COMPONENT_ITEM_NUMBER);
                 setComponentDescription(dataArray[0].COMPONENT_DESCRIPTION);
-
-            }else{
-                console.log("fail");
-
-            }
-
-
-        } catch (error) {
+            } else {
+                console.log("Data fetch failed");
+            } 
+        }catch (error) {
             console.error('Error:', error);
         }
-
     }
     // useEffect(() => {
     //     console.log("itemNum updated:", itemNum);
@@ -70,14 +69,6 @@ export default function TeardownTray() {
     // }, [componentDescription]);
     //
     //
-
-
-
-    useEffect(() => {
-        if(componentDescription) {
-            printLabel();
-        }
-    }, [componentDescription]);
 
     // data that will go inside the zebra printer language
     const printLabel = () => {
@@ -108,11 +99,8 @@ export default function TeardownTray() {
         // Allow only numbers and limit length to 7
         if (/^\d{0,7}$/.test(inputValue)) {
             setComponentNumber(inputValue);
-            if (inputValue.length === 7) {
-                handleComponent(inputValue);
-            }
         }
-    };   
+    } 
 
     const reman = () => {
         navigate("/app/Reman");
