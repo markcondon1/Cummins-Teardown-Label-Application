@@ -31,6 +31,14 @@ export default function FirstFit(){
     const[componentDropdown, setComponentDropdown] = useState('');
     const date = getDateTime('date');
 
+    const currentDate = new Date();
+    const year = currentDate.getFullYear(); // Get the current year
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
     const [radioSetting, setRadio] = useState('')
     const onOptionChange = e => {setRadio(e.target.value)}
 
@@ -172,7 +180,7 @@ export default function FirstFit(){
         const serial = handleSerial().toString().padStart(4,'0');
         
         const matrixContent = `P0${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
-        //TODO: Update dbComponentNum with query from database
+        //TODO: Update component num with query from database
             const zpl = `
             ^XA
             ^FX Date/Time
@@ -184,7 +192,7 @@ export default function FirstFit(){
 
             ^FX Component Number:
             ^FO5,55^A 0,30,30^FD Component Number:^FS
-            ^FO310,55^A 0,30,30^FD${dbComponentNum}^FS 
+            ^FO310,55^A 0,30,30^FD${``}^FS 
 
             ^FX TD SQ
             ^FO5,85^A 0,30,30^FD TD SEQ:^FS
@@ -262,7 +270,7 @@ export default function FirstFit(){
                             <div className="card-body">
                                 <div className="scanned-variables">
                                 <input type="text" id="rejectInput" placeholder="Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s"
-                                       onKeyDown={(e) => handleComponent(e.target.value)}></input>
+                                       onKeyDown={(e) => handleInput(e.target.value)}></input>
                                 </div>
                                 <div className="ticket-details">
                                     <p>ID21: </p>
