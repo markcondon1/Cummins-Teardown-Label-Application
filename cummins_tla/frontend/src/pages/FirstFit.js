@@ -25,6 +25,14 @@ export default function FirstFit(){
 
     const [radioSetting, setRadio] = useState('')
     const onOptionChange = e => {setRadio(e.target.value)}
+    const currentDate = new Date();
+    const year = currentDate.getFullYear(); // Get the current year
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
 
     const handleComponent = async (numberEntry)=>{
         try{
@@ -82,26 +90,15 @@ export default function FirstFit(){
         }
     }
 
-
-
-    var compressorBool = false;
-    var turbineBool = false;
-
-    console.log(compressorBool);
-
     const printLabel = () => {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear(); // Get the current year
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        const day = String(currentDate.getDate()).padStart(2, '0');
-        const hours = String(currentDate.getHours()).padStart(2, '0');
-        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
         let start = new Date(currentDate.getFullYear(), 0, 0);
         let diff = (currentDate - start) + ((start.getTimezoneOffset() - currentDate.getTimezoneOffset()) * 60 * 1000);
         let oneDay = 1000 * 60 * 60 * 24;
         let dayOfYear = Math.floor(diff / oneDay).toString().padStart(3,'0');
+
+        const item_segment1 = document.getElementById("rejectInput").value.toString();
+        const itemsegment = item_segment1.toString();
         
         const date =`${month}/${day}/${year}`;
         const time = `${hours}:${minutes}:${seconds}`;
@@ -112,9 +109,8 @@ export default function FirstFit(){
         
         if((radioSetting == "turbine") || (radioSetting == "both"))
         {
-            const itemsegment = ``;
 
-        const matrixContent = `P${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
+        const matrixContent = `P0${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
             const zpl = `
             ^XA
             ^FX Date/Time
@@ -143,13 +139,11 @@ export default function FirstFit(){
             doc.text(zpl, 10, 10);
             // Save PDF
             doc.save('label.pdf');
-            
+            addPrintLog();
         }
         if((radioSetting == "compressor") || (radioSetting == "both"))
-        {            
-            const itemsegment = ``;
-
-            const matrixContent = `P${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
+        {           
+            const matrixContent = `P0${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
             const zpl = `
             ^XA
             ^FX Date/Time
@@ -178,7 +172,70 @@ export default function FirstFit(){
             doc.text(zpl, 10, 10);
             // Save PDF
             doc.save('label.pdf');
+            addPrintLog();
         }
+        
+    }
+
+    const printComponentLabel = () =>{
+
+        let start = new Date(currentDate.getFullYear(), 0, 0);
+        let diff = (currentDate - start) + ((start.getTimezoneOffset() - currentDate.getTimezoneOffset()) * 60 * 1000);
+        let oneDay = 1000 * 60 * 60 * 24;
+        let dayOfYear = Math.floor(diff / oneDay).toString().padStart(3,'0');
+
+        const item_segment1 = ``;   //TODO: Update with component number via user input
+        const itemsegment = item_segment1.toString();
+        
+        const date =`${month}/${day}/${year}`;
+        const time = `${hours}:${minutes}:${seconds}`;
+
+        const twoDigitYear = year.toString().slice(-2);
+
+        const serial = handleSerial().toString().padStart(4,'0');
+        
+        const matrixContent = `P0${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
+        //TODO: Update dbComponentNum with query from database
+            const zpl = `
+            ^XA
+            ^FX Date/Time
+            ^FO5,25^A 0,30,30^FD ${time}^FS
+            ^FO125,25^A 0,30,30^FD ${date}^FS
+        
+            ^FX User ID
+            ^FO310,25^A 0,30,30^FD${user.userid}^FS
+
+            ^FX Component Number:
+            ^FO5,55^A 0,30,30^FD Component Number:^FS
+            ^FO310,55^A 0,30,30^FD${dbComponentNum}^FS 
+
+            ^FX TD SQ
+            ^FO5,85^A 0,30,30^FD TD SEQ:^FS
+            ^FO310,85^A 0,30,30^FD${twoDigitYear}${dayOfYear}${serial}^FS
+
+            ^FO180,145^BXN,5,200,20,20,3,,1
+            ^FD${matrixContent}^FS
+
+            ^XZ 
+            `;
+            //TODO: Update with print quantity
+            // Create a new instance of jsPDF
+            const doc = new jsPDF();
+            // Add ZPL content to PDF
+            doc.text(zpl, 10, 10);
+            // Save PDF
+            doc.save('label.pdf');
+            //addPrintLog();
+    }
+
+    const addPrintLog = async ()=>{
+        
+        const date_printed =`${month}/${day}/${year}`
+        const time_printed = `${hours}:${minutes}:${seconds}`;
+        const print_station = 'First Fit';
+        const userid = user.userid;
+        const data = await apiWrapper('api/addLog', 'POST', {userid, time_printed,date_printed,print_station});
+        console.log(data);
     }
 
 
@@ -220,7 +277,7 @@ export default function FirstFit(){
                             <div className="card-header">Reject Tickets</div>
                             <div className="card-body">
                                 <div className="scanned-variables">
-                                <input type="text" placeholder="Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s"
+                                <input type="text" id="rejectInput" placeholder="Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s"
                                        onKeyDown={(e) => handleComponent(e.target.value)}></input>
                                 </div>
                                 <div className="ticket-details">
@@ -268,7 +325,7 @@ export default function FirstFit(){
                                 <div className="print-qty">
                                     <label htmlFor="printQty">Print Qty:</label>
                                     <input type="number" id="printQty" defaultValue="1" />
-                                    <button className="print-button">Print</button>
+                                    <button className="print-button" onClick={printComponentLabel}>Print</button>
                                 </div>
                             </div>
                         </div>
