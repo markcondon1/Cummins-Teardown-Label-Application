@@ -306,13 +306,14 @@ app.get('/api/firstFit', async (req,res) => {
 });
 
 app.get('/api/getDropdown', async (req,res) => {
-    const component = req.query.component;
+    const component = `${req.query.component}%`;
+    console.log("component ",component);
     try{
         const query = 
         `SELECT DISTINCT "COMPONENT_ITEM_NUMBER", "COMMODITY_TYPE" 
         FROM mes_bom_components 
-        WHERE "COMPONENT_ITEM_NUMBER" 
-        LIKE ':component%'`;
+        WHERE "COMPONENT_ITEM_NUMBER" LIKE :component 
+        AND ("COMMODITY_TYPE" = 'TURBINE HOUSING' OR "COMMODITY_TYPE" = 'COMPRESSOR HOUSING')`;
         const dropdown = [] = await sequelize.query(query, {
             replacements:{component: component},
             type:QueryTypes.SELECT,
@@ -326,7 +327,7 @@ app.get('/api/getDropdown', async (req,res) => {
             res.status(401).json({ success: false, message: 'Invalid Search'});
         }
     } catch{
-        console.error('Error executing query', error);
+        console.error('Error executing query');
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
