@@ -327,16 +327,22 @@ app.get('/api/firstFit', async (req,res) =>{
                 //success
                 let turbine, compressor;
                 let shroud = false;
+                console.log('Data: ', data);
                 data.forEach(element => {
+                    console.log(element);
                     switch (element.COMMODITY_TYPE){
                         case 'TURBINE HOUSING':
                             turbine = element;
+                            break;
                         case 'COMPRESSOR HOUSING':
                             compressor = element;
+                            break;
                         case 'SHROUD':
                             shroud = element;
+                            break;
                     }
                 });
+                
                 console.log(compressor, shroud, turbine);
                 res.json({ success: true, message: 'Query successful', compressor:compressor, shroud:shroud, turbine:turbine });
             } else {
