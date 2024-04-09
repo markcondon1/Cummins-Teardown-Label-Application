@@ -10,6 +10,7 @@ import { getDropdownMenuPlacement } from "react-bootstrap/esm/DropdownMenu";
 import { useState } from "react";
 import { apiWrapper } from "../apiWrapper"
 import { func } from "prop-types";
+import { getDateTime } from "../dateTime";
 
 export default function Reman(){
     //handles focusing input box
@@ -19,9 +20,10 @@ export default function Reman(){
       inputElement.current.focus();
     }
   }, []);
-
-    const navigate = useNavigate();
     const user = useSelector(state => state.user);
+    const navigate = useNavigate();
+    const date = getDateTime('date');
+
     const reman=()=>{
         navigate("/app/Reman");
     }
@@ -64,17 +66,9 @@ export default function Reman(){
     const generateLabel = (item_segment1)  =>{
         //getting components for time and date
         const currentDate = new Date();
-        const year = currentDate.getFullYear(); // Get the current year
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        const day = String(currentDate.getDate()).padStart(2, '0');
-        const hours = String(currentDate.getHours()).padStart(2, '0');
-        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-        
-        const date =`${month}/${day}/${year}`;
-        const time = `${hours}:${minutes}:${seconds}`;
+        const time = getDateTime('time');
        
-        const twoDigitYear = year.toString().slice(-2);
+        const twoDigitYear = currentDate.getFullYear().toString().slice(-2);
 
         let start = new Date(currentDate.getFullYear(), 0, 0);
         let diff = (currentDate - start) + ((start.getTimezoneOffset() - currentDate.getTimezoneOffset()) * 60 * 1000);
@@ -158,7 +152,17 @@ export default function Reman(){
             setNotification('No label generated. Please try again.');
             setTimeout(() => setNotification(''), 5000);
         }
+        addPrintLog();
+
     };
+    const addPrintLog = async ()=>{
+        const date_printed = date;
+        const time_printed = getDateTime('time');
+        const print_station = 'Reman';
+        const userid = user.userid;
+        const data = await apiWrapper('api/addLog', 'POST', {userid, time_printed,date_printed,print_station});
+        console.log(data);
+    }
 
     const handleSerial = () =>{
         const currentDate = new Date();

@@ -30,12 +30,12 @@ export default function Login(){
         // Make an HTTP request to the login endpoint
         try {
             const data = await apiWrapper('api/login', 'POST', { username, password });
-            console.log(data); // Handle the response from the server
+            console.log(data);
             if (data.success){
                 dispatch(userAuth({
                     userAuth: true
                 }))
-//dispatch to set user
+            //dispatch to set user
                 dispatch(setUser({
                     firstname: data.user.firstname,
                     lastname: data.user.lastname,
