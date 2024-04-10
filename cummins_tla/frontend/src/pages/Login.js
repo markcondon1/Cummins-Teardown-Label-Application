@@ -25,6 +25,10 @@ export default function Login(){
     const [lastname, setLastname] = useState(null);
     const user = useSelector(state => state.user);
 
+
+    //handle login is an async function that takes in the inputted username and password
+    //parses the values to ensure they match up with the users in the database
+    // if they do the user is allowed to enter the system.
     const handleLogin = async () => {
 
         // Make an HTTP request to the login endpoint
@@ -60,12 +64,10 @@ export default function Login(){
     };
 
 
-
     const fetchUserData = async () => {
         try {
             const data = await apiWrapper('api/data', 'GET');
             setUsers(data); // Set the users state with the fetched data
-            console.log("users= ", data);
         } catch (error) {
             console.error("Error fetching user data:", error);
         }

@@ -12,11 +12,13 @@ export default function AddUser(){
     const [lastname, setLastname] = useState('');
     const [password, setPassword]= useState('');
 
+    // this function handles creating a new user based off the input from the text boxes
+    //and adds the new user to the database
     const handleCreate = async () => {
         try{
             console.log("user id ", userid);
-            //const input = {item: userId};
-            const deleteUser = await apiWrapper('api/addUser', 'POST', {userid,firstname,lastname,password});
+            //call to the backend that create a new user based off the specific inputs
+            await apiWrapper('api/addUser', 'POST', {userid,firstname,lastname,password});
 
 
         }catch (error) {

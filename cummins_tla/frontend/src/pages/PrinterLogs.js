@@ -11,16 +11,17 @@ export default function PrinterLogs(){
     const navigate = useNavigate();
     const [rows, setRows] = useState([]);
 
-
+   //get logs pulls in all the printer logs in the printer log database table.
+   //from there it accumulates them into a table grid.
     const getLogs = async () => {
         try{
-            console.log("user id ", userId);
+
             const input = {item: userId};
+            //call to backend print log function
             const logPull = await apiWrapper('api/printLog', 'POST', {input});
-            console.log("logs ", logPull);
 
             let index = 0
-                 console.log("length ", logPull.length);
+
             if (logPull.message === 'printer logs found') {
                 const logs = logPull.logs.map((log, index) => ({
                     id: index + 1,
@@ -29,18 +30,19 @@ export default function PrinterLogs(){
                     timePrinted: log.time_printed,
                     printStation: log.print_station,
                 }));
-                console.log("Logs: ", logs);
                 setRows(logs);
             } else {
                 setRows([]);
             }
         }catch (error) {
             console.error('Error:', error);
-            ;
+
         }
     }
-    getLogs();
-    console.log("rows: ", rows)
+    useEffect(()=>{
+        getLogs();
+    },[]);
+
 
     const columns=[
     { field: 'userid', headerName: 'User ID', width: 400 },
@@ -58,7 +60,7 @@ export default function PrinterLogs(){
                 <DataGrid
                     rows={rows}
                     columns = {columns}
-                    pageSize={5}
+                    pageSize={4}
                 />
                 </div>
             </div>

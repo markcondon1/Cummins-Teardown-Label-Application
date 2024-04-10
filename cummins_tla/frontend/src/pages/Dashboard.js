@@ -9,6 +9,9 @@ import '../App.css';
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {useSelector} from "react-redux";
+
+//Dashboard helps navigate between the three main print stations among
+//a user first entering the system
 export default function Dashboard(){
     const navigate = useNavigate();
     const user = useSelector(state => state.user);

@@ -14,12 +14,6 @@ export default function FirstFit(){
 
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
-    const [numberEntry, setNumberEntry] = useState('');
-    const [itemNum, setItemNum]=useState('');
-    const [componentDescription, setComponentDescription] = useState('');
-
-    const [componentOptions, setComponentOptions] = useState([]);
-    const [selectedComponent, setSelectedComponent] = useState(''); 
 
     const [partSerial, setPartSerial] = useState('');
     const [id21, setid21] = useState('');

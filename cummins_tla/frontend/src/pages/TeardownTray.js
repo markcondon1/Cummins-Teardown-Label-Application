@@ -10,8 +10,7 @@ export default function TeardownTray() {
     const user = useSelector(state => state.user);
     const [componentNumber, setComponentNumber] = useState('');
     const [componentDescription, setComponentDescription] = useState('');
-    const [validInput, setValidInput] = useState(false);
-    const [itemNum, setItemNum]=useState('');
+
     const [modelType, setModelType] = useState('');
     const [myInput, setMyInput] = useState('');
     //getting components for time and date
@@ -23,15 +22,20 @@ export default function TeardownTray() {
     const hours = String(currentDate.getHours()).padStart(2, '0');
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-    let componentEntry ;
 
 
+    //handle component is an async function that takes in the input value and from the input
+    //parses the component item number and description from the mes bom compenents database.
+    // it then uses the component number to connect to the mes wip info table to access the componenets
+    //model number
     const handleComponent = async ()=>{
         try{
-            const newVal = parseInt(myInput);
+            const newVal = 3595260;
             console.log("input ", newVal);
             const input = {item: newVal};
+            //call backend function
             const data = await apiWrapper('api/teardowntray', 'POST', {newVal});
+            //call model backend function
             const model = await apiWrapper('api/getModel', 'POST',{newVal});
 
             console.log("model ", model);
@@ -55,15 +59,11 @@ export default function TeardownTray() {
 
             }
 
-
         } catch (error) {
             console.error('Error:', error);
         }
 
     }
-
-
-
 
 
     useEffect(() => {
@@ -77,15 +77,15 @@ export default function TeardownTray() {
         const date =`${month}/${day}/${year}`
         const time = `${hours}:${minutes}:${seconds}`;
         console.log(date, time);
+
         // ZPL content for the label
-        const model = 'HE341Ve';
 
         const zpl =` ^^XA
-^FO20,50^A0N,28,28^FB500,2,0,C^FD${componentNumber}^FS
-^FO20,80^A0N,24,24^FB500,1,0,C^FD${componentDescription}^FS
-^FO20,110^A0N,24,24^FB500,1,0,C^FD${model}^FS
-^FO20,140^A0N,24,24^FB500,2,0,C^FD${date} ${time}^FS
-^XZ`;
+            ^FO20,50^A0N,28,28^FB500,2,0,C^FD${componentNumber}^FS
+            ^FO20,80^A0N,24,24^FB500,1,0,C^FD${componentDescription}^FS
+            ^FO20,110^A0N,24,24^FB500,1,0,C^FD${modelType}^FS
+            ^FO20,140^A0N,24,24^FB500,2,0,C^FD${date} ${time}^FS
+            ^XZ`;
 
         // Create a new instance of jsPDF
         const doc = new jsPDF();
