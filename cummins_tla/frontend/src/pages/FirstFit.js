@@ -30,8 +30,20 @@ export default function FirstFit(){
 
     const date = getDateTime('date');
 
-    const [radioSetting, setRadio] = useState('')
+    const [autoPrint, setAutoPrint] = useState(false);
+    const [radioSetting, setRadio] = useState('');
+
     const onOptionChange = e => {setRadio(e.target.value)}
+
+    const handleAutoPrintChange = (e) => {
+        setAutoPrint(e.target.checked);
+    }
+
+    useEffect(() => {
+        if (autoPrint && radioSetting) {
+            printLabel();
+        }
+    }, [radioSetting, autoPrint]);
 
     const handleInput = async (input)=>{
         //Example input for testing: P1908051718;5324132;
@@ -224,7 +236,7 @@ export default function FirstFit(){
                                 </div>
                                 <div className="print-controls">
                                     <div className="auto-print">
-                                        <input type="checkbox" id="autoPrint" />
+                                        <input type="checkbox" id="autoPrint" checked={autoPrint} onChange={handleAutoPrintChange} />
                                         <label htmlFor="autoPrint">Auto Print</label>
                                     </div>
                                     <button className="print-button" onClick={printLabel}>Print</button>
