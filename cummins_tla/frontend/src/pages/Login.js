@@ -58,6 +58,9 @@ export default function Login(){
             setTimeout(() => setNotification(''), 5000);
         }
     };
+
+
+
     const fetchUserData = async () => {
         try {
             const data = await apiWrapper('api/data', 'GET');
