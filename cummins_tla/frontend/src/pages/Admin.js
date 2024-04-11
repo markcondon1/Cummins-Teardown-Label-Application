@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 import NavBar from "./components/NavBar";
 import  './page_styles.css';
 
-
+//admin navigates between the pages of the admnistrators main features
 export default function Admin(){
     const [userId, setUserId] = useState('');
     const navigate = useNavigate();

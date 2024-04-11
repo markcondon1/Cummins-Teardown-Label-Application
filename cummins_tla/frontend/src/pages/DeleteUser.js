@@ -7,10 +7,13 @@ import './page_styles.css';
 
 export default function Admin(){
     const [userId, setUserId] = useState('');
+
+    //handle delete deletes a user from the database table when a user inputs a user's id.
     const handleDelete = async () => {
         try{
             console.log("user id ", userId);
             const input = {item: userId};
+            //call to the backend delete query
             const deleteUser = await apiWrapper('api/deleteUser', 'POST', {input});
 
 

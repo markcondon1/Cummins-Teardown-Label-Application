@@ -41,6 +41,7 @@ const MES_LINEREJECTION= sequelize.define('mes_scrap_info', {
      { tableName: 'printer_logs',
    });
 
+ //load model to make sure the database is synced
 (async () => {
     try {
         await sequelize.sync();
@@ -50,6 +51,8 @@ const MES_LINEREJECTION= sequelize.define('mes_scrap_info', {
     }
 })();
 
+//backend post function to query the components description, org id, op code, and id21 number passed off a users
+//component item number input
 app.post('/api/teardowntray', async (req, res) => {
     const { newVal } = req.body;
     console.log("component ", newVal);
@@ -100,6 +103,7 @@ app.post('/api/firstFit', async (req, res) => {
 
 });
 
+//post function to query the users information from the database upon successfully logging in
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     console.log("user and password ", username, password);
@@ -121,6 +125,8 @@ app.post('/api/login', async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
+
+//post query to delete a user based on the input of a user's id
 app.post('/api/deleteUser', async(req,res)=>{
     const { item: userid } = req.body.input;
     console.log(userid);
@@ -141,6 +147,8 @@ app.post('/api/deleteUser', async(req,res)=>{
     }
 });
 
+
+//post query to create a new user ased on the specified input
 app.post('/api/addUser', async(req,res)=>{
     const { userid, firstname,lastname, password } = req.body;
     console.log(userid, firstname, lastname,password);
@@ -161,6 +169,8 @@ app.post('/api/addUser', async(req,res)=>{
         res.status(500).send({ error: 'An error occurred while adding the user.' });
     }
 });
+
+//backend post query to add a print log everytime a user prints a label
 app.post('/api/addLog', async(req,res)=>{
     const { userid, time_printed,date_printed, print_station } = req.body;
     console.log(userid, time_printed, date_printed,print_station);
@@ -186,6 +196,8 @@ app.post('/api/addLog', async(req,res)=>{
     }
 });
 
+
+//backend query to pull in all existing print logs from the database
 app.post('/api/printLog', async(req,res)=>{
     const query = `select * from printer_logs;`;
     try{
@@ -231,7 +243,8 @@ app.get('/api/reman', async (req, res) => {
     }
 });
 
-
+//backend query that joins the mes wip info table to the mes bom compnonents in order to determine a parts
+//model number
 app.post('/api/getModel', async (req, res) => {
     const { newVal } = req.body;
     console.log("input  ", newVal);
@@ -331,6 +344,34 @@ app.get('/api/getDropdown', async (req,res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
+app.get('/api/getTeardown', async (req,res)=>{
+    const component = `${req.query.component}%`;
+    console.log("component ",component);
+    try{
+        const query =
+            `select distinct   "COMPONENT_ITEM_NUMBER"
+             from
+                 mes_bom_components
+             where
+                 "COMPONENT_ITEM_NUMBER" like :component`;
+        const dropdown = [] = await sequelize.query(query, {
+            replacements:{component: component},
+            type:QueryTypes.SELECT,
+            raw:true,
+        });
+        if(dropdown.length > 0){
+            //success
+            res.json({ success: true, message: 'Query successful', dropdown:dropdown });
+        } else {
+            // No entries match the search
+            res.status(401).json({ success: false, message: 'Invalid Search'});
+        }
+    } catch{
+        console.error('Error executing query');
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+//ensure that the port is working
 app.listen(8080, () => {
     console.log('server listening on port 8080');
 });
