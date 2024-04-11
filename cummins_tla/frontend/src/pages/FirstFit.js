@@ -24,6 +24,8 @@ export default function FirstFit(){
     const [dropdownArray, setDropdownArray] = useState(["no components found"]);
     const[componentDropdown, setComponentDropdown] = useState('');
     const date = getDateTime('date');
+    const [componentNumber, setComponentNumber] = useState('');
+
 
     const [autoPrint, setAutoPrint] = useState(false);
     const [radioSetting, setRadio] = useState('');
@@ -60,6 +62,7 @@ export default function FirstFit(){
                 setModel(data.compressor.MODEL_NUMBER);
                 setTurbineHousing(data.turbine.COMPONENT_ITEM_NUMBER);
                 setCompressorHousing(data.compressor.COMPONENT_ITEM_NUMBER);
+                setComponentNumber(data.compressor.COMPONENT_ITEM_NUMBER);
                 if(data.shroud){
                     setShroudPlate(data.shroud.COMPONENT_ITEM_NUMBER);
                 }else{
@@ -198,7 +201,7 @@ export default function FirstFit(){
 
             ^FX Component Number:
             ^FO5,55^A 0,30,30^FD Component Number:^FS
-            ^FO310,55^A 0,30,30^FD${``}^FS 
+            ^FO310,55^A 0,30,30^FD${componentNumber}^FS 
 
             ^FX TD SQ
             ^FO5,85^A 0,30,30^FD TD SEQ:^FS
