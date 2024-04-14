@@ -15,14 +15,16 @@ export default function FirstFit(){
     const [turbineHousing, setTurbineHousing] = useState('');
     const [compressorHousing, setCompressorHousing] = useState('');
     const [shroudPlate, setShroudPlate] = useState('');
-    const [dropdownArray, setDropdownArray] = useState(["no components found"]);
-    const[componentDropdown, setComponentDropdown] = useState('');
     const date = getDateTime('date');
     const [componentNumber, setComponentNumber] = useState('');
 
 
     const [autoPrint, setAutoPrint] = useState(false);
     const [radioSetting, setRadio] = useState('');
+
+    //state for handling input and suggestions
+    const [componentInput, setComponentInput] = useState('');
+    const [componentSuggestions, setComponentSuggestions] = useState([]);
 
     const currentDate = new Date();
     const year = currentDate.getFullYear(); // Get the current year
@@ -172,8 +174,7 @@ export default function FirstFit(){
         let oneDay = 1000 * 60 * 60 * 24;
         let dayOfYear = Math.floor(diff / oneDay).toString().padStart(3,'0');
 
-        const item_segment1 = ``;   //TODO: Update with component number via user input
-        const itemsegment = item_segment1.toString();
+        const itemsegment = componentInput;
         
         const date =`${month}/${day}/${year}`;
         const time = `${hours}:${minutes}:${seconds}`;
@@ -195,7 +196,7 @@ export default function FirstFit(){
 
             ^FX Component Number:
             ^FO5,55^A 0,30,30^FD Component Number:^FS
-            ^FO310,55^A 0,30,30^FD${componentNumber}^FS 
+            ^FO310,55^A 0,30,30^FD${itemsegment}^FS 
 
             ^FX TD SQ
             ^FO5,85^A 0,30,30^FD TD SEQ:^FS
@@ -214,24 +215,6 @@ export default function FirstFit(){
             // Save PDF
             doc.save('label.pdf');
             //addPrintLog();
-    }
-    const getDropdown =async (componentNum) =>{
-            if(componentNum.length>2) {
-                setComponentDropdown(componentNum);
-                const dropdown = await apiWrapper('api/getDropdown', 'GET', {component: componentNum});
-                console.log("drop down", dropdown);
-                const dropdownArray = dropdown.dropdown;
-                if (dropdown.success) {
-                    setDropdownArray(dropdownArray);
-                }
-                console.log(dropdown.success);
-                if(!dropdown.success){
-                    console.log("fail");
-                    setComponentDropdown(['no components found']);
-                }
-            }
-
-
     }
 
     const handleSerial = () =>{
@@ -261,6 +244,30 @@ export default function FirstFit(){
         localStorage.setItem('serialData', JSON.stringify(serialData))
         return JSON.parse(localStorage.getItem('serialData')).serial;
     };
+
+   
+    
+    useEffect(() => {
+        if (componentInput.length > 2) {
+            const fetchComponents = async () => {
+                try {
+                    const response = await apiWrapper('api/getDropdown', 'GET', {component: componentInput});
+                    if (response.success) {
+                        setComponentSuggestions(response.dropdown);
+                    } else {
+                        setComponentSuggestions([]);
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch components', error);
+                }
+            };
+
+            fetchComponents();
+        } else {
+            setComponentSuggestions([]);
+        }
+    }, [componentInput]);
+
     
     return(
         <div className="container-flex">
@@ -313,17 +320,21 @@ export default function FirstFit(){
                         <div className="card">
                             <div className="card-header">Components</div>
                                 <div className="card-body">
-                                <label htmlFor="components">Select Components</label>
-                                    <input   type="text"
-                                             onChange={(e) => getDropdown(e.target.value)}
-                                    />
-                                    <select id="components" className="form-control">
-                                        {componentDropdown && dropdownArray.map((item, index) => (
-                                            <option key={index} value={item.value}>
-                                                {`${item.COMPONENT_ITEM_NUMBER}, ${item.COMMODITY_TYPE}`} {/* Assuming each item has 'value' and 'label' properties */}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <label htmlFor="componentInput">Select Components</label>
+                                        <input 
+                                            list="componentList" 
+                                            id="componentInput" 
+                                            className="form-control"
+                                            placeholder="Type to search components..."
+                                            value={componentInput}
+                                            onChange={(e) => setComponentInput(e.target.value)}
+                                        /> 
+                                        <datalist id="componentList">
+                                            {componentSuggestions.map((item, index) => (
+                                                <option key={index} value={item.COMPONENT_ITEM_NUMBER} />
+                                            ))}
+                                        </datalist>
+
                                 {/*<select id="components" className="form-control">*/}
                                 {/*    {componentOptions.map((component, index) => (*/}
                                 {/*        <option key={index} value={component.ID21_ITEM_NUMBER}>*/}
