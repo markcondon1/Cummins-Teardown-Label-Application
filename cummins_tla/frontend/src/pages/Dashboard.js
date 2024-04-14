@@ -1,13 +1,8 @@
 import {useNavigate} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
 import NavBar from "./components/NavBar";
 import '../App.css';
-import {useEffect, useState} from "react";
-import axios from "axios";
 import {useSelector} from "react-redux";
 
 //Dashboard helps navigate between the three main print stations among
@@ -32,7 +27,7 @@ export default function Dashboard(){
     return(
     
     <div class="container-flex">
-            <NavBar></NavBar>     
+            <NavBar></NavBar>
             <div className="dashboard-container">
                 <div className="dashboard">
                     <h1>Click which label you would like to print.</h1>

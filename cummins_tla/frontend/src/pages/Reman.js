@@ -1,15 +1,11 @@
 import React, { useRef, useEffect } from "react";
-import {useNavigate} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
-import RemanLabelPreview from "./components/RemanLabelPreview";
 import placeholder_label from "./components/placeholder_label.png"
 import {useSelector} from "react-redux";
 import jsPDF from "jspdf";
-import { getDropdownMenuPlacement } from "react-bootstrap/esm/DropdownMenu";
 import { useState } from "react";
 import { apiWrapper } from "../apiWrapper"
-import { func } from "prop-types";
 import { getDateTime } from "../dateTime";
 
 export default function Reman(){
@@ -21,19 +17,7 @@ export default function Reman(){
     }
   }, []);
     const user = useSelector(state => state.user);
-    const navigate = useNavigate();
     const date = getDateTime('date');
-
-    const reman=()=>{
-        navigate("/app/Reman");
-    }
-    const teardown = () => {
-        navigate("/app/teardownTray");
-    }
-
-    const firstFit = () =>{
-        navigate("/app/firstFit");
-    }
 
     const [zpl, setZpl] = useState(null);
     const [notification, setNotification] = useState(null);
@@ -144,7 +128,7 @@ export default function Reman(){
             const doc = new jsPDF();
             // Add ZPL content to PDF
             var img = new Image();
-            img.src = document.getElementById('remanLabelPreview').getAttribute('src');;
+            img.src = document.getElementById('remanLabelPreview').getAttribute('src');
             doc.addImage(img, 'png', 0, 40, 200, 80);
             // Save PDF
             doc.save('label.pdf');

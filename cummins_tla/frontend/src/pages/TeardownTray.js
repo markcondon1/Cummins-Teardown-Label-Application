@@ -1,24 +1,17 @@
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
 import jsPDF from "jspdf";
 import {useEffect, useState} from "react";
 import { apiWrapper } from "../apiWrapper";
 import {getDateTime} from "../dateTime";
 export default function TeardownTray() {
-    const navigate = useNavigate();
-    const user = useSelector(state => state.user);
     const [componentNumber, setComponentNumber] = useState('');
     const [componentDescription, setComponentDescription] = useState('');
-
     const [modelType, setModelType] = useState('');
-
     const date = getDateTime('date');
     //getting components for time and date
     const currentDate = new Date();
-
-    const year = currentDate.getFullYear(); // Get the current year
+    const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
     const day = String(currentDate.getDate()).padStart(2, '0');
     const hours = String(currentDate.getHours()).padStart(2, '0');
@@ -37,7 +30,6 @@ export default function TeardownTray() {
         }
     }, [componentDescription]);
 
-//weh
 
     //handle component is an async function that takes in the input value and from the input
     //parses the component item number and description from the mes bom compenents database.
@@ -63,22 +55,13 @@ export default function TeardownTray() {
 
             }else{
                 console.log("fail");
-
             }
 
         } catch (error) {
             console.error('Error:', error);
         }
     }
-    const addPrintLog = async ()=>{
-        const date_printed = date;
-        const time_printed = getDateTime('time');
-        const print_station = 'Teardown';
-        const userid = user.userid;
-        const data = await apiWrapper('api/addLog', 'POST', {userid, time_printed,date_printed,print_station});
-        //console.log(data);
 
-    }
 
     useEffect(() => {
         if(componentDescription) {
@@ -107,7 +90,7 @@ export default function TeardownTray() {
         doc.text(zpl, 10, 10);
         // Save PDF
         doc.save('teardown_label.pdf');
-        addPrintLog();
+
     }
 
     const handleInputChange = (e) => {
@@ -118,17 +101,6 @@ export default function TeardownTray() {
         }
     } 
 
-    const reman = () => {
-        navigate("/app/Reman");
-    }
-
-    const teardown = () => {
-        navigate("/app/teardownTray");
-    }
-
-    const firstFit = () => {
-        navigate("/app/firstFit");
-    }
 
     return (
         <div class="container-flex">

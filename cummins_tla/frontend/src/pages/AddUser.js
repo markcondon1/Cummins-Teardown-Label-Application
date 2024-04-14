@@ -1,14 +1,12 @@
 import Button from "react-bootstrap/Button";
 import {apiWrapper} from "../apiWrapper";
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
 import NavBar from "./components/NavBar";
 import './page_styles.css';
 
 
 export default function AddUser(){
     const [userid, setUserId] = useState('');
-    const navigate = useNavigate();
     const [firstname, setFirstname] =useState('');
     const [lastname, setLastname] = useState('');
     const [password, setPassword]= useState('');
@@ -24,7 +22,7 @@ export default function AddUser(){
 
         }catch (error) {
             console.error('Error:', error);
-            ;
+
         }
     }
 

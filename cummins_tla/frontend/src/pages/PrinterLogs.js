@@ -1,14 +1,11 @@
-import Button from "react-bootstrap/Button";
 import {apiWrapper} from "../apiWrapper";
 import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import NavBar from "./components/NavBar";
 import { DataGrid } from '@mui/x-data-grid';
 
 
 export default function PrinterLogs(){
     const [userId, setUserId] = useState('');
-    const navigate = useNavigate();
     const [rows, setRows] = useState([]);
 
    //get logs pulls in all the printer logs in the printer log database table.
@@ -19,8 +16,6 @@ export default function PrinterLogs(){
             const input = {item: userId};
             //call to backend print log function
             const logPull = await apiWrapper('api/printLog', 'POST', {input});
-
-            let index = 0
 
             if (logPull.message === 'printer logs found') {
                 const logs = logPull.logs.map((log, index) => ({

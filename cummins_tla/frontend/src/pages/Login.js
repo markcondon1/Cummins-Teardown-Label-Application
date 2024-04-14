@@ -1,14 +1,9 @@
 import {useNavigate} from "react-router-dom";
-
 import Button from "react-bootstrap/Button";
-import Image from 'react-bootstrap/Image';
 import  './page_styles.css';
 import logo from './components/logo.png';
 import {useEffect, useState} from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import axios, {AxiosHeaders } from "axios";
-import { supabase } from '../supabase';
-import {SET_USER} from "../store/actionTypes/user";
 import {setUser, userAuth} from "../store/actions/user";
 import {useDispatch, useSelector} from "react-redux";
 import { apiWrapper } from "../apiWrapper";
@@ -21,8 +16,6 @@ export default function Login(){
     const [passwordShown, setPasswordShown] = useState(false);
     const [users, setUsers] = useState([]);
     const [notification, setNotification] = useState(null);
-    const [firstname, setFirstname] = useState(null);
-    const [lastname, setLastname] = useState(null);
     const user = useSelector(state => state.user);
 
 
@@ -76,15 +69,8 @@ export default function Login(){
     useEffect(() => {
         fetchUserData();
         console.log(users);
-    }, []);
+    }, [users]);
 
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setNotification(null);
-    };
 
     const togglePasswordVisibility = () => {
         setPasswordShown(!passwordShown);

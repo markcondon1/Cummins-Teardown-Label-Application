@@ -1,20 +1,14 @@
-import {useNavigate} from "react-router-dom";
-import Button from "react-bootstrap/Button";
 import NavBar from "./components/NavBar";
 import  './page_styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import jsPDF from "jspdf";
 import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
-import axios from "axios";
 import {apiWrapper} from "../apiWrapper";
 import {getDateTime} from "../dateTime";
 
 export default function FirstFit(){
-
-    const navigate = useNavigate();
     const user = useSelector(state => state.user);
-
     const [partSerial, setPartSerial] = useState('');
     const [id21, setid21] = useState('');
     const [model, setModel] = useState('');
@@ -93,7 +87,7 @@ export default function FirstFit(){
 
         const serial = handleSerial().toString().padStart(4,'0');
         
-        if((radioSetting == "turbine") || (radioSetting == "both"))
+        if((radioSetting === "turbine") || (radioSetting === "both"))
         {
 
         const matrixContent = `P0${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
@@ -127,7 +121,7 @@ export default function FirstFit(){
             doc.save('label.pdf');
             addPrintLog();
         }
-        if((radioSetting == "compressor") || (radioSetting == "both"))
+        if((radioSetting === "compressor") || (radioSetting === "both"))
         {           
             const matrixContent = `P0${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
             const zpl = `

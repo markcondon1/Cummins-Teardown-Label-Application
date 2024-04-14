@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 
 //set up sequelize ORM
 const sequelize = require('./database/sequelize');
-const {DataTypes, QueryTypes, Sequelize} = require("sequelize");
+const { QueryTypes, Sequelize} = require("sequelize");
 
 
 // Define the User model
