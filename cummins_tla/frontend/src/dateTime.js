@@ -12,7 +12,7 @@ export const getDateTime = (input) =>{
     {
         return `${month}/${day}/${year}`;
     } else if (input = 'time'){
-       return `${month}/${day}/${year}`;
+       return `${hours}:${minutes}:${seconds}`;
     }
     else{
         console.log('Error in dateTime.js, incorrect input');

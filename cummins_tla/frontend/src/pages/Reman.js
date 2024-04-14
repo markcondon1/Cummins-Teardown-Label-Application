@@ -127,16 +127,15 @@ export default function Reman(){
             // Create a new instance of jsPDF
             const doc = new jsPDF();
             // Add ZPL content to PDF
-            var img = new Image();
-            img.src = document.getElementById('remanLabelPreview').getAttribute('src');
-            doc.addImage(img, 'png', 0, 40, 200, 80);
+            doc.text(zpl, 10, 10);
             // Save PDF
             doc.save('label.pdf');
+            addPrintLog();
         } else {
             setNotification('No label generated. Please try again.');
             setTimeout(() => setNotification(''), 5000);
         }
-        addPrintLog();
+
 
     };
     const addPrintLog = async ()=>{
