@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button";
 import {apiWrapper} from "../apiWrapper";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import NavBar from "./components/NavBar";
 import { DataGrid } from '@mui/x-data-grid';
@@ -57,6 +57,7 @@ export default function PrinterLogs(){
             <div>
                 <NavBar />
                 <div style={{ margin: '20px' }}>
+                    <h4>Printer Logs</h4>
                 <DataGrid
                     rows={rows}
                     columns = {columns}
