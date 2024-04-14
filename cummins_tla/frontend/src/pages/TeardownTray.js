@@ -5,6 +5,7 @@ import NavBar from "./components/NavBar";
 import jsPDF from "jspdf";
 import {useEffect, useState} from "react";
 import { apiWrapper } from "../apiWrapper";
+import {getDateTime} from "../dateTime";
 export default function TeardownTray() {
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
@@ -12,7 +13,8 @@ export default function TeardownTray() {
     const [componentDescription, setComponentDescription] = useState('');
 
     const [modelType, setModelType] = useState('');
-    const [myInput, setMyInput] = useState('');
+
+    const date = getDateTime('date');
     //getting components for time and date
     const currentDate = new Date();
 
@@ -68,7 +70,15 @@ export default function TeardownTray() {
             console.error('Error:', error);
         }
     }
+    const addPrintLog = async ()=>{
+        const date_printed = date;
+        const time_printed = getDateTime('time');
+        const print_station = 'Teardown';
+        const userid = user.userid;
+        const data = await apiWrapper('api/addLog', 'POST', {userid, time_printed,date_printed,print_station});
+        //console.log(data);
 
+    }
 
     useEffect(() => {
         if(componentDescription) {
@@ -97,6 +107,7 @@ export default function TeardownTray() {
         doc.text(zpl, 10, 10);
         // Save PDF
         doc.save('teardown_label.pdf');
+        addPrintLog();
     }
 
     const handleInputChange = (e) => {
