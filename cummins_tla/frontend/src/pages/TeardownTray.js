@@ -3,11 +3,16 @@ import jsPDF from "jspdf";
 import {useEffect, useState, useRef} from "react";
 import { apiWrapper } from "../apiWrapper";
 import {getDateTime} from "../dateTime";
+
 export default function TeardownTray() {
     const [componentNumber, setComponentNumber] = useState('');
     const [componentDescription, setComponentDescription] = useState('');
     const [modelType, setModelType] = useState('');
+
+    const [componentSuggestions, setComponentSuggestions] = useState([]);
+
     const date = getDateTime('date');
+
     //getting components for time and date
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -16,6 +21,32 @@ export default function TeardownTray() {
     const hours = String(currentDate.getHours()).padStart(2, '0');
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+
+    const fetchComponentSuggestions = async () => {
+        if (componentNumber.length > 2) {  // Fetch only if there are at least 3 characters
+            try {
+                // Use apiWrapper to make a GET request to the backend
+                const response = await apiWrapper(`/api/getTeardown?component=${componentNumber}`, 'GET');
+                if (response.success) {
+                    // Assuming the backend sends an array of components under the key 'components'
+                    setComponentSuggestions(response.components);
+                } else {
+                    console.error(response.message); // Log any message from the API on error
+                    setComponentSuggestions([]);     // Reset suggestions on error
+                }
+            } catch (error) {
+                console.error('Failed to fetch component suggestions:', error); // Log any error during fetching
+                setComponentSuggestions([]);
+            }
+        } else {
+            setComponentSuggestions([]); // Reset suggestions if the input length is less than 3
+        }
+    };
+
+    useEffect(() => {
+        fetchComponentSuggestions();
+    }, [componentNumber]);
 
     useEffect(() => {
         if (componentNumber.length === 7) {
@@ -68,13 +99,6 @@ export default function TeardownTray() {
         }
     }
 
-
-    useEffect(() => {
-        if(componentDescription) {
-            printLabel();
-        }
-    }, [componentDescription]);
-
     // data that will go inside the zebra printer language
     const printLabel = () => {
         const date =`${month}/${day}/${year}`
@@ -107,7 +131,6 @@ export default function TeardownTray() {
         }
     } 
 
-
     return (
         <div class="container-flex">
             <div>
@@ -124,6 +147,11 @@ export default function TeardownTray() {
                            onChange={handleInputChange}
                            
                     />
+                    <datalist id="component-suggestions">
+                        {componentSuggestions.map((suggestion, index) => (
+                            <option key={index} value={suggestion.COMPONENT_ITEM_NUMBER} />
+                        ))}
+                    </datalist>
                 </div>
             </div>
         </div>
