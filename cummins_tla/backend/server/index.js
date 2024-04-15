@@ -354,7 +354,7 @@ app.get('/api/getTeardown', async (req,res)=>{
         FROM mes_bom_components
         WHERE "COMPONENT_ITEM_NUMBER" LIKE :component`;    
         const components = [] = await sequelize.query(query, {
-            replacements: { component: component },
+            replacements:{component: component },
             type:QueryTypes.SELECT,
             raw:true,
         });
