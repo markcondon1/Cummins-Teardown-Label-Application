@@ -148,7 +148,7 @@ app.post('/api/deleteUser', async(req,res)=>{
 });
 
 
-//post query to create a new user ased on the specified input
+//post query to create a new user based on the specified input
 app.post('/api/addUser', async(req,res)=>{
     const { userid, firstname,lastname, password } = req.body;
     console.log(userid, firstname, lastname,password);
@@ -344,33 +344,33 @@ app.get('/api/getDropdown', async (req,res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
+
 app.get('/api/getTeardown', async (req,res)=>{
     const component = `${req.query.component}%`;
     console.log("component ",component);
     try{
-        const query =
-            `select distinct   "COMPONENT_ITEM_NUMBER"
-             from
-                 mes_bom_components
-             where
-                 "COMPONENT_ITEM_NUMBER" like :component`;
-        const dropdown = [] = await sequelize.query(query, {
-            replacements:{component: component},
+        const query = 
+        `SELECT DISTINCT "COMPONENT_ITEM_NUMBER"
+        FROM mes_bom_components
+        WHERE "COMPONENT_ITEM_NUMBER" LIKE :component`;    
+        const components = [] = await sequelize.query(query, {
+            replacements: { component: component },
             type:QueryTypes.SELECT,
             raw:true,
         });
-        if(dropdown.length > 0){
+        if (components.length > 0){
             //success
-            res.json({ success: true, message: 'Query successful', dropdown:dropdown });
+            res.json({ success: true, message: 'Query successful', components: components });
         } else {
             // No entries match the search
             res.status(401).json({ success: false, message: 'Invalid Search'});
         }
-    } catch{
-        console.error('Error executing query');
+    } catch (error) {
+        console.error('Error executing query', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
+
 //ensure that the port is working
 app.listen(8080, () => {
     console.log('server listening on port 8080');
