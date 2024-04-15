@@ -8,10 +8,10 @@ export const getDateTime = (input) =>{
     const hours = String(currentDate.getHours()).padStart(2, '0');
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-    if(input = 'date')
+    if(input === 'date')
     {
         return `${month}/${day}/${year}`;
-    } else if (input = 'time'){
+    } else if (input === 'time'){
        return `${hours}:${minutes}:${seconds}`;
     }
     else{

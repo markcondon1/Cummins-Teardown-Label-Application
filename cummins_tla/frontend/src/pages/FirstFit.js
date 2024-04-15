@@ -16,6 +16,7 @@ export default function FirstFit(){
     const [compressorHousing, setCompressorHousing] = useState('');
     const [shroudPlate, setShroudPlate] = useState('');
     const date = getDateTime('date');
+    const time  = getDateTime('time');
     const [componentNumber, setComponentNumber] = useState('');
 
 
@@ -159,7 +160,7 @@ export default function FirstFit(){
     }
     const addPrintLog = async ()=>{
         const date_printed = date;
-        const time_printed = getDateTime('time');
+        const time_printed = time;
         const print_station = 'First Fit';
         const userid = user.userid;
         const data = await apiWrapper('api/addLog', 'POST', {userid, time_printed,date_printed,print_station});
