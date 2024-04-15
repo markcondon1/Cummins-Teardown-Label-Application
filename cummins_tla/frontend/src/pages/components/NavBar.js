@@ -2,33 +2,26 @@ import {useLocation, useNavigate} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { slide as Menu } from 'react-burger-menu';
 import logo from './logo.png';
 import { FaUser } from "react-icons/fa";
 import './NavBar.css';
 import {useEffect, useState} from "react";
-import axios from "axios";
 import {useSelector} from "react-redux";
 
 
 function NavBar(){
     const navigate = useNavigate();
-    const [userInfo, setUserInfo] = useState(null);
-    const location = useLocation();
     const user = useSelector(state => state.user);
-    const [firstname, setFirstname] = useState(null);
-    const [lastname, setLastname] = useState(null);
-    const [username, setUsername] = useState('');
     const[isAdmin, setIsAdmin] = useState('');
 
-
+    //checks user's admin permissions, if true, shows admin on hamburger menu
     useEffect(() => {
         setIsAdmin(user.admin);
     }, []);
 
+    //handles navigation for navbar
     const logout=()=>{
         navigate("/");
     }

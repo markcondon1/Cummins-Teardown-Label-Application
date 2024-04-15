@@ -3,7 +3,7 @@ import  './page_styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import jsPDF from "jspdf";
 import {useSelector} from "react-redux";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import {apiWrapper} from "../apiWrapper";
 import {getDateTime} from "../dateTime";
 
@@ -36,6 +36,14 @@ export default function FirstFit(){
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
     const onOptionChange = e => {setRadio(e.target.value)}
+
+    //handles focusing input box
+    const rejectInput = useRef(null);
+    useEffect(() => {
+    if (rejectInput.current) {
+      rejectInput.current.focus();
+    }
+    }, []);
 
     const handleAutoPrintChange = (e) => {
         setAutoPrint(e.target.checked);
@@ -75,6 +83,7 @@ export default function FirstFit(){
         }
     }
 
+    //handles print label taken from scans, responds to radio buttons
     const printLabel = () => {
 
         let start = new Date(currentDate.getFullYear(), 0, 0);
@@ -89,7 +98,7 @@ export default function FirstFit(){
         const twoDigitYear = currentDate.getFullYear().toString().slice(-2);
 
         const serial = handleSerial().toString().padStart(4,'0');
-        
+        //if radio button is selected to Turbine Housing or Both
         if((radioSetting === "turbine") || (radioSetting === "both"))
         {
 
@@ -124,6 +133,7 @@ export default function FirstFit(){
             doc.save('label.pdf');
             addPrintLog();
         }
+        //if radio button is selected to Compressor Housing or Both
         if((radioSetting === "compressor") || (radioSetting === "both"))
         {           
             const matrixContent = `P0${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
@@ -158,6 +168,7 @@ export default function FirstFit(){
             addPrintLog();
         }
     }
+    //handles adding print logs
     const addPrintLog = async ()=>{
         const date_printed = date;
         const time_printed = time;
@@ -167,13 +178,15 @@ export default function FirstFit(){
         console.log(data);
         
     }
-
+    //handles printing of the components label
     const printComponentLabel = () =>{
 
         let start = new Date(currentDate.getFullYear(), 0, 0);
         let diff = (currentDate - start) + ((start.getTimezoneOffset() - currentDate.getTimezoneOffset()) * 60 * 1000);
         let oneDay = 1000 * 60 * 60 * 24;
         let dayOfYear = Math.floor(diff / oneDay).toString().padStart(3,'0');
+
+        const printQuantity = document.getElementById("printQty").value;
 
         const itemsegment = componentInput;
         
@@ -185,7 +198,6 @@ export default function FirstFit(){
         const serial = handleSerial().toString().padStart(4,'0');
         
         const matrixContent = `P0${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
-        //TODO: Update component num with query from database
             const zpl = `
             ^XA
             ^FX Date/Time
@@ -208,9 +220,19 @@ export default function FirstFit(){
 
             ^XZ 
             `;
-            //TODO: Update with print quantity
+
             // Create a new instance of jsPDF
             const doc = new jsPDF();
+
+            //handles print quantity
+            for(var i = 1; i < printQuantity; i++)
+            {
+                // Add ZPL content to PDF
+                doc.text(zpl, 10, 10);
+                // Save PDF
+                doc.save('label.pdf');
+            }
+            
             // Add ZPL content to PDF
             doc.text(zpl, 10, 10);
             // Save PDF
@@ -218,6 +240,8 @@ export default function FirstFit(){
             //addPrintLog();
     }
 
+    //handles handle serial numbers, if one exists for the day, then 1 is added to it. If not, one is generated via createSerial. 
+    //This currently shares the serial number with Reman, so the number is consistent across both pages
     const handleSerial = () =>{
         const currentDate = new Date();
         if(localStorage.getItem('serialData') !== null){
@@ -236,6 +260,7 @@ export default function FirstFit(){
         }
     };
 
+    //handles creation of serial number if one does not exist for the day
     const createSerial = () =>{
         const currentDate = new Date();
         const serialData = {
@@ -280,7 +305,7 @@ export default function FirstFit(){
                             <div className="card-header">Reject Tickets</div>
                             <div className="card-body">
                                 <div className="scanned-variables">
-                                <input type="text" id="rejectInput" placeholder="Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s"
+                                <input type="text" ref = {rejectInput} id="rejectInput" placeholder="Scanned: p240060168; ####### ; 00; ##; Beta Zone 3; AUTO; Y-M-D; h:m:s"
                                        onKeyDown={(e) => handleInput(e.target.value)}></input>
                                 </div>
                                 <div className="ticket-details">
