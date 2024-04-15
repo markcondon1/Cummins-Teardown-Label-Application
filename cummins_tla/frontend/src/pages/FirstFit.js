@@ -279,7 +279,9 @@ export default function FirstFit(){
                 try {
                     const response = await apiWrapper('api/getDropdown', 'GET', {component: componentInput});
                     if (response.success) {
+
                         setComponentSuggestions(response.dropdown);
+                        console.log(componentSuggestions);
                     } else {
                         setComponentSuggestions([]);
                     }

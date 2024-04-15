@@ -1,6 +1,6 @@
 import NavBar from "./components/NavBar";
 import jsPDF from "jspdf";
-import {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import { apiWrapper } from "../apiWrapper";
 import {getDateTime} from "../dateTime";
 
@@ -108,31 +108,33 @@ export default function TeardownTray() {
 
     }
 
+
     useEffect(() => {
+        if (componentNumber.length > 2) {
         const fetchComponentSuggestions = async () => {
-            if (componentNumber.length > 2) {  // Fetch only if there are at least 3 characters
-                try {
-                    // Use apiWrapper to make a GET request to the backend
-                    const response = await apiWrapper('api/getTeardown', 'GET', {component: componentNumber});
-                    console.log(response);
-                    if (response.success) {
-                        // Assuming the backend sends an array of components under the key 'components'
-                        setComponentSuggestions(response.dropdown);
-                        console.log("array ", componentSuggestions);
-                    } else {
-                        console.error(response.message); // Log any message from the API on error
-                        setComponentSuggestions([]);     // Reset suggestions on error
-                    }
-                } catch (error) {
-                    console.error('Failed to fetch component suggestions:', error); // Log any error during fetching
-                    setComponentSuggestions([]);
+            // Fetch only if there are at least 3 characters
+            try {
+                // Use apiWrapper to make a GET request to the backend
+                const response = await apiWrapper('api/getTeardown', 'GET', {component: componentNumber});
+                //  console.log(response);
+                if (response.success) {
+                    // Assuming the backend sends an array of components under the key 'components'
+                    setComponentSuggestions(response.dropdown);
+                    //     console.log("array ", componentSuggestions);
+                } else {
+                    console.error(response.message); // Log any message from the API on error
+                    setComponentSuggestions([]);     // Reset suggestions on error
                 }
-            } else {
-                setComponentSuggestions([]); // Reset suggestions if the input length is less than 3
+            } catch (error) {
+                console.error('Failed to fetch component suggestions:', error); // Log any error during fetching
             }
         };
-
         fetchComponentSuggestions();
+
+        }else {
+            setComponentSuggestions([]);
+        }
+
     }, [componentNumber]);
     return (
         <div class="container-flex">
@@ -144,7 +146,6 @@ export default function TeardownTray() {
                 <div className="teardown-container">
                     <label>Enter Value:</label>
                     <input type="text"
-                           // ref = {teardownInput}
                            placeholder="Value"
                            value={componentNumber}
                            onChange={handleInputChange}
