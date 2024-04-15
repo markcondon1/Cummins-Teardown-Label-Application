@@ -10,14 +10,20 @@ export default function AddUser(){
     const [firstname, setFirstname] =useState('');
     const [lastname, setLastname] = useState('');
     const [password, setPassword]= useState('');
+    const [isAdmin, setIsAdmin] =useState(false);
 
     // this function handles creating a new user based off the input from the text boxes
     //and adds the new user to the database
+
+    const handleCheckboxChange = (event) => {
+        setIsAdmin(event.target.checked);
+    };
+
     const handleCreate = async () => {
         try{
             console.log("user id ", userid);
             //call to the backend that create a new user based off the specific inputs
-            await apiWrapper('api/addUser', 'POST', {userid,firstname,lastname,password});
+            await apiWrapper('api/addUser', 'POST', {userid,firstname,lastname,password, isAdmin});
 
 
         }catch (error) {
@@ -67,7 +73,11 @@ export default function AddUser(){
                     placeholder="enter password"
                     />
                     <div className="admin-checkbox">
-                        <input type="checkbox" id="adminPermission" />
+                        <input type="checkbox"
+                               id="adminPermission"
+                               checked={isAdmin}
+                               onChange={handleCheckboxChange}
+                        />
                         <label htmlFor="adminPermission">Administrator</label>
                     </div>
                     <Button onClick={handleCreate} className="add-user-button">Add User</Button>

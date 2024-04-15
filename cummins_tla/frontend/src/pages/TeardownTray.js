@@ -83,11 +83,11 @@ export default function TeardownTray() {
 
         // ZPL content for the label
 
-        const zpl =` ^^XA
-            ^FO20,50^A0N,28,28^FB500,2,0,C^FD${componentNumber}^FS
-            ^FO20,80^A0N,24,24^FB500,1,0,C^FD${componentDescription}^FS
-            ^FO20,110^A0N,24,24^FB500,1,0,C^FD${modelType}^FS
-            ^FO20,140^A0N,24,24^FB500,2,0,C^FD${date} ${time}^FS
+        const zpl =`^XA
+            ^FO50,50^A0N,28,28^FB320,2,0,C^FD${componentNumber}^FS
+            ^FO50,80^A0N,24,24^FB320,1,0,C^FD${componentDescription}^FS
+            ^FO50,110^A0N,24,24^FB320,1,0,C^FD${modelType}^FS
+            ^FO50,140^A0N,24,24^FB320,2,0,C^FD${date} ${time}^FS
             ^XZ`;
 
         // Create a new instance of jsPDF
@@ -151,7 +151,7 @@ export default function TeardownTray() {
                            onChange={handleInputChange}
                     />
                     <datalist id="componentList">
-                        {componentSuggestions.map((suggestions, index) => (
+                        {componentSuggestions && componentSuggestions.map((suggestions, index) => (
                             <option key={index} value={suggestions.COMPONENT_ITEM_NUMBER} />
                         ))}
                     </datalist>

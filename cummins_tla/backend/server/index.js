@@ -150,10 +150,10 @@ app.post('/api/deleteUser', async(req,res)=>{
 
 //post query to create a new user based on the specified input
 app.post('/api/addUser', async(req,res)=>{
-    const { userid, firstname,lastname, password } = req.body;
-    console.log(userid, firstname, lastname,password);
-    const query = 'INSERT INTO users (userid, firstname, lastname, password)\n' +
-        `VALUES ('${userid}', '${firstname}', '${lastname}', '${password}')`;
+    const { userid, firstname,lastname, password,isAdmin } = req.body;
+    console.log(userid, firstname, lastname,password, isAdmin);
+    const query = 'INSERT INTO users (userid, firstname, lastname, password, admin)\n' +
+        `VALUES ('${userid}', '${firstname}', '${lastname}', '${password}', '${isAdmin}')`;
     try{
         const [addUser, metadata] = await sequelize.query(query, {
             replacements: { userid,firstname,lastname,password },
