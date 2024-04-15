@@ -83,7 +83,7 @@ export default function TeardownTray() {
 
         // ZPL content for the label
 
-        const zpl =` ^^XA
+        const zpl =` ^XA
             ^FO20,50^A0N,28,28^FB500,2,0,C^FD${componentNumber}^FS
             ^FO20,80^A0N,24,24^FB500,1,0,C^FD${componentDescription}^FS
             ^FO20,110^A0N,24,24^FB500,1,0,C^FD${modelType}^FS
