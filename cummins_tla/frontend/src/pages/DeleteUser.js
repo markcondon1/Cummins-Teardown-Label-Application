@@ -3,11 +3,13 @@ import {apiWrapper} from "../apiWrapper";
 import {useState} from "react";
 import NavBar from "./components/NavBar";
 import './page_styles.css';
+import {useNavigate} from "react-router-dom";
 
 
 export default function Admin(){
     const [userId, setUserId] = useState('');
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
 
     //handle delete deletes a user from the database table when a user inputs a user's id.
     const handleDelete = async () => {
@@ -28,6 +30,10 @@ export default function Admin(){
             setMessage('Error deleting user');
             setTimeout(() => setMessage(''), 5000);
         }
+    }
+
+    const backNavigate=()=>{
+        navigate("/app/admin");
     }
 
     return(
