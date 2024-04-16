@@ -207,7 +207,7 @@ export default function FirstFit(){
             ^FO280,25^A 0,25,25^FD${user.userid}^FS
 
             ^FX Turbine/Compressor Housing
-            ^FO5,55^A 0,25,25^FD Compenent Number:^FS
+            ^FO5,55^A 0,25,25^FD Component Number:^FS
             ^FO280,55^A 0,25,25^FD${itemsegment}^FS
 
             ^FX TD SQ
