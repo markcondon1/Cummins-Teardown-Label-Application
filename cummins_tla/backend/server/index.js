@@ -150,19 +150,19 @@ app.post('/api/deleteUser', async(req,res)=>{
 
 //post query to create a new user based on the specified input
 app.post('/api/addUser', async(req,res)=>{
-    const { userid, firstname,lastname, password,isAdmin } = req.body;
+    const { userid, firstname,lastname, password, isAdmin } = req.body;
     console.log(userid, firstname, lastname,password, isAdmin);
     const query = 'INSERT INTO users (userid, firstname, lastname, password, admin)\n' +
         `VALUES ('${userid}', '${firstname}', '${lastname}', '${password}', '${isAdmin}')`;
     try{
         const [addUser, metadata] = await sequelize.query(query, {
-            replacements: { userid,firstname,lastname,password },
+            replacements: { userid,firstname,lastname,password, isAdmin },
             type: QueryTypes.INSERT
         });
         if(addUser){
-            res.status(200).send({ message: 'User added successfully.' });
+            res.status(200).send({ success: true, message: 'User added successfully.' });
         } else {
-            res.status(404).send({ error: 'User not found.' });
+            res.status(404).send({ success: false, error: 'User not found.' });
         }
     } catch (error) {
         console.error('Error deleting user:', error);

@@ -28,8 +28,13 @@ export default function AddUser(){
         try{
             console.log("user id ", userid);
             //call to the backend that create a new user based off the specific inputs
-            await apiWrapper('api/addUser', 'POST', {userid,firstname,lastname,password});
-            setMessage('User added successfully!');
+            const response= await apiWrapper('api/addUser', 'POST', {userid,firstname,lastname,password, isAdmin});
+            if(response.success){
+                setMessage('User added successfully!');
+            }else{
+                setError('Failed to add user. Please try again.');
+            }
+
             setTimeout(() => setMessage(''), 7000);
             setUserId('');
             setFirstname('');
