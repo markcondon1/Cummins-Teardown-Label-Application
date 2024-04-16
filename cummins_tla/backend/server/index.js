@@ -137,13 +137,13 @@ app.post('/api/deleteUser', async(req,res)=>{
         type: QueryTypes.DELETE
     });
     if(deleteUser){
-        res.status(200).send({ message: 'User deleted successfully.' });
+        res.status(200).send({ success: true, message: 'User deleted successfully.' });
     } else {
-        res.status(404).send({ error: 'User not found.' });
+        res.status(404).send({ success: false, message: 'User not found.' });
     }
     } catch (error) {
     console.error('Error deleting user:', error);
-    res.status(500).send({ error: 'An error occurred while deleting the user.' });
+    res.status(500).send({success: false, message: 'An error occurred while deleting the user.' });
     }
 });
 
