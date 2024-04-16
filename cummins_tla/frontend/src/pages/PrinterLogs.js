@@ -3,11 +3,13 @@ import React, {useEffect, useState} from "react";
 import NavBar from "./components/NavBar";
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Button from "react-bootstrap/Button";
+import {useNavigate} from "react-router-dom";
 
 
 export default function PrinterLogs(){
     const [userId, setUserId] = useState('');
     const [rows, setRows] = useState([]);
+    const navigate = useNavigate();
 
    //get logs pulls in all the printer logs in the printer log database table.
    //from there it accumulates them into a table grid.
@@ -38,6 +40,10 @@ export default function PrinterLogs(){
     useEffect(()=>{
         getLogs();
     },[]);
+
+    const backNavigate=()=>{
+        navigate("/app/admin");
+    }
 
 
     const columns=[
