@@ -59,7 +59,7 @@ export default function FirstFit(){
         //Example input for testing: P1908051718;5324132;
         //Format Example: P2406802175;5606728;00;Beta Zone 2;10;202;2024-03-11;02:56:46
         input = input.split(';');
-        setPartSerial(input[0].substring(2));
+        setPartSerial(input[0].substring(1));
         setid21(input[1]);
         try{
             const data = await apiWrapper('api/firstFit', 'GET', {serial:partSerial, id21:id21});
