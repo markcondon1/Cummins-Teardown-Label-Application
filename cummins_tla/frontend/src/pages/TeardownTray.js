@@ -1,6 +1,6 @@
 import NavBar from "./components/NavBar";
 import jsPDF from "jspdf";
-import {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import { apiWrapper } from "../apiWrapper";
 import {getDateTime} from "../dateTime";
 
@@ -23,30 +23,6 @@ export default function TeardownTray() {
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
 
-    const fetchComponentSuggestions = async () => {
-        if (componentNumber.length > 2) {  // Fetch only if there are at least 3 characters
-            try {
-                // Use apiWrapper to make a GET request to the backend
-                const response = await apiWrapper(`/api/getTeardown?component=${componentNumber}`, 'GET');
-                if (response.success) {
-                    // Assuming the backend sends an array of components under the key 'components'
-                    setComponentSuggestions(response.components);
-                } else {
-                    console.error(response.message); // Log any message from the API on error
-                    setComponentSuggestions([]);     // Reset suggestions on error
-                }
-            } catch (error) {
-                console.error('Failed to fetch component suggestions:', error); // Log any error during fetching
-                setComponentSuggestions([]);
-            }
-        } else {
-            setComponentSuggestions([]); // Reset suggestions if the input length is less than 3
-        }
-    };
-
-    useEffect(() => {
-        fetchComponentSuggestions();
-    }, [componentNumber]);
 
     useEffect(() => {
         if (componentNumber.length === 7) {
@@ -93,7 +69,7 @@ export default function TeardownTray() {
             }else{
                 console.log("fail");
             }
-
+           // printLabel();
         } catch (error) {
             console.error('Error:', error);
         }
@@ -107,11 +83,11 @@ export default function TeardownTray() {
 
         // ZPL content for the label
 
-        const zpl =` ^^XA
-            ^FO20,50^A0N,28,28^FB500,2,0,C^FD${componentNumber}^FS
-            ^FO20,80^A0N,24,24^FB500,1,0,C^FD${componentDescription}^FS
-            ^FO20,110^A0N,24,24^FB500,1,0,C^FD${modelType}^FS
-            ^FO20,140^A0N,24,24^FB500,2,0,C^FD${date} ${time}^FS
+        const zpl =`^XA
+            ^FO50,50^A0N,28,28^FB320,2,0,C^FD${componentNumber}^FS
+            ^FO50,80^A0N,24,24^FB320,1,0,C^FD${componentDescription}^FS
+            ^FO50,110^A0N,24,24^FB320,1,0,C^FD${modelType}^FS
+            ^FO50,140^A0N,24,24^FB320,2,0,C^FD${date} ${time}^FS
             ^XZ`;
 
         // Create a new instance of jsPDF
@@ -129,8 +105,37 @@ export default function TeardownTray() {
         if (/^\d{0,7}$/.test(inputValue)) {
             setComponentNumber(inputValue);
         }
-    } 
 
+    }
+
+
+    useEffect(() => {
+        if (componentNumber.length > 2) {
+        const fetchComponentSuggestions = async () => {
+            // Fetch only if there are at least 3 characters
+            try {
+                // Use apiWrapper to make a GET request to the backend
+                const response = await apiWrapper('api/getTeardown', 'GET', {component: componentNumber});
+                //  console.log(response);
+                if (response.success) {
+                    // Assuming the backend sends an array of components under the key 'components'
+                    setComponentSuggestions(response.dropdown);
+                    //     console.log("array ", componentSuggestions);
+                } else {
+                    console.error(response.message); // Log any message from the API on error
+                    setComponentSuggestions([]);     // Reset suggestions on error
+                }
+            } catch (error) {
+                console.error('Failed to fetch component suggestions:', error); // Log any error during fetching
+            }
+        };
+        fetchComponentSuggestions();
+
+        }else {
+            setComponentSuggestions([]);
+        }
+
+    }, [componentNumber]);
     return (
         <div class="container-flex">
             <div>
@@ -144,11 +149,10 @@ export default function TeardownTray() {
                            placeholder="Value"
                            value={componentNumber}
                            onChange={handleInputChange}
-                           
                     />
-                    <datalist id="component-suggestions">
-                        {componentSuggestions.map((suggestion, index) => (
-                            <option key={index} value={suggestion.COMPONENT_ITEM_NUMBER} />
+                    <datalist id="componentList">
+                        {componentSuggestions && componentSuggestions.map((suggestions, index) => (
+                            <option key={index} value={suggestions.COMPONENT_ITEM_NUMBER} />
                         ))}
                     </datalist>
                 </div>

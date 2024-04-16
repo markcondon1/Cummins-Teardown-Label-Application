@@ -1,7 +1,8 @@
 import {apiWrapper} from "../apiWrapper";
 import React, {useEffect, useState} from "react";
 import NavBar from "./components/NavBar";
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import Button from "react-bootstrap/Button";
 
 
 export default function PrinterLogs(){
@@ -57,6 +58,7 @@ export default function PrinterLogs(){
                     rows={rows}
                     columns = {columns}
                     pageSize={4}
+                    slots={{ toolbar: GridToolbar }}
                 />
                 </div>
             </div>

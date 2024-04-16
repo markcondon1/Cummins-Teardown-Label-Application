@@ -137,32 +137,32 @@ app.post('/api/deleteUser', async(req,res)=>{
         type: QueryTypes.DELETE
     });
     if(deleteUser){
-        res.status(200).send({ message: 'User deleted successfully.' });
+        res.status(200).send({ success: true, message: 'User deleted successfully.' });
     } else {
-        res.status(404).send({ error: 'User not found.' });
+        res.status(404).send({ success: false, message: 'User not found.' });
     }
     } catch (error) {
     console.error('Error deleting user:', error);
-    res.status(500).send({ error: 'An error occurred while deleting the user.' });
+    res.status(500).send({success: false, message: 'An error occurred while deleting the user.' });
     }
 });
 
 
 //post query to create a new user based on the specified input
 app.post('/api/addUser', async(req,res)=>{
-    const { userid, firstname,lastname, password } = req.body;
-    console.log(userid, firstname, lastname,password);
-    const query = 'INSERT INTO users (userid, firstname, lastname, password)\n' +
-        `VALUES ('${userid}', '${firstname}', '${lastname}', '${password}')`;
+    const { userid, firstname,lastname, password, isAdmin } = req.body;
+    console.log(userid, firstname, lastname,password, isAdmin);
+    const query = 'INSERT INTO users (userid, firstname, lastname, password, admin)\n' +
+        `VALUES ('${userid}', '${firstname}', '${lastname}', '${password}', '${isAdmin}')`;
     try{
         const [addUser, metadata] = await sequelize.query(query, {
-            replacements: { userid,firstname,lastname,password },
+            replacements: { userid,firstname,lastname,password, isAdmin },
             type: QueryTypes.INSERT
         });
         if(addUser){
-            res.status(200).send({ message: 'User added successfully.' });
+            res.status(200).send({ success: true, message: 'User added successfully.' });
         } else {
-            res.status(404).send({ error: 'User not found.' });
+            res.status(404).send({ success: false, error: 'User not found.' });
         }
     } catch (error) {
         console.error('Error deleting user:', error);
@@ -354,7 +354,7 @@ app.get('/api/getTeardown', async (req,res)=>{
         FROM mes_bom_components
         WHERE "COMPONENT_ITEM_NUMBER" LIKE :component`;    
         const components = [] = await sequelize.query(query, {
-            replacements: { component: component },
+            replacements:{component: component },
             type:QueryTypes.SELECT,
             raw:true,
         });

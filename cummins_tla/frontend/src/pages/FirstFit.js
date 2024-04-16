@@ -58,8 +58,9 @@ export default function FirstFit(){
     const handleInput = async (input)=>{
         //Example input for testing: P1908051718;5324132;
         //Format Example: P2406802175;5606728;00;Beta Zone 2;10;202;2024-03-11;02:56:46
-        setPartSerial(input.slice(1,11));
-        setid21(input.slice(12,19));
+        input = input.split(';');
+        setPartSerial(input[0].substring(2));
+        setid21(input[1]);
         try{
             const data = await apiWrapper('api/firstFit', 'GET', {serial:partSerial, id21:id21});
             if(data.success){
@@ -276,7 +277,9 @@ export default function FirstFit(){
                 try {
                     const response = await apiWrapper('api/getDropdown', 'GET', {component: componentInput});
                     if (response.success) {
+                        console.log(response.dropdown);
                         setComponentSuggestions(response.dropdown);
+                        console.log(componentSuggestions);
                     } else {
                         setComponentSuggestions([]);
                     }
