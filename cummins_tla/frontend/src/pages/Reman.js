@@ -70,25 +70,25 @@ export default function Reman(){
         const zpl =
         `^XA
         ^FX Barcode and associated text
-        ^FO40,0^ADN,30,20^BCN,30,Y,N,N,N
-        ^FD${item_segment1}^FS
+        ^FO20,0^ADN,30,20^BCN,30,Y,N,N,N
+        ^FD${itemsegment}^FS
         
         ^FX Logo
         ^FO15,80^GFA,480,480,8,,L07JFE1FE,K07KFCC7E,J03LFC03E,J0LFC233E,I03KF7C187E,I07JFE3110FE,001KFEE18FFE,003LF91C7FE,007LF88DFFE,00LFC847FFE, 01LF844IFE,01LF023IFE,03KFC613IFE,07KF831JFE,07JFE239JFE,0KFC71KFE,0KF638KFE,1JFE11BKFE,1JFC10LFE,3JF189LFE,3IFE1C7LFE,3IF98C6,3IF18F8,7FFD0C6,7FF88EC,7DFC47C,78CC278,60C62F8,61C71F8,47E0FF8,47F0FF8,478BFF8,410IFC,601IFE,703JF,3CKFC,3SFE,:1SFE,::0SFE,:07RFE,03RFE,:01RFE,00RFE,007QFE,003QFE,001QFE,I0QFE,I03PFE,I01PFE,J07OFE,K0OFE!K01NFEDM03LFC,,^FS
         
         ^FX Date/Time
-        ^FO80,85^AFN,10,10^FD${time}^FS
-        ^FO80,120^AFN,10,10^FD${date}^FS
+        ^FO80,85^ACN,10,10^FD${time}^FS
+        ^FO80,120^ACN,10,10^FD${date}^FS
         
         ^FX User ID
-        ^FO250,95^ASN,1,1,^FD${user.userid}^FS
+        ^FO210,90^AQN,1,1,^FD${user.userid}^FS
         
         ^FX Data matrix content text
         ^FO25,160^ADN,10,10
         ^FD${matrixContent}^FS
         
         ^FX Data Matrix
-        ^FO380,65^BXN,5,200,20,20,3,,1
+        ^FO290,50^BXN,5,200,20,20,3,,1
         ^FD${matrixContent}^FS
         ^XZ`;
 
@@ -100,7 +100,7 @@ export default function Reman(){
     async function requestLabelPreview(zpl){
         console.log(zpl);
         const dpmm = 8;
-        const width = 2.5;
+        const width = 2;
         const height = 1;
         try{
             const response = await fetch(`http://api.labelary.com/v1/printers/${dpmm}dpmm/labels/${width}x${height}/0/${zpl}/`,
