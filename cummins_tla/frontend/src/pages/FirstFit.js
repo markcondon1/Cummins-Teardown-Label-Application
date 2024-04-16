@@ -102,28 +102,27 @@ export default function FirstFit(){
         if((radioSetting === "turbine") || (radioSetting === "both"))
         {
 
-        const matrixContent = `P0${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
+        const matrixContent = `P0${turbineHousing}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
             const zpl = `
             ^XA
             ^FX Date/Time
-            ^FO5,25^A 0,30,30^FD ${time}^FS
-            ^FO125,25^A 0,30,30^FD ${date}^FS
-                
+            ^FO5,25^A 0,25,25^FD ${time}^FS
+            ^FO105,25^A 0,25,25^FD ${date}^FS
+
             ^FX User ID
-            ^FO310,25^A 0,30,30^FD${user.userid}^FS
-        
+            ^FO280,25^A 0,25,25^FD${user.userid}^FS
+
             ^FX Turbine/Compressor Housing
-            ^FO5,55^A 0,30,30^FD Turbine Housing:^FS
-            ^FO310,55^A 0,30,30^FD${turbineHousing}^FS
-        
+            ^FO5,55^A 0,25,25^FD Turbine Housing:^FS
+            ^FO280,55^A 0,25,25^FD${turbineHousing}^FS
+
             ^FX TD SQ
-            ^FO5,85^A 0,30,30^FD TD SEQ:^FS
-            ^FO310,85^A 0,30,30^FD${twoDigitYear}${dayOfYear}${serial}^FS
-        
-            ^FO180,145^BXN,5,200,20,20,3,,1
+            ^FO5,85^A 0,25,25^FD TD SEQ:^FS
+            ^FO280,85^A 0,25,25^FD${twoDigitYear}${dayOfYear}${serial}^FS
+
+            ^FO150,115^BXN,4,200,20,20,3,,1
             ^FD${matrixContent}^FS
-        
-            ^XZ 
+            ^XZ
             `;
             // Create a new instance of jsPDF
             const doc = new jsPDF();
@@ -136,28 +135,27 @@ export default function FirstFit(){
         //if radio button is selected to Compressor Housing or Both
         if((radioSetting === "compressor") || (radioSetting === "both"))
         {           
-            const matrixContent = `P0${itemsegment}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
+            const matrixContent = `P0${compressorHousing}S${twoDigitYear}${dayOfYear}${serial}V0TDRC`;
             const zpl = `
             ^XA
             ^FX Date/Time
-            ^FO5,25^A 0,30,30^FD ${time}^FS
-            ^FO125,25^A 0,30,30^FD ${date}^FS
-        
+            ^FO5,25^A 0,25,25^FD ${time}^FS
+            ^FO105,25^A 0,25,25^FD ${date}^FS
+
             ^FX User ID
-            ^FO310,25^A 0,30,30^FD${user.userid}^FS
+            ^FO280,25^A 0,25,25^FD${user.userid}^FS
 
             ^FX Turbine/Compressor Housing
-            ^FO5,55^A 0,30,30^FD Compressor Housing:^FS
-            ^FO310,55^A 0,30,30^FD${compressorHousing}^FS
+            ^FO5,55^A 0,25,25^FD Compressor Housing:^FS
+            ^FO280,55^A 0,25,25^FD${compressorHousing}^FS
 
             ^FX TD SQ
-            ^FO5,85^A 0,30,30^FD TD SEQ:^FS
-            ^FO310,85^A 0,30,30^FD${twoDigitYear}${dayOfYear}${serial}^FS
+            ^FO5,85^A 0,25,25^FD TD SEQ:^FS
+            ^FO280,85^A 0,25,25^FD${twoDigitYear}${dayOfYear}${serial}^FS
 
-            ^FO180,145^BXN,5,200,20,20,3,,1
+            ^FO150,115^BXN,4,200,20,20,3,,1
             ^FD${matrixContent}^FS
-
-            ^XZ 
+            ^XZ
             `;
             // Create a new instance of jsPDF
             const doc = new jsPDF();
@@ -201,24 +199,23 @@ export default function FirstFit(){
             const zpl = `
             ^XA
             ^FX Date/Time
-            ^FO5,25^A 0,30,30^FD ${time}^FS
-            ^FO125,25^A 0,30,30^FD ${date}^FS
-        
-            ^FX User ID
-            ^FO310,25^A 0,30,30^FD${user.userid}^FS
+            ^FO5,25^A 0,25,25^FD ${time}^FS
+            ^FO105,25^A 0,25,25^FD ${date}^FS
 
-            ^FX Component Number:
-            ^FO5,55^A 0,30,30^FD Component Number:^FS
-            ^FO310,55^A 0,30,30^FD${itemsegment}^FS 
+            ^FX User ID
+            ^FO280,25^A 0,25,25^FD${user.userid}^FS
+
+            ^FX Turbine/Compressor Housing
+            ^FO5,55^A 0,25,25^FD Compenent Number:^FS
+            ^FO280,55^A 0,25,25^FD${itemsegment}^FS
 
             ^FX TD SQ
-            ^FO5,85^A 0,30,30^FD TD SEQ:^FS
-            ^FO310,85^A 0,30,30^FD${twoDigitYear}${dayOfYear}${serial}^FS
+            ^FO5,85^A 0,25,25^FD TD SEQ:^FS
+            ^FO280,85^A 0,25,25^FD${twoDigitYear}${dayOfYear}${serial}^FS
 
-            ^FO180,145^BXN,5,200,20,20,3,,1
+            ^FO150,115^BXN,4,200,20,20,3,,1
             ^FD${matrixContent}^FS
-
-            ^XZ 
+            ^XZ
             `;
 
             // Create a new instance of jsPDF
@@ -370,7 +367,7 @@ export default function FirstFit(){
                                 {/*</select>*/}
                                 <div className="print-qty">
                                     <label htmlFor="printQty">Print Qty:</label>
-                                    <input type="number" id="printQty" defaultValue="1" />
+                                    <input type="number" id="printQty" defaultValue="1" min="1" />
                                     <button className="print-button" onClick={printComponentLabel}>Print</button>
                                 </div>
                             </div>

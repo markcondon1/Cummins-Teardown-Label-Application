@@ -61,12 +61,12 @@ export default function TeardownTray() {
     }, [componentDescription]);
 
     //handles focusing input box
-    const teardownInput = useRef(null);
-    useEffect(() => {
-    if (teardownInput.current) {
-        teardownInput.current.focus();
-    }
-    }, []);
+    // const teardownInput = useRef(null);
+    // useEffect(() => {
+    // if (teardownInput.current) {
+    //     teardownInput.current.focus();
+    // }
+    // }, []);
 
     //handle component is an async function that takes in the input value and from the input
     //parses the component item number and description from the mes bom compenents database.
@@ -141,7 +141,6 @@ export default function TeardownTray() {
                 <div className="teardown-container">
                     <label>Enter Value:</label>
                     <input type="text"
-                           ref = {teardownInput}
                            placeholder="Value"
                            value={componentNumber}
                            onChange={handleInputChange}
