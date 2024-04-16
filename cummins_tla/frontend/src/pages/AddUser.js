@@ -11,18 +11,27 @@ export default function AddUser(){
     const [lastname, setLastname] = useState('');
     const [password, setPassword]= useState('');
 
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+
     // this function handles creating a new user based off the input from the text boxes
     //and adds the new user to the database
     const handleCreate = async () => {
+        setMessage('');
+        setError('')
         try{
             console.log("user id ", userid);
             //call to the backend that create a new user based off the specific inputs
             await apiWrapper('api/addUser', 'POST', {userid,firstname,lastname,password});
-
-
+            setMessage('User added successfully!');
+            setTimeout(() => setMessage(''), 7000);
+            setUserId('');
+            setFirstname('');
+            setLastname('');
+            setPassword('');
         }catch (error) {
             console.error('Error:', error);
-
+            setError('Failed to add user. Please try again.');
         }
     }
 
@@ -71,6 +80,8 @@ export default function AddUser(){
                         <label htmlFor="adminPermission">Administrator</label>
                     </div>
                     <Button onClick={handleCreate} className="add-user-button">Add User</Button>
+                    {message && <div className="alert alert-success">{message}</div>}
+                    {error && <div className="alert alert-danger">{error}</div>}
                 </div>
             </div>
         </div>
