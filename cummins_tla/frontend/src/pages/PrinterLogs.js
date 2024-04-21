@@ -4,7 +4,7 @@ import NavBar from "./components/NavBar";
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Button from "react-bootstrap/Button";
 import {useNavigate} from "react-router-dom";
-
+import { FaArrowLeft } from 'react-icons/fa';
 
 export default function PrinterLogs(){
     const [userId, setUserId] = useState('');
@@ -55,20 +55,20 @@ export default function PrinterLogs(){
 
 
     return(
-        <div>
-            <div>
-                <NavBar />
-                <div style={{ margin: '20px' }}>
-                    <h4>Printer Logs</h4>
-                <DataGrid
-                    rows={rows}
-                    columns = {columns}
-                    pageSize={4}
-                    slots={{ toolbar: GridToolbar }}
-                />
-                </div>
+        <div class="container-flex">
+            <NavBar />
+            <Button onClick={backNavigate} className="back-button printer-logs-back-button">
+                <FaArrowLeft /> Back
+            </Button>
+            <div style={{ margin: '20px' }}>
+                <h4>Printer Logs</h4>
+            <DataGrid
+                rows={rows}
+                columns = {columns}
+                pageSize={4}
+                slots={{ toolbar: GridToolbar }}
+            />
             </div>
-
         </div>
     )
 

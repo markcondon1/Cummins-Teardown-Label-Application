@@ -4,6 +4,7 @@ import {useState} from "react";
 import NavBar from "./components/NavBar";
 import './page_styles.css';
 import {useNavigate} from "react-router-dom";
+import { FaArrowLeft } from 'react-icons/fa';
 
 
 export default function Admin(){
@@ -39,6 +40,11 @@ export default function Admin(){
     return(
         <div class="container-flex">
             <NavBar />
+            <div className="back-button-container">
+                <Button onClick={backNavigate} className="back-button">
+                    <FaArrowLeft /> Back
+                </Button>
+            </div>
             <div className="delete-user-container">
                 <div className="delete-user-form">
                     <div className="delete-user-header">

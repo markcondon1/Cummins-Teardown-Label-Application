@@ -555,4 +555,49 @@ label {
 .delete-user-button:hover {
     background-color: #0056b3;
 }
+
+.container-flex {
+    position: relative;
+}
+
+.back-button-container {
+    position: absolute;
+    top: 110px;
+    left: 20px;
+    z-index: 1000;
+}
  
+.back-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    gap: 8px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.back-button:active {
+    background-color: #004085;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.back-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+}
+
+.printer-logs-back-button {
+    margin-top: 20px;
+    margin-left: 20px;
+}

@@ -4,6 +4,7 @@ import {useState} from "react";
 import NavBar from "./components/NavBar";
 import './page_styles.css';
 import {useNavigate} from "react-router-dom";
+import { FaArrowLeft } from 'react-icons/fa';
 
 
 export default function AddUser(){
@@ -54,6 +55,11 @@ export default function AddUser(){
     return(
         <div className="container-flex">
             <NavBar />
+            <div className="back-button-container">
+                <Button onClick={backNavigate} className="back-button">
+                    <FaArrowLeft /> Back
+                </Button>
+            </div>
             <div className="add-user-container">
                 <div className="add-user-form">
                     <div className="add-user-header">
@@ -103,8 +109,6 @@ export default function AddUser(){
                     {message && <div className="alert alert-success">{message}</div>}
                     {error && <div className="alert alert-danger">{error}</div>}
                 </div>
-                <Button
-                    onClick={backNavigate} />
 
             </div>
         </div>
