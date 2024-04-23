@@ -8,7 +8,7 @@ export default function TeardownTray() {
     const [componentNumber, setComponentNumber] = useState('');
     const [componentDescription, setComponentDescription] = useState('');
     const [modelType, setModelType] = useState('');
-
+    const [message, setMessage] = useState('');
     const [componentSuggestions, setComponentSuggestions] = useState([]);
 
     const date = getDateTime('date');
@@ -68,6 +68,8 @@ export default function TeardownTray() {
 
             }else{
                 console.log("fail");
+                setMessage('component not found');
+                setTimeout(() => setMessage(''), 3000);
             }
            // printLabel();
         } catch (error) {
@@ -155,7 +157,9 @@ export default function TeardownTray() {
                             <option key={index} value={suggestions.COMPONENT_ITEM_NUMBER} />
                         ))}
                     </datalist>
+                    {message && <div className="message">{message}</div>}
                 </div>
+
             </div>
         </div>
     );
